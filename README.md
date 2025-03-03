@@ -34,8 +34,17 @@ Each execution trace line should follow this format:
 - **Location**: The shared variable (`&g_counter`)
 - **Everything after the memory location is ignored**.
 
+Example:
+Execution trace 1:
+------------------------------------------------------------------------------------
+#    t    Action type     MO       Location         Value               
+------------------------------------------------------------------------------------
+1    1    thread start    seq_cst  00007F2D69CFE110   0xdeadbeef              
+2    1    thread create   seq_cst  00007FFCF04A85D8   0x7ffcf04a8560  
+
 ## How to Use
 1. Run the script:
 2. **Enter trace data line by line**, then **press Ctrl+D** (Linux/macOS) or **Ctrl+Z + Enter** (Windows).
 3. The program will **analyze the trace** and output **detected non-atomic data races**.
+
 
