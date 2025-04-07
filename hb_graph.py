@@ -108,9 +108,3 @@ class HBGraph:
                     if id2 not in reachable[id1] and id1 not in reachable[id2]:
                         races.append((a1, a2))
         return races
-# Ce mai trebuie verificat
-# Mutex unlock/lock
-# Notify/wait
-# Fences
-# Thread creation ids
-# Optimizari (exemple foarte mari)

@@ -48,3 +48,11 @@ Execution trace 1:
 3. The program will **analyze the trace** and output **detected non-atomic data races**.
 
 
+## Ce mai avem de facut
+1. Exemple mici (testele pe care le-am facut Nicu si David)
+2. Mutex unlock/lock (un benchmark)
+3. Notify/wait (un benchmark)
+4. Fences (un benchmark)
+5. Thread creation ids (Verificat daca legatura intre pthread create si thread start se face bine)
+6. Optimizari ( luam benchmark-urile din c11 si le schimbam sa aiba non-atomic datarace-uri)
+
