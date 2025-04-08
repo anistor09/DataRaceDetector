@@ -1,3 +1,4 @@
+from collections import defaultdict
 from typing import List,Dict,Optional,Tuple
 from dataclasses import dataclass
 from trace_structure import ThreadAction, TraceStruct
@@ -5,39 +6,39 @@ from trace_structure import ThreadAction, TraceStruct
 class HBGraph:
     
     def __init__(self, trace:TraceStruct):
-        self.edges:List[List[int]] = []
-        self.size:int = trace.actions[-1][-1].id+1
+        # unique thread id trace size
+        self.size: int = trace.actions[-1][-1].id + 1
+        # the graph
+        self.edges:List[List[int]] = [[] for _ in range(self.size)]
+        # the trace
         self.trace:TraceStruct = trace
         # memory location to actions
-        self.location_to_actions: Dict[str , List[int]] = {}
-        
-        for i in range(self.size):
-            self.edges.append([])
+        self.location_to_actions: Dict[str , List[int]] = defaultdict(lambda: [])
 
         last_thread_create: Optional[int] = None
         thread_to_last_action:Dict[int,int] = {}
 
         for action_group in trace.actions:
             for action in action_group: 
-                
-                if action.location in self.location_to_actions:
-                    self.location_to_actions[action.location].append(action.id)
-                else:
-                    self.location_to_actions[action.location] = [action.id]
+                # adds to action to the list of actions per location
+                self.location_to_actions[action.location].append(action.id)
 
+                # goes through action_group to find a possible sw parent
                 if action.memory_order == "acquire" and action.read_from:
                     for possible_parent in trace.actions[action.read_from]:
                         if possible_parent.memory_order == "release" and possible_parent.value == action.value and possible_parent.location == action.location:
                             self.add_edge(possible_parent.id, action.id)
-                            
-
 
                 if action.action_type == "thread start":
+                    # if it's thread 1 since it does not have a thread that started it
                     if not last_thread_create:
                         thread_to_last_action[action.thread_id] = action.id
+                        # first thread
                         continue
+                    # po edge between parent and child thread
                     self.add_edge(last_thread_create, action.id)
                     thread_to_last_action[action.thread_id] = action.id
+                    # thread was just created
                     continue
                 
                 if action.action_type == "pthread join":
@@ -47,6 +48,7 @@ class HBGraph:
                 if action.action_type == "pthread create":
                     last_thread_create = action.id
 
+                # po edge from same thread to same thread
                 self.add_edge(thread_to_last_action[action.thread_id], action.id)
                 thread_to_last_action[action.thread_id] = action.id
         
