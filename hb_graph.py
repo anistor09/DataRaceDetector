@@ -10,10 +10,12 @@ class HBGraph:
         self.size: int = trace.actions[-1][-1].id + 1
         # the graph
         self.edges:List[List[int]] = [[] for _ in range(self.size)]
-        # the trace
+        # the tracer
         self.trace:TraceStruct = trace
         # memory location to actions
         self.location_to_actions: Dict[str , List[int]] = defaultdict(lambda: [])
+        # last unlocked mutex for sw between unlock -> lock for a mutex location
+        mutex_last_unlock: Dict[str, int] = {}
 
         last_thread_create: Optional[int] = None
         thread_to_last_action:Dict[int,int] = {}
@@ -22,6 +24,12 @@ class HBGraph:
             for action in action_group: 
                 # adds to action to the list of actions per location
                 self.location_to_actions[action.location].append(action.id)
+
+                if action.action_type == "lock":
+                    if action.location in mutex_last_unlock:
+                        self.add_edge(mutex_last_unlock[action.location], action.id)
+                elif action.action_type == "unlock":
+                    mutex_last_unlock[action.location] = action.id
 
                 # goes through action_group to find a possible sw parent
                 if action.memory_order == "acquire" and action.read_from:
@@ -50,6 +58,7 @@ class HBGraph:
 
                 # po edge from same thread to same thread
                 self.add_edge(thread_to_last_action[action.thread_id], action.id)
+                # mark action as last processed action in thread
                 thread_to_last_action[action.thread_id] = action.id
         
 
