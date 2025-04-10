@@ -25,11 +25,20 @@ class HBGraph:
                 # adds to action to the list of actions per location
                 self.location_to_actions[action.location].append(action.id)
 
+                # mutexes
                 if action.action_type == "lock":
                     if action.location in mutex_last_unlock:
                         self.add_edge(mutex_last_unlock[action.location], action.id)
                 elif action.action_type == "unlock":
                     mutex_last_unlock[action.location] = action.id
+                # condition variables (notify/wait)
+                # treat wait as an unlock: it releases a mutex (given by `value`),
+                # so we update mutex_last_unlock to allow a SW edge to the next lock.
+                # we don't track which notify triggered it—C++tester ensures correct order.
+                elif action.action_type == "wait":
+                    address = self.format_address_value_location(action.value)
+                    mutex_last_unlock[address] = action.id
+
 
                 # goes through action_group to find a possible sw parent
                 if action.memory_order == "acquire" and action.read_from:
@@ -64,6 +73,10 @@ class HBGraph:
 
     def add_edge(self, parent, node):
         self.edges[parent].append(node)
+
+    def format_address_value_location(self, hex_value):
+        formatted = f"{int(hex_value, 16):016X}"
+        return formatted
 
     def __str__(self):
         result = ["HBGraph:"]
