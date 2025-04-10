@@ -3,11 +3,13 @@ import sys
 #from hb_builder import build_hb_graph
 #from na_races_detector import detect_na_races
 from hb_graph import HBGraph
-from trace_parser import parse_trace
+# from trace_parser import parse_trace
+from parser_2 import parse_trace
 
 
 def main():
-    trace_name = "trace_outputNicu.txt"
+    # trace_name = "trace_outputNicu.txt"
+    trace_name = "benchmark/DavidBenchmarks/fences.txt"
     # 1) Parse input
     execution_trace_list = parse_trace(trace_name)
 
