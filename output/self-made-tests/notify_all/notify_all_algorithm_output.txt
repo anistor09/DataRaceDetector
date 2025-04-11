@@ -1,5 +1,0 @@
-HB and Reachable are the same ✅
-Data race detected between
-ThreadAction(id=19, thread_id=3, action_type='nonatomic write', memory_order='relaxed', location='00000000004040A8', value='0x5')
-ThreadAction(id=20, thread_id=2, action_type='atomic read', memory_order='acquire', location='00000000004040A8', value='0x4', read_from=12)
-

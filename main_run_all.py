@@ -12,11 +12,14 @@ def process_trace_file(trace_path):
 
         for trace in execution_trace_list:
             hb_graph = HBGraph(trace)
-            if hb_graph.comparison_hb_reachable():
-                output.write("HB and Reachable are the same ✅\n")
-            else:
-                output.write("HB and Reachable are not the same ❌\n")
+            # Testing purposes
+            # if hb_graph.comparison_hb_reachable():
+            #     output.write("HB and Reachable are the same ✅\n")
+            # else:
+            #     output.write("HB and Reachable are not the same ❌\n")
             data_races = hb_graph.detect_data_races()
+            if not data_races:
+                output.write("No data races found in this program")
             for el1, el2 in data_races:
                 output.write("Data race detected between\n")
                 output.write(f"{el1}\n")
