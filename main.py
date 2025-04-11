@@ -12,18 +12,21 @@ sys.setrecursionlimit(1000000)
 
 
 def main():
-    # trace_name = "benchmark/DavidBenchmarks/fences.txt"
-    trace_name = "benchmark/NicuTest/trace_outputNicu.txt"
+    trace_name = "benchmark/DavidBenchmarks/signal_wait.txt"
+    # trace_name = "benchmark/NicuTest/trace_outputNicu.txt"
     # 1) Parse input
     execution_trace_list = parse_trace(trace_name)
     for trace in execution_trace_list:
         hb_graph = HBGraph(trace)
         # print(hb_graph)
-        if hb_graph.comparison_hb_reachable():
-            print("HB and Reachable are the same ✅")
-        else:
-            print("HB and Reachable are not the same ❌")
+        # Testing purposes
+        # if hb_graph.comparison_hb_reachable():
+        #     print("HB and Reachable are the same ✅")
+        # else:
+        #     print("HB and Reachable are not the same ❌")
         data_races = hb_graph.detect_data_races()
+        if not data_races:
+            print("No data races found in this program")
         for data_race in data_races:
             el1 = data_race[0]
             el2 = data_race[1]
