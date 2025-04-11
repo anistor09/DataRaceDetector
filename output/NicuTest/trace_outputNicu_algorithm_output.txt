@@ -1,3 +1,4 @@
+HB and Reachable are the same ✅
 Data race detected between
 ThreadAction(id=6, thread_id=2, action_type='nonatomic write', memory_order='relaxed', location='0000000000404078', value='0x3')
 ThreadAction(id=9, thread_id=3, action_type='nonatomic write', memory_order='relaxed', location='0000000000404078', value='0x1')
@@ -22,6 +23,7 @@ Data race detected between
 ThreadAction(id=10, thread_id=3, action_type='nonatomic write', memory_order='relaxed', location='0000000000404080', value='0x2')
 ThreadAction(id=12, thread_id=2, action_type='atomic read', memory_order='acquire', location='0000000000404080', value='0x4', read_from=5)
 
+HB and Reachable are the same ✅
 Data race detected between
 ThreadAction(id=6, thread_id=3, action_type='nonatomic write', memory_order='relaxed', location='0000000000404078', value='0x1')
 ThreadAction(id=9, thread_id=2, action_type='nonatomic write', memory_order='relaxed', location='0000000000404078', value='0x3')
@@ -38,6 +40,7 @@ Data race detected between
 ThreadAction(id=8, thread_id=2, action_type='nonatomic write', memory_order='relaxed', location='0000000000404080', value='0x4')
 ThreadAction(id=11, thread_id=3, action_type='atomic read', memory_order='acquire', location='0000000000404080', value='0x4', read_from=6)
 
+HB and Reachable are the same ✅
 Data race detected between
 ThreadAction(id=6, thread_id=3, action_type='nonatomic write', memory_order='relaxed', location='0000000000404078', value='0x1')
 ThreadAction(id=9, thread_id=2, action_type='nonatomic write', memory_order='relaxed', location='0000000000404078', value='0x3')
@@ -62,6 +65,7 @@ Data race detected between
 ThreadAction(id=10, thread_id=2, action_type='nonatomic write', memory_order='relaxed', location='0000000000404080', value='0x4')
 ThreadAction(id=12, thread_id=3, action_type='atomic read', memory_order='acquire', location='0000000000404080', value='0x2', read_from=5)
 
+HB and Reachable are the same ✅
 Data race detected between
 ThreadAction(id=6, thread_id=3, action_type='nonatomic write', memory_order='relaxed', location='0000000000404078', value='0x1')
 ThreadAction(id=9, thread_id=2, action_type='nonatomic write', memory_order='relaxed', location='0000000000404078', value='0x3')
@@ -86,6 +90,7 @@ Data race detected between
 ThreadAction(id=10, thread_id=2, action_type='nonatomic write', memory_order='relaxed', location='0000000000404080', value='0x4')
 ThreadAction(id=12, thread_id=3, action_type='atomic read', memory_order='acquire', location='0000000000404080', value='0x2', read_from=5)
 
+HB and Reachable are the same ✅
 Data race detected between
 ThreadAction(id=6, thread_id=3, action_type='nonatomic write', memory_order='relaxed', location='0000000000404078', value='0x1')
 ThreadAction(id=8, thread_id=2, action_type='nonatomic write', memory_order='relaxed', location='0000000000404078', value='0x3')
@@ -102,6 +107,7 @@ Data race detected between
 ThreadAction(id=9, thread_id=2, action_type='nonatomic write', memory_order='relaxed', location='0000000000404080', value='0x4')
 ThreadAction(id=12, thread_id=3, action_type='atomic read', memory_order='acquire', location='0000000000404080', value='0x4', read_from=6)
 
+HB and Reachable are the same ✅
 Data race detected between
 ThreadAction(id=6, thread_id=3, action_type='nonatomic write', memory_order='relaxed', location='0000000000404078', value='0x1')
 ThreadAction(id=8, thread_id=2, action_type='nonatomic write', memory_order='relaxed', location='0000000000404078', value='0x3')
@@ -118,6 +124,7 @@ Data race detected between
 ThreadAction(id=9, thread_id=2, action_type='nonatomic write', memory_order='relaxed', location='0000000000404080', value='0x4')
 ThreadAction(id=15, thread_id=3, action_type='atomic read', memory_order='acquire', location='0000000000404080', value='0x4', read_from=6)
 
+HB and Reachable are the same ✅
 Data race detected between
 ThreadAction(id=6, thread_id=2, action_type='nonatomic write', memory_order='relaxed', location='0000000000404078', value='0x3')
 ThreadAction(id=9, thread_id=3, action_type='nonatomic write', memory_order='relaxed', location='0000000000404078', value='0x1')
@@ -142,6 +149,7 @@ Data race detected between
 ThreadAction(id=10, thread_id=3, action_type='nonatomic write', memory_order='relaxed', location='0000000000404080', value='0x2')
 ThreadAction(id=12, thread_id=2, action_type='atomic read', memory_order='acquire', location='0000000000404080', value='0x4', read_from=5)
 
+HB and Reachable are the same ✅
 Data race detected between
 ThreadAction(id=6, thread_id=3, action_type='nonatomic write', memory_order='relaxed', location='0000000000404078', value='0x1')
 ThreadAction(id=9, thread_id=2, action_type='nonatomic write', memory_order='relaxed', location='0000000000404078', value='0x3')
@@ -158,6 +166,7 @@ Data race detected between
 ThreadAction(id=8, thread_id=2, action_type='nonatomic write', memory_order='relaxed', location='0000000000404080', value='0x4')
 ThreadAction(id=11, thread_id=3, action_type='atomic read', memory_order='acquire', location='0000000000404080', value='0x4', read_from=6)
 
+HB and Reachable are the same ✅
 Data race detected between
 ThreadAction(id=6, thread_id=2, action_type='nonatomic write', memory_order='relaxed', location='0000000000404078', value='0x3')
 ThreadAction(id=9, thread_id=3, action_type='nonatomic write', memory_order='relaxed', location='0000000000404078', value='0x1')
@@ -174,6 +183,7 @@ Data race detected between
 ThreadAction(id=8, thread_id=3, action_type='nonatomic write', memory_order='relaxed', location='0000000000404080', value='0x2')
 ThreadAction(id=11, thread_id=2, action_type='atomic read', memory_order='acquire', location='0000000000404080', value='0x2', read_from=6)
 
+HB and Reachable are the same ✅
 Data race detected between
 ThreadAction(id=6, thread_id=3, action_type='nonatomic write', memory_order='relaxed', location='0000000000404078', value='0x1')
 ThreadAction(id=9, thread_id=2, action_type='nonatomic write', memory_order='relaxed', location='0000000000404078', value='0x3')
