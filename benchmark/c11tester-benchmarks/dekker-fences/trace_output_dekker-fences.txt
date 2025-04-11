@@ -1,0 +1,593 @@
+C11Tester
+Copyright (c) 2013 and 2019 Regents of the University of California. All rights reserved.
+Distributed under the GPLv2
+Written by Weiyu Luo, Brian Norris, and Brian Demsky
+
+Program output from execution 1:
+---- BEGIN PROGRAM OUTPUT ----
+---- END PROGRAM OUTPUT   ----
+
+Execution trace 1:
+------------------------------------------------------------------------------------
+#    t    Action type     MO       Location         Value               Rf  CV
+------------------------------------------------------------------------------------
+1    1    thread start    seq_cst  00007F89EDDFB110   0xdeadbeef              ( 0,  1)
+2    1    atomic write    seq_cst  0000000000407148   0                       ( 0,  2)
+3    1    atomic write    seq_cst  0000000000407149   0                       ( 0,  3)
+4    1    atomic write    seq_cst  000000000040714C   0                       ( 0,  4)
+5    1    pthread create  seq_cst  00007FFCF8A20218   0x7ffcf8a20120          ( 0,  5)
+6    2    thread start    seq_cst  00007F89EF5FED20   0xdeadbeef              ( 0,  5,  6)
+7    1    pthread create  seq_cst  00007FFCF8A20210   0x7ffcf8a20120          ( 0,  7)
+8    3    thread start    seq_cst  00007F89EF8002E0   0xdeadbeef              ( 0,  7,  0,  8)
+9    2    atomic write    relaxed  0000000000407148   0x1                     ( 0,  5,  9)
+10   3    atomic write    relaxed  0000000000407149   0x1                     ( 0,  7,  0, 10)
+11   2    atomic read     relaxed  0000000000407149   0x1                 10  ( 0,  5, 11)
+12   3    fence           seq_cst  0000000000000007   0xdeadbeef              ( 0,  7,  0, 12)
+13   2    atomic read     relaxed  000000000040714C   0                   4   ( 0,  5, 13)
+14   3    atomic read     relaxed  0000000000407148   0                   2   ( 0,  7,  0, 14)
+15   3    fence           acquire  0000000000000007   0xdeadbeef              ( 0,  7,  0, 15)
+16   3    atomic write    relaxed  000000000040714C   0                       ( 0,  7,  0, 16)
+17   3    fence           release  0000000000000007   0xdeadbeef              ( 0,  7,  0, 17)
+18   3    atomic write    relaxed  0000000000407149   0                       ( 0,  7,  0, 18)
+19   3    thread finish   seq_cst  00007F89EF8002E0   0xdeadbeef              ( 0,  7,  0, 19)
+20   2    thread yield    seq_cst  00007F89EF5FED20   0xdeadbeef              ( 0,  5, 20)
+21   2    atomic read     relaxed  0000000000407149   0x1                 10  ( 0,  5, 21)
+22   2    atomic read     relaxed  000000000040714C   0                   4   ( 0,  5, 22)
+23   2    thread yield    seq_cst  00007F89EF5FED20   0xdeadbeef              ( 0,  5, 23)
+24   2    atomic read     relaxed  0000000000407149   0                   18  ( 0,  5, 24)
+25   2    fence           acquire  0000000000000007   0xdeadbeef              ( 0,  7, 25, 17)
+26   2    atomic write    relaxed  000000000040714C   0x1                     ( 0,  7, 26, 17)
+27   2    fence           release  0000000000000007   0xdeadbeef              ( 0,  7, 27, 17)
+28   2    atomic write    relaxed  0000000000407148   0                       ( 0,  7, 28, 17)
+29   2    thread finish   seq_cst  00007F89EF5FED20   0xdeadbeef              ( 0,  7, 29, 17)
+30   1    pthread join    seq_cst  00007F89EF5FED20   0x2                     ( 0, 30, 29, 17)
+31   1    pthread join    seq_cst  00007F89EF8002E0   0x3                     ( 0, 31, 29, 19)
+32   1    thread finish   seq_cst  00007F89EDDFB110   0xdeadbeef              ( 0, 32, 29, 19)
+HASH 2019187935
+------------------------------------------------------------------------------------
+
+Program output from execution 2:
+---- BEGIN PROGRAM OUTPUT ----
+---- END PROGRAM OUTPUT   ----
+
+Execution trace 2:
+------------------------------------------------------------------------------------
+#    t    Action type     MO       Location         Value               Rf  CV
+------------------------------------------------------------------------------------
+1    1    thread start    seq_cst  00007F89EDDFB110   0xdeadbeef              ( 0,  1)
+2    1    atomic write    seq_cst  0000000000407148   0                       ( 0,  2)
+3    1    atomic write    seq_cst  0000000000407149   0                       ( 0,  3)
+4    1    atomic write    seq_cst  000000000040714C   0                       ( 0,  4)
+5    1    pthread create  seq_cst  00007FFCF8A20218   0x7ffcf8a20120          ( 0,  5)
+6    2    thread start    seq_cst  00007F89EF5FED20   0xdeadbeef              ( 0,  5,  6)
+7    1    pthread create  seq_cst  00007FFCF8A20210   0x7ffcf8a20120          ( 0,  7)
+8    3    thread start    seq_cst  00007F89EF8002E0   0xdeadbeef              ( 0,  7,  0,  8)
+9    2    atomic write    relaxed  0000000000407148   0x1                     ( 0,  5,  9)
+10   3    atomic write    relaxed  0000000000407149   0x1                     ( 0,  7,  0, 10)
+11   2    atomic read     relaxed  0000000000407149   0x1                 10  ( 0,  5, 11)
+12   2    atomic read     relaxed  000000000040714C   0                   4   ( 0,  5, 12)
+13   2    thread yield    seq_cst  00007F89EF5FED20   0xdeadbeef              ( 0,  5, 13)
+14   2    atomic read     relaxed  0000000000407149   0x1                 10  ( 0,  5, 14)
+15   3    fence           seq_cst  0000000000000007   0xdeadbeef              ( 0,  7,  0, 15)
+16   2    atomic read     relaxed  000000000040714C   0                   4   ( 0,  5, 16)
+17   3    atomic read     relaxed  0000000000407148   0x1                 9   ( 0,  7,  0, 17)
+18   3    atomic read     relaxed  000000000040714C   0                   4   ( 0,  7,  0, 18)
+19   3    atomic write    relaxed  0000000000407149   0                       ( 0,  7,  0, 19)
+20   2    thread yield    seq_cst  00007F89EF5FED20   0xdeadbeef              ( 0,  5, 20)
+21   3    atomic read     relaxed  000000000040714C   0                   4   ( 0,  7,  0, 21)
+22   2    atomic read     relaxed  0000000000407149   0                   19  ( 0,  5, 22)
+23   2    fence           acquire  0000000000000007   0xdeadbeef              ( 0,  7, 23, 15)
+24   2    atomic write    relaxed  000000000040714C   0x1                     ( 0,  7, 24, 15)
+25   3    thread yield    seq_cst  00007F89EF8002E0   0xdeadbeef              ( 0,  7,  0, 25)
+26   2    fence           release  0000000000000007   0xdeadbeef              ( 0,  7, 26, 15)
+27   2    atomic write    relaxed  0000000000407148   0                       ( 0,  7, 27, 15)
+28   2    thread finish   seq_cst  00007F89EF5FED20   0xdeadbeef              ( 0,  7, 28, 15)
+29   1    pthread join    seq_cst  00007F89EF5FED20   0x2                     ( 0, 29, 28, 15)
+30   3    atomic read     relaxed  000000000040714C   0                   4   ( 0,  7,  0, 30)
+31   3    thread yield    seq_cst  00007F89EF8002E0   0xdeadbeef              ( 0,  7,  0, 31)
+32   3    atomic read     relaxed  000000000040714C   0x1                 24  ( 0,  7,  0, 32)
+33   3    atomic write    relaxed  0000000000407149   0x1                     ( 0,  7,  0, 33)
+34   3    fence           seq_cst  0000000000000007   0xdeadbeef              ( 0,  7,  0, 34)
+35   3    atomic read     relaxed  0000000000407148   0x1                 9   ( 0,  7,  0, 35)
+36   3    atomic read     relaxed  000000000040714C   0x1                 24  ( 0,  7,  0, 36)
+37   3    thread yield    seq_cst  00007F89EF8002E0   0xdeadbeef              ( 0,  7,  0, 37)
+38   3    atomic read     relaxed  0000000000407148   0                   27  ( 0,  7,  0, 38)
+39   3    fence           acquire  0000000000000007   0xdeadbeef              ( 0,  7, 26, 39)
+40   3    atomic write    relaxed  000000000040714C   0                       ( 0,  7, 26, 40)
+41   3    fence           release  0000000000000007   0xdeadbeef              ( 0,  7, 26, 41)
+42   3    atomic write    relaxed  0000000000407149   0                       ( 0,  7, 26, 42)
+43   3    thread finish   seq_cst  00007F89EF8002E0   0xdeadbeef              ( 0,  7, 26, 43)
+44   1    pthread join    seq_cst  00007F89EF8002E0   0x3                     ( 0, 44, 28, 43)
+45   1    thread finish   seq_cst  00007F89EDDFB110   0xdeadbeef              ( 0, 45, 28, 43)
+HASH 3301370285
+------------------------------------------------------------------------------------
+
+Race detected at location: 
+/lib/libmodel.so(+0x1594f)[0x7f8a1460b94f]
+/lib/libmodel.so(_Z16raceCheckWrite32iPKv+0x57)[0x7f8a1460dc17]
+./c11tester-benchmarks/cdschecker_modified_benchmarks/dekker-fences/dekker-fences[0x4013f8]
+./c11tester-benchmarks/cdschecker_modified_benchmarks/dekker-fences/dekker-fences[0x401ecf]
+./c11tester-benchmarks/cdschecker_modified_benchmarks/dekker-fences/dekker-fences[0x4033d7]
+./c11tester-benchmarks/cdschecker_modified_benchmarks/dekker-fences/dekker-fences[0x40335d]
+./c11tester-benchmarks/cdschecker_modified_benchmarks/dekker-fences/dekker-fences[0x403335]
+./c11tester-benchmarks/cdschecker_modified_benchmarks/dekker-fences/dekker-fences[0x403305]
+./c11tester-benchmarks/cdschecker_modified_benchmarks/dekker-fences/dekker-fences[0x4031c9]
+/lib/x86_64-linux-gnu/libstdc++.so.6(+0xd6df4)[0x7f8a144eadf4]
+/lib/libmodel.so(_Z14thread_startupv+0x2f)[0x7f8a1460734f]
+/lib/libmodel.so(_Z13helper_threadPv+0xae)[0x7f8a1460740e]
+/lib/x86_64-linux-gnu/libpthread.so.0(+0x8609)[0x7f8a1428f609]
+/lib/x86_64-linux-gnu/libc.so.6(clone+0x43)[0x7f8a141b4353]
+
+Data race detected @ address 0000000000407150:
+    Access 1: write in thread  2 @ clock  14
+    Access 2: write in thread  3 @ clock  16
+
+Program output from execution 3:
+---- BEGIN PROGRAM OUTPUT ----
+---- END PROGRAM OUTPUT   ----
+
+Execution trace 3:
+------------------------------------------------------------------------------------
+#    t    Action type     MO       Location         Value               Rf  CV
+------------------------------------------------------------------------------------
+1    1    thread start    seq_cst  00007F89EDDFB110   0xdeadbeef              ( 0,  1)
+2    1    atomic write    seq_cst  0000000000407148   0                       ( 0,  2)
+3    1    atomic write    seq_cst  0000000000407149   0                       ( 0,  3)
+4    1    atomic write    seq_cst  000000000040714C   0                       ( 0,  4)
+5    1    pthread create  seq_cst  00007FFCF8A20218   0x7ffcf8a20120          ( 0,  5)
+6    2    thread start    seq_cst  00007F89EF5FED20   0xdeadbeef              ( 0,  5,  6)
+7    1    pthread create  seq_cst  00007FFCF8A20210   0x7ffcf8a20120          ( 0,  7)
+8    3    thread start    seq_cst  00007F89EF8002E0   0xdeadbeef              ( 0,  7,  0,  8)
+9    2    atomic write    relaxed  0000000000407148   0x1                     ( 0,  5,  9)
+10   3    atomic write    relaxed  0000000000407149   0x1                     ( 0,  7,  0, 10)
+11   2    atomic read     relaxed  0000000000407149   0                   3   ( 0,  5, 11)
+12   3    fence           seq_cst  0000000000000007   0xdeadbeef              ( 0,  7,  0, 12)
+13   3    atomic read     relaxed  0000000000407148   0                   2   ( 0,  7,  0, 13)
+14   2    fence           acquire  0000000000000007   0xdeadbeef              ( 0,  5, 14)
+15   2    atomic write    relaxed  000000000040714C   0x1                     ( 0,  5, 15)
+16   3    fence           acquire  0000000000000007   0xdeadbeef              ( 0,  7,  0, 16)
+17   3    atomic write    relaxed  000000000040714C   0                       ( 0,  7,  0, 17)
+18   2    fence           release  0000000000000007   0xdeadbeef              ( 0,  5, 18)
+19   2    atomic write    relaxed  0000000000407148   0                       ( 0,  5, 19)
+20   2    thread finish   seq_cst  00007F89EF5FED20   0xdeadbeef              ( 0,  5, 20)
+21   3    fence           release  0000000000000007   0xdeadbeef              ( 0,  7,  0, 21)
+22   3    atomic write    relaxed  0000000000407149   0                       ( 0,  7,  0, 22)
+23   3    thread finish   seq_cst  00007F89EF8002E0   0xdeadbeef              ( 0,  7,  0, 23)
+24   1    pthread join    seq_cst  00007F89EF5FED20   0x2                     ( 0, 24, 20)
+25   1    pthread join    seq_cst  00007F89EF8002E0   0x3                     ( 0, 25, 20, 23)
+26   1    thread finish   seq_cst  00007F89EDDFB110   0xdeadbeef              ( 0, 26, 20, 23)
+HASH 962797710
+------------------------------------------------------------------------------------
+
+Program output from execution 4:
+---- BEGIN PROGRAM OUTPUT ----
+---- END PROGRAM OUTPUT   ----
+
+Execution trace 4:
+------------------------------------------------------------------------------------
+#    t    Action type     MO       Location         Value               Rf  CV
+------------------------------------------------------------------------------------
+1    1    thread start    seq_cst  00007F89EDDFB110   0xdeadbeef              ( 0,  1)
+2    1    atomic write    seq_cst  0000000000407148   0                       ( 0,  2)
+3    1    atomic write    seq_cst  0000000000407149   0                       ( 0,  3)
+4    1    atomic write    seq_cst  000000000040714C   0                       ( 0,  4)
+5    1    pthread create  seq_cst  00007FFCF8A20218   0x7ffcf8a20120          ( 0,  5)
+6    2    thread start    seq_cst  00007F89EF5FED20   0xdeadbeef              ( 0,  5,  6)
+7    1    pthread create  seq_cst  00007FFCF8A20210   0x7ffcf8a20120          ( 0,  7)
+8    3    thread start    seq_cst  00007F89EF8002E0   0xdeadbeef              ( 0,  7,  0,  8)
+9    2    atomic write    relaxed  0000000000407148   0x1                     ( 0,  5,  9)
+10   3    atomic write    relaxed  0000000000407149   0x1                     ( 0,  7,  0, 10)
+11   3    fence           seq_cst  0000000000000007   0xdeadbeef              ( 0,  7,  0, 11)
+12   2    atomic read     relaxed  0000000000407149   0x1                 10  ( 0,  5, 12)
+13   2    atomic read     relaxed  000000000040714C   0                   4   ( 0,  5, 13)
+14   2    thread yield    seq_cst  00007F89EF5FED20   0xdeadbeef              ( 0,  5, 14)
+15   2    atomic read     relaxed  0000000000407149   0x1                 10  ( 0,  5, 15)
+16   2    atomic read     relaxed  000000000040714C   0                   4   ( 0,  5, 16)
+17   2    thread yield    seq_cst  00007F89EF5FED20   0xdeadbeef              ( 0,  5, 17)
+18   2    atomic read     relaxed  0000000000407149   0x1                 10  ( 0,  5, 18)
+19   2    atomic read     relaxed  000000000040714C   0                   4   ( 0,  5, 19)
+20   2    thread yield    seq_cst  00007F89EF5FED20   0xdeadbeef              ( 0,  5, 20)
+21   3    atomic read     relaxed  0000000000407148   0x1                 9   ( 0,  7,  0, 21)
+22   2    atomic read     relaxed  0000000000407149   0x1                 10  ( 0,  5, 22)
+23   3    atomic read     relaxed  000000000040714C   0                   4   ( 0,  7,  0, 23)
+24   3    atomic write    relaxed  0000000000407149   0                       ( 0,  7,  0, 24)
+25   3    atomic read     relaxed  000000000040714C   0                   4   ( 0,  7,  0, 25)
+26   2    atomic read     relaxed  000000000040714C   0                   4   ( 0,  5, 26)
+27   3    thread yield    seq_cst  00007F89EF8002E0   0xdeadbeef              ( 0,  7,  0, 27)
+28   3    atomic read     relaxed  000000000040714C   0                   4   ( 0,  7,  0, 28)
+29   2    thread yield    seq_cst  00007F89EF5FED20   0xdeadbeef              ( 0,  5, 29)
+30   3    thread yield    seq_cst  00007F89EF8002E0   0xdeadbeef              ( 0,  7,  0, 30)
+31   3    atomic read     relaxed  000000000040714C   0                   4   ( 0,  7,  0, 31)
+32   2    atomic read     relaxed  0000000000407149   0x1                 10  ( 0,  5, 32)
+33   3    thread yield    seq_cst  00007F89EF8002E0   0xdeadbeef              ( 0,  7,  0, 33)
+34   2    atomic read     relaxed  000000000040714C   0                   4   ( 0,  5, 34)
+35   2    thread yield    seq_cst  00007F89EF5FED20   0xdeadbeef              ( 0,  5, 35)
+36   2    atomic read     relaxed  0000000000407149   0x1                 10  ( 0,  5, 36)
+37   3    atomic read     relaxed  000000000040714C   0                   4   ( 0,  7,  0, 37)
+38   2    atomic read     relaxed  000000000040714C   0                   4   ( 0,  5, 38)
+39   2    thread yield    seq_cst  00007F89EF5FED20   0xdeadbeef              ( 0,  5, 39)
+40   3    thread yield    seq_cst  00007F89EF8002E0   0xdeadbeef              ( 0,  7,  0, 40)
+41   2    atomic read     relaxed  0000000000407149   0x1                 10  ( 0,  5, 41)
+42   3    atomic read     relaxed  000000000040714C   0                   4   ( 0,  7,  0, 42)
+43   2    atomic read     relaxed  000000000040714C   0                   4   ( 0,  5, 43)
+44   3    thread yield    seq_cst  00007F89EF8002E0   0xdeadbeef              ( 0,  7,  0, 44)
+45   2    thread yield    seq_cst  00007F89EF5FED20   0xdeadbeef              ( 0,  5, 45)
+46   3    atomic read     relaxed  000000000040714C   0                   4   ( 0,  7,  0, 46)
+47   3    thread yield    seq_cst  00007F89EF8002E0   0xdeadbeef              ( 0,  7,  0, 47)
+48   3    atomic read     relaxed  000000000040714C   0                   4   ( 0,  7,  0, 48)
+49   2    atomic read     relaxed  0000000000407149   0                   24  ( 0,  5, 49)
+50   2    fence           acquire  0000000000000007   0xdeadbeef              ( 0,  7, 50, 11)
+51   2    atomic write    relaxed  000000000040714C   0x1                     ( 0,  7, 51, 11)
+52   3    thread yield    seq_cst  00007F89EF8002E0   0xdeadbeef              ( 0,  7,  0, 52)
+53   2    fence           release  0000000000000007   0xdeadbeef              ( 0,  7, 53, 11)
+54   2    atomic write    relaxed  0000000000407148   0                       ( 0,  7, 54, 11)
+55   2    thread finish   seq_cst  00007F89EF5FED20   0xdeadbeef              ( 0,  7, 55, 11)
+56   3    atomic read     relaxed  000000000040714C   0                   4   ( 0,  7,  0, 56)
+57   3    thread yield    seq_cst  00007F89EF8002E0   0xdeadbeef              ( 0,  7,  0, 57)
+58   3    atomic read     relaxed  000000000040714C   0                   4   ( 0,  7,  0, 58)
+59   3    thread yield    seq_cst  00007F89EF8002E0   0xdeadbeef              ( 0,  7,  0, 59)
+60   1    pthread join    seq_cst  00007F89EF5FED20   0x2                     ( 0, 60, 55, 11)
+61   3    atomic read     relaxed  000000000040714C   0                   4   ( 0,  7,  0, 61)
+62   3    thread yield    seq_cst  00007F89EF8002E0   0xdeadbeef              ( 0,  7,  0, 62)
+63   3    atomic read     relaxed  000000000040714C   0                   4   ( 0,  7,  0, 63)
+64   3    thread yield    seq_cst  00007F89EF8002E0   0xdeadbeef              ( 0,  7,  0, 64)
+65   3    atomic read     relaxed  000000000040714C   0                   4   ( 0,  7,  0, 65)
+66   3    thread yield    seq_cst  00007F89EF8002E0   0xdeadbeef              ( 0,  7,  0, 66)
+67   3    atomic read     relaxed  000000000040714C   0                   4   ( 0,  7,  0, 67)
+68   3    thread yield    seq_cst  00007F89EF8002E0   0xdeadbeef              ( 0,  7,  0, 68)
+69   3    atomic read     relaxed  000000000040714C   0x1                 51  ( 0,  7,  0, 69)
+70   3    atomic write    relaxed  0000000000407149   0x1                     ( 0,  7,  0, 70)
+71   3    fence           seq_cst  0000000000000007   0xdeadbeef              ( 0,  7,  0, 71)
+72   3    atomic read     relaxed  0000000000407148   0x1                 9   ( 0,  7,  0, 72)
+73   3    atomic read     relaxed  000000000040714C   0x1                 51  ( 0,  7,  0, 73)
+74   3    thread yield    seq_cst  00007F89EF8002E0   0xdeadbeef              ( 0,  7,  0, 74)
+75   3    atomic read     relaxed  0000000000407148   0x1                 9   ( 0,  7,  0, 75)
+76   3    atomic read     relaxed  000000000040714C   0x1                 51  ( 0,  7,  0, 76)
+77   3    thread yield    seq_cst  00007F89EF8002E0   0xdeadbeef              ( 0,  7,  0, 77)
+78   3    atomic read     relaxed  0000000000407148   0x1                 9   ( 0,  7,  0, 78)
+79   3    atomic read     relaxed  000000000040714C   0x1                 51  ( 0,  7,  0, 79)
+80   3    thread yield    seq_cst  00007F89EF8002E0   0xdeadbeef              ( 0,  7,  0, 80)
+81   3    atomic read     relaxed  0000000000407148   0x1                 9   ( 0,  7,  0, 81)
+82   3    atomic read     relaxed  000000000040714C   0x1                 51  ( 0,  7,  0, 82)
+83   3    thread yield    seq_cst  00007F89EF8002E0   0xdeadbeef              ( 0,  7,  0, 83)
+84   3    atomic read     relaxed  0000000000407148   0                   54  ( 0,  7,  0, 84)
+85   3    fence           acquire  0000000000000007   0xdeadbeef              ( 0,  7, 53, 85)
+86   3    atomic write    relaxed  000000000040714C   0                       ( 0,  7, 53, 86)
+87   3    fence           release  0000000000000007   0xdeadbeef              ( 0,  7, 53, 87)
+88   3    atomic write    relaxed  0000000000407149   0                       ( 0,  7, 53, 88)
+89   3    thread finish   seq_cst  00007F89EF8002E0   0xdeadbeef              ( 0,  7, 53, 89)
+90   1    pthread join    seq_cst  00007F89EF8002E0   0x3                     ( 0, 90, 55, 89)
+91   1    thread finish   seq_cst  00007F89EDDFB110   0xdeadbeef              ( 0, 91, 55, 89)
+HASH 833793757
+------------------------------------------------------------------------------------
+
+Program output from execution 5:
+---- BEGIN PROGRAM OUTPUT ----
+---- END PROGRAM OUTPUT   ----
+
+Execution trace 5:
+------------------------------------------------------------------------------------
+#    t    Action type     MO       Location         Value               Rf  CV
+------------------------------------------------------------------------------------
+1    1    thread start    seq_cst  00007F89EDDFB110   0xdeadbeef              ( 0,  1)
+2    1    atomic write    seq_cst  0000000000407148   0                       ( 0,  2)
+3    1    atomic write    seq_cst  0000000000407149   0                       ( 0,  3)
+4    1    atomic write    seq_cst  000000000040714C   0                       ( 0,  4)
+5    1    pthread create  seq_cst  00007FFCF8A20218   0x7ffcf8a20120          ( 0,  5)
+6    2    thread start    seq_cst  00007F89EF5FED20   0xdeadbeef              ( 0,  5,  6)
+7    1    pthread create  seq_cst  00007FFCF8A20210   0x7ffcf8a20120          ( 0,  7)
+8    3    thread start    seq_cst  00007F89EF8002E0   0xdeadbeef              ( 0,  7,  0,  8)
+9    2    atomic write    relaxed  0000000000407148   0x1                     ( 0,  5,  9)
+10   3    atomic write    relaxed  0000000000407149   0x1                     ( 0,  7,  0, 10)
+11   2    atomic read     relaxed  0000000000407149   0                   3   ( 0,  5, 11)
+12   3    fence           seq_cst  0000000000000007   0xdeadbeef              ( 0,  7,  0, 12)
+13   2    fence           acquire  0000000000000007   0xdeadbeef              ( 0,  5, 13)
+14   2    atomic write    relaxed  000000000040714C   0x1                     ( 0,  5, 14)
+15   2    fence           release  0000000000000007   0xdeadbeef              ( 0,  5, 15)
+16   2    atomic write    relaxed  0000000000407148   0                       ( 0,  5, 16)
+17   2    thread finish   seq_cst  00007F89EF5FED20   0xdeadbeef              ( 0,  5, 17)
+18   3    atomic read     relaxed  0000000000407148   0                   2   ( 0,  7,  0, 18)
+19   3    fence           acquire  0000000000000007   0xdeadbeef              ( 0,  7,  0, 19)
+20   3    atomic write    relaxed  000000000040714C   0                       ( 0,  7,  0, 20)
+21   1    pthread join    seq_cst  00007F89EF5FED20   0x2                     ( 0, 21, 17)
+22   3    fence           release  0000000000000007   0xdeadbeef              ( 0,  7,  0, 22)
+23   3    atomic write    relaxed  0000000000407149   0                       ( 0,  7,  0, 23)
+24   3    thread finish   seq_cst  00007F89EF8002E0   0xdeadbeef              ( 0,  7,  0, 24)
+25   1    pthread join    seq_cst  00007F89EF8002E0   0x3                     ( 0, 25, 17, 24)
+26   1    thread finish   seq_cst  00007F89EDDFB110   0xdeadbeef              ( 0, 26, 17, 24)
+HASH 1171090038
+------------------------------------------------------------------------------------
+
+Program output from execution 6:
+---- BEGIN PROGRAM OUTPUT ----
+---- END PROGRAM OUTPUT   ----
+
+Execution trace 6:
+------------------------------------------------------------------------------------
+#    t    Action type     MO       Location         Value               Rf  CV
+------------------------------------------------------------------------------------
+1    1    thread start    seq_cst  00007F89EDDFB110   0xdeadbeef              ( 0,  1)
+2    1    atomic write    seq_cst  0000000000407148   0                       ( 0,  2)
+3    1    atomic write    seq_cst  0000000000407149   0                       ( 0,  3)
+4    1    atomic write    seq_cst  000000000040714C   0                       ( 0,  4)
+5    1    pthread create  seq_cst  00007FFCF8A20218   0x7ffcf8a20120          ( 0,  5)
+6    2    thread start    seq_cst  00007F89EF5FED20   0xdeadbeef              ( 0,  5,  6)
+7    1    pthread create  seq_cst  00007FFCF8A20210   0x7ffcf8a20120          ( 0,  7)
+8    3    thread start    seq_cst  00007F89EF8002E0   0xdeadbeef              ( 0,  7,  0,  8)
+9    2    atomic write    relaxed  0000000000407148   0x1                     ( 0,  5,  9)
+10   3    atomic write    relaxed  0000000000407149   0x1                     ( 0,  7,  0, 10)
+11   2    atomic read     relaxed  0000000000407149   0x1                 10  ( 0,  5, 11)
+12   2    atomic read     relaxed  000000000040714C   0                   4   ( 0,  5, 12)
+13   2    thread yield    seq_cst  00007F89EF5FED20   0xdeadbeef              ( 0,  5, 13)
+14   3    fence           seq_cst  0000000000000007   0xdeadbeef              ( 0,  7,  0, 14)
+15   2    atomic read     relaxed  0000000000407149   0x1                 10  ( 0,  5, 15)
+16   2    atomic read     relaxed  000000000040714C   0                   4   ( 0,  5, 16)
+17   2    thread yield    seq_cst  00007F89EF5FED20   0xdeadbeef              ( 0,  5, 17)
+18   3    atomic read     relaxed  0000000000407148   0x1                 9   ( 0,  7,  0, 18)
+19   2    atomic read     relaxed  0000000000407149   0x1                 10  ( 0,  5, 19)
+20   3    atomic read     relaxed  000000000040714C   0                   4   ( 0,  7,  0, 20)
+21   3    atomic write    relaxed  0000000000407149   0                       ( 0,  7,  0, 21)
+22   2    atomic read     relaxed  000000000040714C   0                   4   ( 0,  5, 22)
+23   3    atomic read     relaxed  000000000040714C   0                   4   ( 0,  7,  0, 23)
+24   3    thread yield    seq_cst  00007F89EF8002E0   0xdeadbeef              ( 0,  7,  0, 24)
+25   3    atomic read     relaxed  000000000040714C   0                   4   ( 0,  7,  0, 25)
+26   2    thread yield    seq_cst  00007F89EF5FED20   0xdeadbeef              ( 0,  5, 26)
+27   2    atomic read     relaxed  0000000000407149   0                   21  ( 0,  5, 27)
+28   3    thread yield    seq_cst  00007F89EF8002E0   0xdeadbeef              ( 0,  7,  0, 28)
+29   2    fence           acquire  0000000000000007   0xdeadbeef              ( 0,  7, 29, 14)
+30   2    atomic write    relaxed  000000000040714C   0x1                     ( 0,  7, 30, 14)
+31   3    atomic read     relaxed  000000000040714C   0x1                 30  ( 0,  7,  0, 31)
+32   3    atomic write    relaxed  0000000000407149   0x1                     ( 0,  7,  0, 32)
+33   3    fence           seq_cst  0000000000000007   0xdeadbeef              ( 0,  7,  0, 33)
+34   3    atomic read     relaxed  0000000000407148   0x1                 9   ( 0,  7,  0, 34)
+35   2    fence           release  0000000000000007   0xdeadbeef              ( 0,  7, 35, 14)
+36   2    atomic write    relaxed  0000000000407148   0                       ( 0,  7, 36, 14)
+37   2    thread finish   seq_cst  00007F89EF5FED20   0xdeadbeef              ( 0,  7, 37, 14)
+38   1    pthread join    seq_cst  00007F89EF5FED20   0x2                     ( 0, 38, 37, 14)
+39   3    atomic read     relaxed  000000000040714C   0x1                 30  ( 0,  7,  0, 39)
+40   3    thread yield    seq_cst  00007F89EF8002E0   0xdeadbeef              ( 0,  7,  0, 40)
+41   3    atomic read     relaxed  0000000000407148   0                   36  ( 0,  7,  0, 41)
+42   3    fence           acquire  0000000000000007   0xdeadbeef              ( 0,  7, 35, 42)
+43   3    atomic write    relaxed  000000000040714C   0                       ( 0,  7, 35, 43)
+44   3    fence           release  0000000000000007   0xdeadbeef              ( 0,  7, 35, 44)
+45   3    atomic write    relaxed  0000000000407149   0                       ( 0,  7, 35, 45)
+46   3    thread finish   seq_cst  00007F89EF8002E0   0xdeadbeef              ( 0,  7, 35, 46)
+47   1    pthread join    seq_cst  00007F89EF8002E0   0x3                     ( 0, 47, 37, 46)
+48   1    thread finish   seq_cst  00007F89EDDFB110   0xdeadbeef              ( 0, 48, 37, 46)
+HASH 3799706065
+------------------------------------------------------------------------------------
+
+Program output from execution 7:
+---- BEGIN PROGRAM OUTPUT ----
+---- END PROGRAM OUTPUT   ----
+
+Execution trace 7:
+------------------------------------------------------------------------------------
+#    t    Action type     MO       Location         Value               Rf  CV
+------------------------------------------------------------------------------------
+1    1    thread start    seq_cst  00007F89EDDFB110   0xdeadbeef              ( 0,  1)
+2    1    atomic write    seq_cst  0000000000407148   0                       ( 0,  2)
+3    1    atomic write    seq_cst  0000000000407149   0                       ( 0,  3)
+4    1    atomic write    seq_cst  000000000040714C   0                       ( 0,  4)
+5    1    pthread create  seq_cst  00007FFCF8A20218   0x7ffcf8a20120          ( 0,  5)
+6    2    thread start    seq_cst  00007F89EF5FED20   0xdeadbeef              ( 0,  5,  6)
+7    1    pthread create  seq_cst  00007FFCF8A20210   0x7ffcf8a20120          ( 0,  7)
+8    3    thread start    seq_cst  00007F89EF8002E0   0xdeadbeef              ( 0,  7,  0,  8)
+9    2    atomic write    relaxed  0000000000407148   0x1                     ( 0,  5,  9)
+10   3    atomic write    relaxed  0000000000407149   0x1                     ( 0,  7,  0, 10)
+11   3    fence           seq_cst  0000000000000007   0xdeadbeef              ( 0,  7,  0, 11)
+12   3    atomic read     relaxed  0000000000407148   0x1                 9   ( 0,  7,  0, 12)
+13   2    atomic read     relaxed  0000000000407149   0x1                 10  ( 0,  5, 13)
+14   2    atomic read     relaxed  000000000040714C   0                   4   ( 0,  5, 14)
+15   2    thread yield    seq_cst  00007F89EF5FED20   0xdeadbeef              ( 0,  5, 15)
+16   2    atomic read     relaxed  0000000000407149   0x1                 10  ( 0,  5, 16)
+17   3    atomic read     relaxed  000000000040714C   0                   4   ( 0,  7,  0, 17)
+18   3    atomic write    relaxed  0000000000407149   0                       ( 0,  7,  0, 18)
+19   3    atomic read     relaxed  000000000040714C   0                   4   ( 0,  7,  0, 19)
+20   3    thread yield    seq_cst  00007F89EF8002E0   0xdeadbeef              ( 0,  7,  0, 20)
+21   3    atomic read     relaxed  000000000040714C   0                   4   ( 0,  7,  0, 21)
+22   2    atomic read     relaxed  000000000040714C   0                   4   ( 0,  5, 22)
+23   2    thread yield    seq_cst  00007F89EF5FED20   0xdeadbeef              ( 0,  5, 23)
+24   2    atomic read     relaxed  0000000000407149   0x1                 10  ( 0,  5, 24)
+25   3    thread yield    seq_cst  00007F89EF8002E0   0xdeadbeef              ( 0,  7,  0, 25)
+26   2    atomic read     relaxed  000000000040714C   0                   4   ( 0,  5, 26)
+27   2    thread yield    seq_cst  00007F89EF5FED20   0xdeadbeef              ( 0,  5, 27)
+28   3    atomic read     relaxed  000000000040714C   0                   4   ( 0,  7,  0, 28)
+29   2    atomic read     relaxed  0000000000407149   0x1                 10  ( 0,  5, 29)
+30   3    thread yield    seq_cst  00007F89EF8002E0   0xdeadbeef              ( 0,  7,  0, 30)
+31   2    atomic read     relaxed  000000000040714C   0                   4   ( 0,  5, 31)
+32   3    atomic read     relaxed  000000000040714C   0                   4   ( 0,  7,  0, 32)
+33   3    thread yield    seq_cst  00007F89EF8002E0   0xdeadbeef              ( 0,  7,  0, 33)
+34   3    atomic read     relaxed  000000000040714C   0                   4   ( 0,  7,  0, 34)
+35   3    thread yield    seq_cst  00007F89EF8002E0   0xdeadbeef              ( 0,  7,  0, 35)
+36   3    atomic read     relaxed  000000000040714C   0                   4   ( 0,  7,  0, 36)
+37   3    thread yield    seq_cst  00007F89EF8002E0   0xdeadbeef              ( 0,  7,  0, 37)
+38   3    atomic read     relaxed  000000000040714C   0                   4   ( 0,  7,  0, 38)
+39   2    thread yield    seq_cst  00007F89EF5FED20   0xdeadbeef              ( 0,  5, 39)
+40   3    thread yield    seq_cst  00007F89EF8002E0   0xdeadbeef              ( 0,  7,  0, 40)
+41   3    atomic read     relaxed  000000000040714C   0                   4   ( 0,  7,  0, 41)
+42   3    thread yield    seq_cst  00007F89EF8002E0   0xdeadbeef              ( 0,  7,  0, 42)
+43   3    atomic read     relaxed  000000000040714C   0                   4   ( 0,  7,  0, 43)
+44   3    thread yield    seq_cst  00007F89EF8002E0   0xdeadbeef              ( 0,  7,  0, 44)
+45   3    atomic read     relaxed  000000000040714C   0                   4   ( 0,  7,  0, 45)
+46   2    atomic read     relaxed  0000000000407149   0                   18  ( 0,  5, 46)
+47   3    thread yield    seq_cst  00007F89EF8002E0   0xdeadbeef              ( 0,  7,  0, 47)
+48   3    atomic read     relaxed  000000000040714C   0                   4   ( 0,  7,  0, 48)
+49   3    thread yield    seq_cst  00007F89EF8002E0   0xdeadbeef              ( 0,  7,  0, 49)
+50   3    atomic read     relaxed  000000000040714C   0                   4   ( 0,  7,  0, 50)
+51   3    thread yield    seq_cst  00007F89EF8002E0   0xdeadbeef              ( 0,  7,  0, 51)
+52   2    fence           acquire  0000000000000007   0xdeadbeef              ( 0,  7, 52, 11)
+53   2    atomic write    relaxed  000000000040714C   0x1                     ( 0,  7, 53, 11)
+54   3    atomic read     relaxed  000000000040714C   0                   4   ( 0,  7,  0, 54)
+55   2    fence           release  0000000000000007   0xdeadbeef              ( 0,  7, 55, 11)
+56   2    atomic write    relaxed  0000000000407148   0                       ( 0,  7, 56, 11)
+57   2    thread finish   seq_cst  00007F89EF5FED20   0xdeadbeef              ( 0,  7, 57, 11)
+58   1    pthread join    seq_cst  00007F89EF5FED20   0x2                     ( 0, 58, 57, 11)
+59   3    thread yield    seq_cst  00007F89EF8002E0   0xdeadbeef              ( 0,  7,  0, 59)
+60   3    atomic read     relaxed  000000000040714C   0x1                 53  ( 0,  7,  0, 60)
+61   3    atomic write    relaxed  0000000000407149   0x1                     ( 0,  7,  0, 61)
+62   3    fence           seq_cst  0000000000000007   0xdeadbeef              ( 0,  7,  0, 62)
+63   3    atomic read     relaxed  0000000000407148   0                   56  ( 0,  7,  0, 63)
+64   3    fence           acquire  0000000000000007   0xdeadbeef              ( 0,  7, 55, 64)
+65   3    atomic write    relaxed  000000000040714C   0                       ( 0,  7, 55, 65)
+66   3    fence           release  0000000000000007   0xdeadbeef              ( 0,  7, 55, 66)
+67   3    atomic write    relaxed  0000000000407149   0                       ( 0,  7, 55, 67)
+68   3    thread finish   seq_cst  00007F89EF8002E0   0xdeadbeef              ( 0,  7, 55, 68)
+69   1    pthread join    seq_cst  00007F89EF8002E0   0x3                     ( 0, 69, 57, 68)
+70   1    thread finish   seq_cst  00007F89EDDFB110   0xdeadbeef              ( 0, 70, 57, 68)
+HASH 836164978
+------------------------------------------------------------------------------------
+
+Program output from execution 8:
+---- BEGIN PROGRAM OUTPUT ----
+---- END PROGRAM OUTPUT   ----
+
+Execution trace 8:
+------------------------------------------------------------------------------------
+#    t    Action type     MO       Location         Value               Rf  CV
+------------------------------------------------------------------------------------
+1    1    thread start    seq_cst  00007F89EDDFB110   0xdeadbeef              ( 0,  1)
+2    1    atomic write    seq_cst  0000000000407148   0                       ( 0,  2)
+3    1    atomic write    seq_cst  0000000000407149   0                       ( 0,  3)
+4    1    atomic write    seq_cst  000000000040714C   0                       ( 0,  4)
+5    1    pthread create  seq_cst  00007FFCF8A20218   0x7ffcf8a20120          ( 0,  5)
+6    2    thread start    seq_cst  00007F89EF5FED20   0xdeadbeef              ( 0,  5,  6)
+7    1    pthread create  seq_cst  00007FFCF8A20210   0x7ffcf8a20120          ( 0,  7)
+8    3    thread start    seq_cst  00007F89EF8002E0   0xdeadbeef              ( 0,  7,  0,  8)
+9    2    atomic write    relaxed  0000000000407148   0x1                     ( 0,  5,  9)
+10   3    atomic write    relaxed  0000000000407149   0x1                     ( 0,  7,  0, 10)
+11   3    fence           seq_cst  0000000000000007   0xdeadbeef              ( 0,  7,  0, 11)
+12   2    atomic read     relaxed  0000000000407149   0                   3   ( 0,  5, 12)
+13   3    atomic read     relaxed  0000000000407148   0x1                 9   ( 0,  7,  0, 13)
+14   2    fence           acquire  0000000000000007   0xdeadbeef              ( 0,  5, 14)
+15   2    atomic write    relaxed  000000000040714C   0x1                     ( 0,  5, 15)
+16   3    atomic read     relaxed  000000000040714C   0x1                 15  ( 0,  7,  0, 16)
+17   2    fence           release  0000000000000007   0xdeadbeef              ( 0,  5, 17)
+18   2    atomic write    relaxed  0000000000407148   0                       ( 0,  5, 18)
+19   2    thread finish   seq_cst  00007F89EF5FED20   0xdeadbeef              ( 0,  5, 19)
+20   3    thread yield    seq_cst  00007F89EF8002E0   0xdeadbeef              ( 0,  7,  0, 20)
+21   3    atomic read     relaxed  0000000000407148   0                   18  ( 0,  7,  0, 21)
+22   3    fence           acquire  0000000000000007   0xdeadbeef              ( 0,  7, 17, 22)
+23   3    atomic write    relaxed  000000000040714C   0                       ( 0,  7, 17, 23)
+24   1    pthread join    seq_cst  00007F89EF5FED20   0x2                     ( 0, 24, 19)
+25   3    fence           release  0000000000000007   0xdeadbeef              ( 0,  7, 17, 25)
+26   3    atomic write    relaxed  0000000000407149   0                       ( 0,  7, 17, 26)
+27   3    thread finish   seq_cst  00007F89EF8002E0   0xdeadbeef              ( 0,  7, 17, 27)
+28   1    pthread join    seq_cst  00007F89EF8002E0   0x3                     ( 0, 28, 19, 27)
+29   1    thread finish   seq_cst  00007F89EDDFB110   0xdeadbeef              ( 0, 29, 19, 27)
+HASH 672057378
+------------------------------------------------------------------------------------
+
+Program output from execution 9:
+---- BEGIN PROGRAM OUTPUT ----
+---- END PROGRAM OUTPUT   ----
+
+Execution trace 9:
+------------------------------------------------------------------------------------
+#    t    Action type     MO       Location         Value               Rf  CV
+------------------------------------------------------------------------------------
+1    1    thread start    seq_cst  00007F89EDDFB110   0xdeadbeef              ( 0,  1)
+2    1    atomic write    seq_cst  0000000000407148   0                       ( 0,  2)
+3    1    atomic write    seq_cst  0000000000407149   0                       ( 0,  3)
+4    1    atomic write    seq_cst  000000000040714C   0                       ( 0,  4)
+5    1    pthread create  seq_cst  00007FFCF8A20218   0x7ffcf8a20120          ( 0,  5)
+6    2    thread start    seq_cst  00007F89EF5FED20   0xdeadbeef              ( 0,  5,  6)
+7    1    pthread create  seq_cst  00007FFCF8A20210   0x7ffcf8a20120          ( 0,  7)
+8    3    thread start    seq_cst  00007F89EF8002E0   0xdeadbeef              ( 0,  7,  0,  8)
+9    2    atomic write    relaxed  0000000000407148   0x1                     ( 0,  5,  9)
+10   3    atomic write    relaxed  0000000000407149   0x1                     ( 0,  7,  0, 10)
+11   3    fence           seq_cst  0000000000000007   0xdeadbeef              ( 0,  7,  0, 11)
+12   3    atomic read     relaxed  0000000000407148   0x1                 9   ( 0,  7,  0, 12)
+13   3    atomic read     relaxed  000000000040714C   0                   4   ( 0,  7,  0, 13)
+14   3    atomic write    relaxed  0000000000407149   0                       ( 0,  7,  0, 14)
+15   2    atomic read     relaxed  0000000000407149   0x1                 10  ( 0,  5, 15)
+16   2    atomic read     relaxed  000000000040714C   0                   4   ( 0,  5, 16)
+17   3    atomic read     relaxed  000000000040714C   0                   4   ( 0,  7,  0, 17)
+18   3    thread yield    seq_cst  00007F89EF8002E0   0xdeadbeef              ( 0,  7,  0, 18)
+19   3    atomic read     relaxed  000000000040714C   0                   4   ( 0,  7,  0, 19)
+20   3    thread yield    seq_cst  00007F89EF8002E0   0xdeadbeef              ( 0,  7,  0, 20)
+21   2    thread yield    seq_cst  00007F89EF5FED20   0xdeadbeef              ( 0,  5, 21)
+22   2    atomic read     relaxed  0000000000407149   0x1                 10  ( 0,  5, 22)
+23   2    atomic read     relaxed  000000000040714C   0                   4   ( 0,  5, 23)
+24   3    atomic read     relaxed  000000000040714C   0                   4   ( 0,  7,  0, 24)
+25   2    thread yield    seq_cst  00007F89EF5FED20   0xdeadbeef              ( 0,  5, 25)
+26   2    atomic read     relaxed  0000000000407149   0                   14  ( 0,  5, 26)
+27   3    thread yield    seq_cst  00007F89EF8002E0   0xdeadbeef              ( 0,  7,  0, 27)
+28   3    atomic read     relaxed  000000000040714C   0                   4   ( 0,  7,  0, 28)
+29   2    fence           acquire  0000000000000007   0xdeadbeef              ( 0,  7, 29, 11)
+30   2    atomic write    relaxed  000000000040714C   0x1                     ( 0,  7, 30, 11)
+31   2    fence           release  0000000000000007   0xdeadbeef              ( 0,  7, 31, 11)
+32   2    atomic write    relaxed  0000000000407148   0                       ( 0,  7, 32, 11)
+33   2    thread finish   seq_cst  00007F89EF5FED20   0xdeadbeef              ( 0,  7, 33, 11)
+34   1    pthread join    seq_cst  00007F89EF5FED20   0x2                     ( 0, 34, 33, 11)
+35   3    thread yield    seq_cst  00007F89EF8002E0   0xdeadbeef              ( 0,  7,  0, 35)
+36   3    atomic read     relaxed  000000000040714C   0x1                 30  ( 0,  7,  0, 36)
+37   3    atomic write    relaxed  0000000000407149   0x1                     ( 0,  7,  0, 37)
+38   3    fence           seq_cst  0000000000000007   0xdeadbeef              ( 0,  7,  0, 38)
+39   3    atomic read     relaxed  0000000000407148   0                   32  ( 0,  7,  0, 39)
+40   3    fence           acquire  0000000000000007   0xdeadbeef              ( 0,  7, 31, 40)
+41   3    atomic write    relaxed  000000000040714C   0                       ( 0,  7, 31, 41)
+42   3    fence           release  0000000000000007   0xdeadbeef              ( 0,  7, 31, 42)
+43   3    atomic write    relaxed  0000000000407149   0                       ( 0,  7, 31, 43)
+44   3    thread finish   seq_cst  00007F89EF8002E0   0xdeadbeef              ( 0,  7, 31, 44)
+45   1    pthread join    seq_cst  00007F89EF8002E0   0x3                     ( 0, 45, 33, 44)
+46   1    thread finish   seq_cst  00007F89EDDFB110   0xdeadbeef              ( 0, 46, 33, 44)
+HASH 2840463766
+------------------------------------------------------------------------------------
+
+Program output from execution 10:
+---- BEGIN PROGRAM OUTPUT ----
+---- END PROGRAM OUTPUT   ----
+
+Execution trace 10:
+------------------------------------------------------------------------------------
+#    t    Action type     MO       Location         Value               Rf  CV
+------------------------------------------------------------------------------------
+1    1    thread start    seq_cst  00007F89EDDFB110   0xdeadbeef              ( 0,  1)
+2    1    atomic write    seq_cst  0000000000407148   0                       ( 0,  2)
+3    1    atomic write    seq_cst  0000000000407149   0                       ( 0,  3)
+4    1    atomic write    seq_cst  000000000040714C   0                       ( 0,  4)
+5    1    pthread create  seq_cst  00007FFCF8A20218   0x7ffcf8a20120          ( 0,  5)
+6    2    thread start    seq_cst  00007F89EF5FED20   0xdeadbeef              ( 0,  5,  6)
+7    1    pthread create  seq_cst  00007FFCF8A20210   0x7ffcf8a20120          ( 0,  7)
+8    3    thread start    seq_cst  00007F89EF8002E0   0xdeadbeef              ( 0,  7,  0,  8)
+9    2    atomic write    relaxed  0000000000407148   0x1                     ( 0,  5,  9)
+10   3    atomic write    relaxed  0000000000407149   0x1                     ( 0,  7,  0, 10)
+11   3    fence           seq_cst  0000000000000007   0xdeadbeef              ( 0,  7,  0, 11)
+12   2    atomic read     relaxed  0000000000407149   0x1                 10  ( 0,  5, 12)
+13   2    atomic read     relaxed  000000000040714C   0                   4   ( 0,  5, 13)
+14   3    atomic read     relaxed  0000000000407148   0                   2   ( 0,  7,  0, 14)
+15   2    thread yield    seq_cst  00007F89EF5FED20   0xdeadbeef              ( 0,  5, 15)
+16   3    fence           acquire  0000000000000007   0xdeadbeef              ( 0,  7,  0, 16)
+17   3    atomic write    relaxed  000000000040714C   0                       ( 0,  7,  0, 17)
+18   2    atomic read     relaxed  0000000000407149   0x1                 10  ( 0,  5, 18)
+19   3    fence           release  0000000000000007   0xdeadbeef              ( 0,  7,  0, 19)
+20   3    atomic write    relaxed  0000000000407149   0                       ( 0,  7,  0, 20)
+21   3    thread finish   seq_cst  00007F89EF8002E0   0xdeadbeef              ( 0,  7,  0, 21)
+22   2    atomic read     relaxed  000000000040714C   0                   4   ( 0,  5, 22)
+23   2    thread yield    seq_cst  00007F89EF5FED20   0xdeadbeef              ( 0,  5, 23)
+24   2    atomic read     relaxed  0000000000407149   0x1                 10  ( 0,  5, 24)
+25   2    atomic read     relaxed  000000000040714C   0                   17  ( 0,  5, 25)
+26   2    thread yield    seq_cst  00007F89EF5FED20   0xdeadbeef              ( 0,  5, 26)
+27   2    atomic read     relaxed  0000000000407149   0x1                 10  ( 0,  5, 27)
+28   2    atomic read     relaxed  000000000040714C   0                   17  ( 0,  5, 28)
+29   2    thread yield    seq_cst  00007F89EF5FED20   0xdeadbeef              ( 0,  5, 29)
+30   2    atomic read     relaxed  0000000000407149   0x1                 10  ( 0,  5, 30)
+31   2    atomic read     relaxed  000000000040714C   0                   17  ( 0,  5, 31)
+32   2    thread yield    seq_cst  00007F89EF5FED20   0xdeadbeef              ( 0,  5, 32)
+33   2    atomic read     relaxed  0000000000407149   0                   20  ( 0,  5, 33)
+34   2    fence           acquire  0000000000000007   0xdeadbeef              ( 0,  7, 34, 19)
+35   2    atomic write    relaxed  000000000040714C   0x1                     ( 0,  7, 35, 19)
+36   2    fence           release  0000000000000007   0xdeadbeef              ( 0,  7, 36, 19)
+37   2    atomic write    relaxed  0000000000407148   0                       ( 0,  7, 37, 19)
+38   2    thread finish   seq_cst  00007F89EF5FED20   0xdeadbeef              ( 0,  7, 38, 19)
+39   1    pthread join    seq_cst  00007F89EF5FED20   0x2                     ( 0, 39, 38, 19)
+40   1    pthread join    seq_cst  00007F89EF8002E0   0x3                     ( 0, 40, 38, 21)
+41   1    thread finish   seq_cst  00007F89EDDFB110   0xdeadbeef              ( 0, 41, 38, 21)
+HASH 691478433
+------------------------------------------------------------------------------------
+
+******* Model-checking complete: *******
+Number of complete, bug-free executions: 10
+Number of buggy executions: 0
+Total executions: 10

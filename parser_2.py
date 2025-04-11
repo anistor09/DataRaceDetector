@@ -47,7 +47,8 @@ def parse_trace(file_name):
                             "atomic read", "atomic write",
                             "pthread create", "pthread join",
                             "thread start", "thread sleep",
-                            "nonatomic write", "thread finish", "notify all"
+                            "nonatomic write", "thread finish", "notify all",
+                            "atomic rmw",
                         }
                         if combined in known_two_word_actions:
                             action_type = combined
@@ -64,13 +65,25 @@ def parse_trace(file_name):
 
                     read_from: Optional[int] = None
                     next_word = next(word_iter)
-                    if next_word != "(":
+
+                    if action_type == "atomic rmw":
+                        next_word = next(word_iter)
+                        token = next_word.rstrip(",)")
+                        if token.isdigit():
+                            read_from = int(token) - 1
+                        else:
+                            read_from = None 
+
+                    elif next_word != "(":
                         # Remove trailing commas or parentheses from token.
                         token = next_word.rstrip(",)")
                         if token.isdigit():
                             read_from = int(token) - 1
                         else:
                             read_from = None  # If it isn't a valid number, ignore RF.
+                    
+                    if read_from == -1:
+                        read_from = 0
 
                     thread_action = ThreadAction(id, thread_id, action_type, memory_order, location, value, read_from)
                     id += 1

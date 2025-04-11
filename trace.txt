@@ -1,0 +1,367 @@
+C11Tester
+Copyright (c) 2013 and 2019 Regents of the University of California. All rights reserved.
+Distributed under the GPLv2
+Written by Weiyu Luo, Brian Norris, and Brian Demsky
+
+Race detected at location: 
+/lib/libmodel.so(+0x17006)[0x7fd8139af006]
+/lib/libmodel.so(_Z15raceCheckRead32iPKv+0x57)[0x7fd8139af917]
+./progNicu[0x401419]
+/lib/libmodel.so(_Z13helper_threadPv+0xae)[0x7fd8139a940e]
+/lib/x86_64-linux-gnu/libpthread.so.0(+0x8609)[0x7fd813785609]
+/lib/x86_64-linux-gnu/libc.so.6(clone+0x43)[0x7fd8138c5353]
+
+Data race detected @ address 000000000040408C:
+    Access 1: write in thread  2 @ clock   6
+    Access 2:  read in thread  3 @ clock   7
+
+Race detected at location: 
+/lib/libmodel.so(+0x1594f)[0x7fd8139ad94f]
+/lib/libmodel.so(_Z16raceCheckWrite32iPKv+0x57)[0x7fd8139afc17]
+./progNicu[0x401448]
+/lib/libmodel.so(_Z13helper_threadPv+0xae)[0x7fd8139a940e]
+/lib/x86_64-linux-gnu/libpthread.so.0(+0x8609)[0x7fd813785609]
+/lib/x86_64-linux-gnu/libc.so.6(clone+0x43)[0x7fd8138c5353]
+
+Data race detected @ address 0000000000404090:
+    Access 1:  read in thread  2 @ clock   6
+    Access 2: write in thread  3 @ clock   7
+
+Program output from execution 1:
+---- BEGIN PROGRAM OUTPUT ----
+Main thread: creating 2 threads
+r1=0 0
+r2=0 42
+Main thread is finished
+---- END PROGRAM OUTPUT   ----
+
+Execution trace 1:
+------------------------------------------------------------------------------------
+#    t    Action type     MO       Location         Value               Rf  CV
+------------------------------------------------------------------------------------
+1    1    thread start    seq_cst  00007FD7ED19D110   0xdeadbeef              ( 0,  1)
+2    1    thread create   seq_cst  00007FFE5AA1E888   0x7ffe5aa1e800          ( 0,  2)
+3    2    thread start    seq_cst  00007FD7EE91EA98   0xdeadbeef              ( 0,  2,  3)
+4    1    thread create   seq_cst  00007FFE5AA1E880   0x7ffe5aa1e800          ( 0,  4)
+5    3    thread start    seq_cst  00007FD7EEB20040   0xdeadbeef              ( 0,  4,  0,  5)
+6    2    thread sleep    seq_cst  0000000000000000   0xf4240                 ( 0,  2,  6)
+6    2    nonatomic write  relaxed  000000000040408C   0                       ( 0,  0,  6)
+7    3    thread sleep    seq_cst  0000000000000000   0xf4240                 ( 0,  4,  0,  7)
+7    3    nonatomic write  relaxed  0000000000404090   0x2a                    ( 0,  0,  0,  7)
+8    2    atomic read     acquire  000000000040408C   0                   6   ( 0,  2,  8)
+9    2    thread finish   seq_cst  00007FD7EE91EA98   0xdeadbeef              ( 0,  2,  9)
+10   1    thread join     seq_cst  00007FD7EE91EA98   0x2                     ( 0, 10,  9)
+11   3    atomic read     acquire  0000000000404090   0x2a                7   ( 0,  4,  0, 11)
+12   3    thread finish   seq_cst  00007FD7EEB20040   0xdeadbeef              ( 0,  4,  0, 12)
+13   1    thread join     seq_cst  00007FD7EEB20040   0x3                     ( 0, 13,  9, 12)
+14   1    thread finish   seq_cst  00007FD7ED19D110   0xdeadbeef              ( 0, 14,  9, 12)
+HASH 2882071134
+------------------------------------------------------------------------------------
+
+Race detected at location: 
+/lib/libmodel.so(+0x17006)[0x7fd8139af006]
+/lib/libmodel.so(_Z15raceCheckRead32iPKv+0x57)[0x7fd8139af917]
+./progNicu[0x401319]
+/lib/libmodel.so(_Z13helper_threadPv+0xae)[0x7fd8139a940e]
+/lib/x86_64-linux-gnu/libpthread.so.0(+0x8609)[0x7fd813785609]
+/lib/x86_64-linux-gnu/libc.so.6(clone+0x43)[0x7fd8138c5353]
+
+Data race detected @ address 0000000000404090:
+    Access 1: write in thread  3 @ clock   6
+    Access 2:  read in thread  2 @ clock   7
+
+Race detected at location: 
+/lib/libmodel.so(+0x1594f)[0x7fd8139ad94f]
+/lib/libmodel.so(_Z16raceCheckWrite32iPKv+0x57)[0x7fd8139afc17]
+./progNicu[0x40134e]
+/lib/libmodel.so(_Z13helper_threadPv+0xae)[0x7fd8139a940e]
+/lib/x86_64-linux-gnu/libpthread.so.0(+0x8609)[0x7fd813785609]
+/lib/x86_64-linux-gnu/libc.so.6(clone+0x43)[0x7fd8138c5353]
+
+Data race detected @ address 000000000040408C:
+    Access 1:  read in thread  3 @ clock   6
+    Access 2: write in thread  2 @ clock   7
+
+Program output from execution 2:
+---- BEGIN PROGRAM OUTPUT ----
+Main thread: creating 2 threads
+r2=30 42
+r1=42 42
+Main thread is finished
+---- END PROGRAM OUTPUT   ----
+
+Execution trace 2:
+------------------------------------------------------------------------------------
+#    t    Action type     MO       Location         Value               Rf  CV
+------------------------------------------------------------------------------------
+1    1    thread start    seq_cst  00007FD7ED19D110   0xdeadbeef              ( 0,  1)
+2    1    thread create   seq_cst  00007FFE5AA1E888   0x7ffe5aa1e800          ( 0,  2)
+3    2    thread start    seq_cst  00007FD7EE91EA98   0xdeadbeef              ( 0,  2,  3)
+4    1    thread create   seq_cst  00007FFE5AA1E880   0x7ffe5aa1e800          ( 0,  4)
+5    3    thread start    seq_cst  00007FD7EEB20040   0xdeadbeef              ( 0,  4,  0,  5)
+6    3    thread sleep    seq_cst  0000000000000000   0xf4240                 ( 0,  4,  0,  6)
+6    3    nonatomic write  relaxed  0000000000404090   0x2a                    ( 0,  0,  0,  6)
+7    2    thread sleep    seq_cst  0000000000000000   0xf4240                 ( 0,  2,  7)
+7    2    nonatomic write  relaxed  000000000040408C   0x2a0000002a            ( 0,  0,  7)
+8    3    atomic read     acquire  0000000000404090   0x2a                6   ( 0,  4,  0,  8)
+9    3    thread finish   seq_cst  00007FD7EEB20040   0xdeadbeef              ( 0,  4,  0,  9)
+10   2    atomic read     acquire  000000000040408C   0x2a0000002a        7   ( 0,  2, 10)
+11   2    thread finish   seq_cst  00007FD7EE91EA98   0xdeadbeef              ( 0,  2, 11)
+12   1    thread join     seq_cst  00007FD7EE91EA98   0x2                     ( 0, 12, 11)
+13   1    thread join     seq_cst  00007FD7EEB20040   0x3                     ( 0, 13, 11,  9)
+14   1    thread finish   seq_cst  00007FD7ED19D110   0xdeadbeef              ( 0, 14, 11,  9)
+HASH 3815501524
+------------------------------------------------------------------------------------
+
+Program output from execution 3:
+---- BEGIN PROGRAM OUTPUT ----
+Main thread: creating 2 threads
+r2=30 42
+r1=42 42
+Main thread is finished
+---- END PROGRAM OUTPUT   ----
+
+Execution trace 3:
+------------------------------------------------------------------------------------
+#    t    Action type     MO       Location         Value               Rf  CV
+------------------------------------------------------------------------------------
+1    1    thread start    seq_cst  00007FD7ED19D110   0xdeadbeef              ( 0,  1)
+2    1    thread create   seq_cst  00007FFE5AA1E888   0x7ffe5aa1e800          ( 0,  2)
+3    2    thread start    seq_cst  00007FD7EE91EA98   0xdeadbeef              ( 0,  2,  3)
+4    1    thread create   seq_cst  00007FFE5AA1E880   0x7ffe5aa1e800          ( 0,  4)
+5    3    thread start    seq_cst  00007FD7EEB20040   0xdeadbeef              ( 0,  4,  0,  5)
+6    3    thread sleep    seq_cst  0000000000000000   0xf4240                 ( 0,  4,  0,  6)
+6    3    nonatomic write  relaxed  0000000000404090   0x2a                    ( 0,  0,  0,  6)
+7    2    thread sleep    seq_cst  0000000000000000   0xf4240                 ( 0,  2,  7)
+7    2    nonatomic write  relaxed  000000000040408C   0x2a0000002a            ( 0,  0,  7)
+8    3    atomic read     acquire  0000000000404090   0x2a                6   ( 0,  4,  0,  8)
+9    3    thread finish   seq_cst  00007FD7EEB20040   0xdeadbeef              ( 0,  4,  0,  9)
+10   2    atomic read     acquire  000000000040408C   0x2a0000002a        7   ( 0,  2, 10)
+11   2    thread finish   seq_cst  00007FD7EE91EA98   0xdeadbeef              ( 0,  2, 11)
+12   1    thread join     seq_cst  00007FD7EE91EA98   0x2                     ( 0, 12, 11)
+13   1    thread join     seq_cst  00007FD7EEB20040   0x3                     ( 0, 13, 11,  9)
+14   1    thread finish   seq_cst  00007FD7ED19D110   0xdeadbeef              ( 0, 14, 11,  9)
+HASH 3815501524
+------------------------------------------------------------------------------------
+
+Program output from execution 4:
+---- BEGIN PROGRAM OUTPUT ----
+Main thread: creating 2 threads
+r1=0 0
+r2=0 42
+Main thread is finished
+---- END PROGRAM OUTPUT   ----
+
+Execution trace 4:
+------------------------------------------------------------------------------------
+#    t    Action type     MO       Location         Value               Rf  CV
+------------------------------------------------------------------------------------
+1    1    thread start    seq_cst  00007FD7ED19D110   0xdeadbeef              ( 0,  1)
+2    1    thread create   seq_cst  00007FFE5AA1E888   0x7ffe5aa1e800          ( 0,  2)
+3    2    thread start    seq_cst  00007FD7EE91EA98   0xdeadbeef              ( 0,  2,  3)
+4    1    thread create   seq_cst  00007FFE5AA1E880   0x7ffe5aa1e800          ( 0,  4)
+5    3    thread start    seq_cst  00007FD7EEB20040   0xdeadbeef              ( 0,  4,  0,  5)
+6    2    thread sleep    seq_cst  0000000000000000   0xf4240                 ( 0,  2,  6)
+6    2    nonatomic write  relaxed  000000000040408C   0                       ( 0,  0,  6)
+7    3    thread sleep    seq_cst  0000000000000000   0xf4240                 ( 0,  4,  0,  7)
+7    3    nonatomic write  relaxed  0000000000404090   0x2a                    ( 0,  0,  0,  7)
+8    2    atomic read     acquire  000000000040408C   0                   6   ( 0,  2,  8)
+9    2    thread finish   seq_cst  00007FD7EE91EA98   0xdeadbeef              ( 0,  2,  9)
+10   1    thread join     seq_cst  00007FD7EE91EA98   0x2                     ( 0, 10,  9)
+11   3    atomic read     acquire  0000000000404090   0x2a                7   ( 0,  4,  0, 11)
+12   3    thread finish   seq_cst  00007FD7EEB20040   0xdeadbeef              ( 0,  4,  0, 12)
+13   1    thread join     seq_cst  00007FD7EEB20040   0x3                     ( 0, 13,  9, 12)
+14   1    thread finish   seq_cst  00007FD7ED19D110   0xdeadbeef              ( 0, 14,  9, 12)
+HASH 2882071134
+------------------------------------------------------------------------------------
+
+Program output from execution 5:
+---- BEGIN PROGRAM OUTPUT ----
+Main thread: creating 2 threads
+r2=30 42
+r1=42 42
+Main thread is finished
+---- END PROGRAM OUTPUT   ----
+
+Execution trace 5:
+------------------------------------------------------------------------------------
+#    t    Action type     MO       Location         Value               Rf  CV
+------------------------------------------------------------------------------------
+1    1    thread start    seq_cst  00007FD7ED19D110   0xdeadbeef              ( 0,  1)
+2    1    thread create   seq_cst  00007FFE5AA1E888   0x7ffe5aa1e800          ( 0,  2)
+3    2    thread start    seq_cst  00007FD7EE91EA98   0xdeadbeef              ( 0,  2,  3)
+4    1    thread create   seq_cst  00007FFE5AA1E880   0x7ffe5aa1e800          ( 0,  4)
+5    3    thread start    seq_cst  00007FD7EEB20040   0xdeadbeef              ( 0,  4,  0,  5)
+6    2    thread sleep    seq_cst  0000000000000000   0xf4240                 ( 0,  2,  6)
+6    2    nonatomic write  relaxed  000000000040408C   0x2a0000002a            ( 0,  0,  6)
+7    3    thread sleep    seq_cst  0000000000000000   0xf4240                 ( 0,  4,  0,  7)
+7    3    nonatomic write  relaxed  0000000000404090   0x2a                    ( 0,  0,  0,  7)
+8    3    atomic read     acquire  0000000000404090   0x2a                7   ( 0,  4,  0,  8)
+9    3    thread finish   seq_cst  00007FD7EEB20040   0xdeadbeef              ( 0,  4,  0,  9)
+10   2    atomic read     acquire  000000000040408C   0x2a0000002a        6   ( 0,  2, 10)
+11   2    thread finish   seq_cst  00007FD7EE91EA98   0xdeadbeef              ( 0,  2, 11)
+12   1    thread join     seq_cst  00007FD7EE91EA98   0x2                     ( 0, 12, 11)
+13   1    thread join     seq_cst  00007FD7EEB20040   0x3                     ( 0, 13, 11,  9)
+14   1    thread finish   seq_cst  00007FD7ED19D110   0xdeadbeef              ( 0, 14, 11,  9)
+HASH 2857070228
+------------------------------------------------------------------------------------
+
+Program output from execution 6:
+---- BEGIN PROGRAM OUTPUT ----
+Main thread: creating 2 threads
+r2=30 42
+r1=42 42
+Main thread is finished
+---- END PROGRAM OUTPUT   ----
+
+Execution trace 6:
+------------------------------------------------------------------------------------
+#    t    Action type     MO       Location         Value               Rf  CV
+------------------------------------------------------------------------------------
+1    1    thread start    seq_cst  00007FD7ED19D110   0xdeadbeef              ( 0,  1)
+2    1    thread create   seq_cst  00007FFE5AA1E888   0x7ffe5aa1e800          ( 0,  2)
+3    2    thread start    seq_cst  00007FD7EE91EA98   0xdeadbeef              ( 0,  2,  3)
+4    1    thread create   seq_cst  00007FFE5AA1E880   0x7ffe5aa1e800          ( 0,  4)
+5    3    thread start    seq_cst  00007FD7EEB20040   0xdeadbeef              ( 0,  4,  0,  5)
+6    2    thread sleep    seq_cst  0000000000000000   0xf4240                 ( 0,  2,  6)
+6    2    nonatomic write  relaxed  000000000040408C   0x2a0000002a            ( 0,  0,  6)
+7    3    thread sleep    seq_cst  0000000000000000   0xf4240                 ( 0,  4,  0,  7)
+7    3    nonatomic write  relaxed  0000000000404090   0x2a                    ( 0,  0,  0,  7)
+8    3    atomic read     acquire  0000000000404090   0x2a                7   ( 0,  4,  0,  8)
+9    3    thread finish   seq_cst  00007FD7EEB20040   0xdeadbeef              ( 0,  4,  0,  9)
+10   2    atomic read     acquire  000000000040408C   0x2a0000002a        6   ( 0,  2, 10)
+11   2    thread finish   seq_cst  00007FD7EE91EA98   0xdeadbeef              ( 0,  2, 11)
+12   1    thread join     seq_cst  00007FD7EE91EA98   0x2                     ( 0, 12, 11)
+13   1    thread join     seq_cst  00007FD7EEB20040   0x3                     ( 0, 13, 11,  9)
+14   1    thread finish   seq_cst  00007FD7ED19D110   0xdeadbeef              ( 0, 14, 11,  9)
+HASH 2857070228
+------------------------------------------------------------------------------------
+
+Program output from execution 7:
+---- BEGIN PROGRAM OUTPUT ----
+Main thread: creating 2 threads
+r2=30 42
+r1=42 42
+Main thread is finished
+---- END PROGRAM OUTPUT   ----
+
+Execution trace 7:
+------------------------------------------------------------------------------------
+#    t    Action type     MO       Location         Value               Rf  CV
+------------------------------------------------------------------------------------
+1    1    thread start    seq_cst  00007FD7ED19D110   0xdeadbeef              ( 0,  1)
+2    1    thread create   seq_cst  00007FFE5AA1E888   0x7ffe5aa1e800          ( 0,  2)
+3    2    thread start    seq_cst  00007FD7EE91EA98   0xdeadbeef              ( 0,  2,  3)
+4    1    thread create   seq_cst  00007FFE5AA1E880   0x7ffe5aa1e800          ( 0,  4)
+5    3    thread start    seq_cst  00007FD7EEB20040   0xdeadbeef              ( 0,  4,  0,  5)
+6    3    thread sleep    seq_cst  0000000000000000   0xf4240                 ( 0,  4,  0,  6)
+6    3    nonatomic write  relaxed  0000000000404090   0x2a                    ( 0,  0,  0,  6)
+7    2    thread sleep    seq_cst  0000000000000000   0xf4240                 ( 0,  2,  7)
+7    2    nonatomic write  relaxed  000000000040408C   0x2a0000002a            ( 0,  0,  7)
+8    3    atomic read     acquire  0000000000404090   0x2a                6   ( 0,  4,  0,  8)
+9    3    thread finish   seq_cst  00007FD7EEB20040   0xdeadbeef              ( 0,  4,  0,  9)
+10   2    atomic read     acquire  000000000040408C   0x2a0000002a        7   ( 0,  2, 10)
+11   2    thread finish   seq_cst  00007FD7EE91EA98   0xdeadbeef              ( 0,  2, 11)
+12   1    thread join     seq_cst  00007FD7EE91EA98   0x2                     ( 0, 12, 11)
+13   1    thread join     seq_cst  00007FD7EEB20040   0x3                     ( 0, 13, 11,  9)
+14   1    thread finish   seq_cst  00007FD7ED19D110   0xdeadbeef              ( 0, 14, 11,  9)
+HASH 3815501524
+------------------------------------------------------------------------------------
+
+Program output from execution 8:
+---- BEGIN PROGRAM OUTPUT ----
+Main thread: creating 2 threads
+r2=30 42
+r1=42 42
+Main thread is finished
+---- END PROGRAM OUTPUT   ----
+
+Execution trace 8:
+------------------------------------------------------------------------------------
+#    t    Action type     MO       Location         Value               Rf  CV
+------------------------------------------------------------------------------------
+1    1    thread start    seq_cst  00007FD7ED19D110   0xdeadbeef              ( 0,  1)
+2    1    thread create   seq_cst  00007FFE5AA1E888   0x7ffe5aa1e800          ( 0,  2)
+3    2    thread start    seq_cst  00007FD7EE91EA98   0xdeadbeef              ( 0,  2,  3)
+4    1    thread create   seq_cst  00007FFE5AA1E880   0x7ffe5aa1e800          ( 0,  4)
+5    3    thread start    seq_cst  00007FD7EEB20040   0xdeadbeef              ( 0,  4,  0,  5)
+6    3    thread sleep    seq_cst  0000000000000000   0xf4240                 ( 0,  4,  0,  6)
+6    3    nonatomic write  relaxed  0000000000404090   0x2a                    ( 0,  0,  0,  6)
+7    2    thread sleep    seq_cst  0000000000000000   0xf4240                 ( 0,  2,  7)
+7    2    nonatomic write  relaxed  000000000040408C   0x2a0000002a            ( 0,  0,  7)
+8    3    atomic read     acquire  0000000000404090   0x2a                6   ( 0,  4,  0,  8)
+9    3    thread finish   seq_cst  00007FD7EEB20040   0xdeadbeef              ( 0,  4,  0,  9)
+10   2    atomic read     acquire  000000000040408C   0x2a0000002a        7   ( 0,  2, 10)
+11   2    thread finish   seq_cst  00007FD7EE91EA98   0xdeadbeef              ( 0,  2, 11)
+12   1    thread join     seq_cst  00007FD7EE91EA98   0x2                     ( 0, 12, 11)
+13   1    thread join     seq_cst  00007FD7EEB20040   0x3                     ( 0, 13, 11,  9)
+14   1    thread finish   seq_cst  00007FD7ED19D110   0xdeadbeef              ( 0, 14, 11,  9)
+HASH 3815501524
+------------------------------------------------------------------------------------
+
+Program output from execution 9:
+---- BEGIN PROGRAM OUTPUT ----
+Main thread: creating 2 threads
+r2=30 42
+r1=42 42
+Main thread is finished
+---- END PROGRAM OUTPUT   ----
+
+Execution trace 9:
+------------------------------------------------------------------------------------
+#    t    Action type     MO       Location         Value               Rf  CV
+------------------------------------------------------------------------------------
+1    1    thread start    seq_cst  00007FD7ED19D110   0xdeadbeef              ( 0,  1)
+2    1    thread create   seq_cst  00007FFE5AA1E888   0x7ffe5aa1e800          ( 0,  2)
+3    2    thread start    seq_cst  00007FD7EE91EA98   0xdeadbeef              ( 0,  2,  3)
+4    1    thread create   seq_cst  00007FFE5AA1E880   0x7ffe5aa1e800          ( 0,  4)
+5    3    thread start    seq_cst  00007FD7EEB20040   0xdeadbeef              ( 0,  4,  0,  5)
+6    2    thread sleep    seq_cst  0000000000000000   0xf4240                 ( 0,  2,  6)
+6    2    nonatomic write  relaxed  000000000040408C   0x2a0000002a            ( 0,  0,  6)
+7    3    thread sleep    seq_cst  0000000000000000   0xf4240                 ( 0,  4,  0,  7)
+7    3    nonatomic write  relaxed  0000000000404090   0x2a                    ( 0,  0,  0,  7)
+8    3    atomic read     acquire  0000000000404090   0x2a                7   ( 0,  4,  0,  8)
+9    3    thread finish   seq_cst  00007FD7EEB20040   0xdeadbeef              ( 0,  4,  0,  9)
+10   2    atomic read     acquire  000000000040408C   0x2a0000002a        6   ( 0,  2, 10)
+11   2    thread finish   seq_cst  00007FD7EE91EA98   0xdeadbeef              ( 0,  2, 11)
+12   1    thread join     seq_cst  00007FD7EE91EA98   0x2                     ( 0, 12, 11)
+13   1    thread join     seq_cst  00007FD7EEB20040   0x3                     ( 0, 13, 11,  9)
+14   1    thread finish   seq_cst  00007FD7ED19D110   0xdeadbeef              ( 0, 14, 11,  9)
+HASH 2857070228
+------------------------------------------------------------------------------------
+
+Program output from execution 10:
+---- BEGIN PROGRAM OUTPUT ----
+Main thread: creating 2 threads
+r2=30 42
+r1=42 42
+Main thread is finished
+---- END PROGRAM OUTPUT   ----
+
+Execution trace 10:
+------------------------------------------------------------------------------------
+#    t    Action type     MO       Location         Value               Rf  CV
+------------------------------------------------------------------------------------
+1    1    thread start    seq_cst  00007FD7ED19D110   0xdeadbeef              ( 0,  1)
+2    1    thread create   seq_cst  00007FFE5AA1E888   0x7ffe5aa1e800          ( 0,  2)
+3    2    thread start    seq_cst  00007FD7EE91EA98   0xdeadbeef              ( 0,  2,  3)
+4    1    thread create   seq_cst  00007FFE5AA1E880   0x7ffe5aa1e800          ( 0,  4)
+5    3    thread start    seq_cst  00007FD7EEB20040   0xdeadbeef              ( 0,  4,  0,  5)
+6    3    thread sleep    seq_cst  0000000000000000   0xf4240                 ( 0,  4,  0,  6)
+6    3    nonatomic write  relaxed  0000000000404090   0x2a                    ( 0,  0,  0,  6)
+7    2    thread sleep    seq_cst  0000000000000000   0xf4240                 ( 0,  2,  7)
+7    2    nonatomic write  relaxed  000000000040408C   0x2a0000002a            ( 0,  0,  7)
+8    3    atomic read     acquire  0000000000404090   0x2a                6   ( 0,  4,  0,  8)
+9    3    thread finish   seq_cst  00007FD7EEB20040   0xdeadbeef              ( 0,  4,  0,  9)
+10   2    atomic read     acquire  000000000040408C   0x2a0000002a        7   ( 0,  2, 10)
+11   2    thread finish   seq_cst  00007FD7EE91EA98   0xdeadbeef              ( 0,  2, 11)
+12   1    thread join     seq_cst  00007FD7EE91EA98   0x2                     ( 0, 12, 11)
+13   1    thread join     seq_cst  00007FD7EEB20040   0x3                     ( 0, 13, 11,  9)
+14   1    thread finish   seq_cst  00007FD7ED19D110   0xdeadbeef              ( 0, 14, 11,  9)
+HASH 3815501524
+------------------------------------------------------------------------------------
+
+******* Model-checking complete: *******
+Number of complete, bug-free executions: 10
+Number of buggy executions: 0
+Total executions: 10

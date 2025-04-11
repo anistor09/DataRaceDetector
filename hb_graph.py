@@ -1,32 +1,38 @@
 from collections import defaultdict
 from typing import List,Dict,Optional,Tuple
-from dataclasses import dataclass
+from collections import deque
 from trace_structure import ThreadAction, TraceStruct
+import time
+from typing import List, Set
+
+
 
 class HBGraph:
 
     def add_fences_sw_edges(self, trace):
         closest_fence_leftside = {}
-        prefix_fence = None
+        prefix_fence_for_thread = defaultdict(lambda: None)
 
         # for each atomic write find the closest release fence to the left
         for action_group in trace.actions:
             for action in action_group:
+                tid = action.thread_id
                 if action.action_type == "fence" and action.memory_order in ("acq_rel", "release", "seq_cst"):
-                    prefix_fence = action.id
+                    prefix_fence_for_thread[tid] = action.id
                 elif action.action_type == "atomic write":
-                    closest_fence_leftside[action.id] = prefix_fence
+                    closest_fence_leftside[action.id] = prefix_fence_for_thread[tid]
 
         closest_fence_rightside = {}
-        prefix_fence = None
+        prefix_fence_for_thread = defaultdict(lambda: None)
 
         # for each atomic read find the closest acquire fence to the right
         for action_group in reversed(trace.actions):
             for action in reversed(action_group):
+                tid = action.thread_id
                 if action.action_type == "fence" and action.memory_order in ("acq_rel", "acquire", "seq_cst"):
-                    prefix_fence = action.id
+                    prefix_fence_for_thread[tid] = action.id
                 elif action.action_type == "atomic read":
-                    closest_fence_rightside[action.id] = prefix_fence
+                    closest_fence_rightside[action.id] = prefix_fence_for_thread[tid]
 
         # for the relaxed case of memory order of read and write, since sw edges for release acquire are already there
         # goes through the reads, see if it has read froms, if it has it gets the closest release fence to the left of
@@ -154,6 +160,35 @@ class HBGraph:
 
         return reachable
 
+    def _compute_happens_before(self) -> List[set]:
+        n = len(self.edges)
+        happensBefore = [set() for _ in range(n)]
+        in_degree = [0] * n
+
+        # Compute in-degrees
+        for u in range(n):
+            for v in self.edges[u]:
+                in_degree[v] += 1
+
+        # Initialize queue with nodes that have in-degree 0
+        queue = deque([i for i in range(n) if in_degree[i] == 0])
+
+        while queue:
+            node = queue.popleft()
+
+            for neighbor in self.edges[node]:
+                # Add current node to happens-before of the neighbor
+                happensBefore[neighbor].add(node)
+                # Add everything that happened before current node
+                happensBefore[neighbor].update(happensBefore[node])
+
+                # Decrease in-degree and enqueue if it's 0
+                in_degree[neighbor] -= 1
+                if in_degree[neighbor] == 0:
+                    queue.append(neighbor)
+
+        return happensBefore
+
     def _get_action_by_id(self, action_id: int) -> ThreadAction:
         for group in self.trace.actions:
             for action in group:
@@ -161,7 +196,7 @@ class HBGraph:
                     return action
 
     def detect_data_races(self) -> List[Tuple[ThreadAction, ThreadAction]]:
-        reachable = self._compute_reachability()
+        dependency_sets = self._compute_dependency_sets()
         races = []
 
         for location, action_ids in self.location_to_actions.items():
@@ -175,6 +210,43 @@ class HBGraph:
                         continue
                     if "nonatomic write" not in a1.action_type and "nonatomic write" not in a2.action_type:
                         continue
-                    if id2 not in reachable[id1] and id1 not in reachable[id2]:
+                    if id2 not in dependency_sets[id1] and id1 not in dependency_sets[id2]:
                         races.append((a1, a2))
         return races
+
+    def _compute_dependency_sets(self) -> List[set]:
+        use_happens_before = True
+        if use_happens_before:
+            return self._compute_happens_before()
+        else:
+            return self._compute_reachability()
+
+    def comparison_hb_reachable(self) -> bool:
+        start = time.time()
+        reachable = self._compute_reachability()
+        end = time.time()
+        time_non_eff = end - start
+        print(f"Non-efficient version took {time_non_eff:.6f} seconds")
+
+        start = time.time()
+        happens_before_eff = self._compute_happens_before()
+        end = time.time()
+        time_eff = end - start
+        print(f"Efficient version took {time_eff:.6f} seconds")
+        n = len(self.edges)
+
+        # Let s see if the HB and HB from reachable are identic
+        happens_before_from_reachable: List[Set[int]] = [set() for _ in range(n)]
+        for j in range(n):
+            for i in reachable[j]:
+                happens_before_from_reachable[i].add(j)
+
+        if happens_before_eff == happens_before_from_reachable:
+            return True
+        else:
+            print("HB from reachable:")
+            print(happens_before_from_reachable)
+            print("HB normal computation:")
+            print(happens_before_eff)
+            return False
+
