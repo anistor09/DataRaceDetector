@@ -7,26 +7,28 @@ class HBGraph:
 
     def add_fences_sw_edges(self, trace):
         closest_fence_leftside = {}
-        prefix_fence = None
+        prefix_fence_for_thread = defaultdict(lambda: None)
 
         # for each atomic write find the closest release fence to the left
         for action_group in trace.actions:
             for action in action_group:
+                tid = action.thread_id
                 if action.action_type == "fence" and action.memory_order in ("acq_rel", "release", "seq_cst"):
-                    prefix_fence = action.id
+                    prefix_fence_for_thread[tid] = action.id
                 elif action.action_type == "atomic write":
-                    closest_fence_leftside[action.id] = prefix_fence
+                    closest_fence_leftside[action.id] = prefix_fence_for_thread[tid]
 
         closest_fence_rightside = {}
-        prefix_fence = None
+        prefix_fence_for_thread = defaultdict(lambda: None)
 
         # for each atomic read find the closest acquire fence to the right
         for action_group in reversed(trace.actions):
             for action in reversed(action_group):
+                tid = action.thread_id
                 if action.action_type == "fence" and action.memory_order in ("acq_rel", "acquire", "seq_cst"):
-                    prefix_fence = action.id
+                    prefix_fence_for_thread[tid] = action.id
                 elif action.action_type == "atomic read":
-                    closest_fence_rightside[action.id] = prefix_fence
+                    closest_fence_rightside[action.id] = prefix_fence_for_thread[tid]
 
         # for the relaxed case of memory order of read and write, since sw edges for release acquire are already there
         # goes through the reads, see if it has read froms, if it has it gets the closest release fence to the left of
