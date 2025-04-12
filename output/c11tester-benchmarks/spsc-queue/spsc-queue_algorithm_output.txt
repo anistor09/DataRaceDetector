@@ -1,0 +1,40 @@
+--Output for execution trace 1
+No data races found in this program
+
+
+
+--Output for execution trace 2
+No data races found in this program
+
+
+
+--Output for execution trace 3
+No data races found in this program
+
+
+
+--Output for execution trace 4
+No data races found in this program
+
+
+
+--Output for execution trace 6
+No data races found in this program
+
+
+
+--Output for execution trace 7
+No data races found in this program
+
+
+
+--Output for execution trace 8
+No data races found in this program
+
+
+
+--Output for execution trace 9
+No data races found in this program
+
+
+

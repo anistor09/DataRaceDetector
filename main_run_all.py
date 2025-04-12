@@ -11,19 +11,17 @@ def process_trace_file(trace_path):
         execution_trace_list = parse_trace(trace_path)
 
         for trace in execution_trace_list:
+            output.write(f"--Output for execution trace {trace.trace_number}\n")
             hb_graph = HBGraph(trace)
-            # Testing purposes
-            # if hb_graph.comparison_hb_reachable():
-            #     output.write("HB and Reachable are the same ✅\n")
-            # else:
-            #     output.write("HB and Reachable are not the same ❌\n")
             data_races = hb_graph.detect_data_races()
             if not data_races:
-                output.write("No data races found in this program")
+                output.write("No data races found in this program\n\n")
             for el1, el2 in data_races:
                 output.write("Data race detected between\n")
                 output.write(f"{el1}\n")
                 output.write(f"{el2}\n\n")
+            output.write("\n\n")
+
     except Exception as e:
         output.write(f"Error processing {trace_path}: {e}\n")
 
