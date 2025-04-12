@@ -1,40 +1,40 @@
 import sys
 
-from hb_builder import build_hb_edges, build_transitive_closure
-from na_races_detector import detect_na_races
-from trace_parser import parse_trace
+# from hb_builder import build_hb_graph
+# from na_races_detector import detect_na_races
+# from hb_builder import build_hb_graph
+# from na_races_detector import detect_na_races
+from hb_graph import HBGraph
+# from trace_parser import parse_trace
+from parser_2 import parse_trace
+import sys
+sys.setrecursionlimit(1000000)
 
 
 def main():
-    print("Enter the execution trace (Ctrl+D to finish input):")
-
-    # Read all lines from input at once
-    raw_lines = []
-    for line in sys.stdin:
-        raw_lines.append(line.strip())
-
+    trace_name = "benchmark/DavidBenchmarks/signal_wait.txt"
+    # trace_name = "benchmark/NicuTest/trace_outputNicu.txt"
     # 1) Parse input
-    events = parse_trace(raw_lines)
-
-    # 2) Build happens-before dependencies
-    hb_edges = build_hb_edges(events)
-
-    # 3) Compute transitive closure of HB relation
-    hb_tc = build_transitive_closure(hb_edges)
-
-    # 4) Detect NA-races
-    races = detect_na_races(events, hb_tc)
-
-    # 5) Print results
-    if races:
-        print("\nNon-atomic Data Races Found:")
-        for (e1, e2) in races:
-            print(f"  E{e1.eid} (Thread {e1.thread_id}, {e1.op_type}) "
-                  f" and E{e2.eid} (Thread {e2.thread_id}, {e2.op_type}) "
-                  f" on location {e1.location}")
-    else:
-        print("\nNo non-atomic data races found.")
-
+    execution_trace_list = parse_trace(trace_name)
+    for trace in execution_trace_list:
+        hb_graph = HBGraph(trace)
+        # print(hb_graph)
+        # Testing purposes
+        # if hb_graph.comparison_hb_reachable():
+        #     print("HB and Reachable are the same ✅")
+        # else:
+        #     print("HB and Reachable are not the same ❌")
+        data_races = hb_graph.detect_data_races()
+        if not data_races:
+            print("No data races found in this program")
+        for data_race in data_races:
+            el1 = data_race[0]
+            el2 = data_race[1]
+            print("Data race detected between")
+            print(el1)
+            print(el2)
+            print()
+        return
 
 if __name__ == "__main__":
     main()

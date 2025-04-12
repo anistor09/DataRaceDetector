@@ -1,0 +1,699 @@
+C11Tester
+Copyright (c) 2013 and 2019 Regents of the University of California. All rights reserved.
+Distributed under the GPLv2
+Written by Weiyu Luo, Brian Norris, and Brian Demsky
+
+Race detected at location: 
+/lib/libmodel.so(+0x17006)[0x7f9a6aa98006]
+/lib/libmodel.so(_Z15raceCheckRead32iPKv+0x57)[0x7f9a6aa98917]
+./c11tester-benchmarks/cdschecker_modified_benchmarks/mpmc-queue/mpmc-queue[0x4014ff]
+./c11tester-benchmarks/cdschecker_modified_benchmarks/mpmc-queue/mpmc-queue[0x401636]
+./c11tester-benchmarks/cdschecker_modified_benchmarks/mpmc-queue/mpmc-queue[0x404aa8]
+./c11tester-benchmarks/cdschecker_modified_benchmarks/mpmc-queue/mpmc-queue[0x4049d2]
+./c11tester-benchmarks/cdschecker_modified_benchmarks/mpmc-queue/mpmc-queue[0x404992]
+./c11tester-benchmarks/cdschecker_modified_benchmarks/mpmc-queue/mpmc-queue[0x404945]
+./c11tester-benchmarks/cdschecker_modified_benchmarks/mpmc-queue/mpmc-queue[0x4046c9]
+/lib/x86_64-linux-gnu/libstdc++.so.6(+0xd6df4)[0x7f9a6a975df4]
+/lib/libmodel.so(_Z14thread_startupv+0x2f)[0x7f9a6aa9234f]
+/lib/libmodel.so(_Z13helper_threadPv+0xae)[0x7f9a6aa9240e]
+/lib/x86_64-linux-gnu/libpthread.so.0(+0x8609)[0x7f9a6a71a609]
+/lib/x86_64-linux-gnu/libc.so.6(clone+0x43)[0x7f9a6a63f353]
+
+Data race detected @ address 00007FFEF7FAF298:
+    Access 1: write in thread  3 @ clock  22
+    Access 2:  read in thread  2 @ clock  38
+
+Program output from execution 1:
+---- BEGIN PROGRAM OUTPUT ----
+0 reader(s), 0 writer(s)
+Adding initial element
+Start threads
+Read: 17
+Read: 1
+Read: 1
+Threads complete
+---- END PROGRAM OUTPUT   ----
+
+Execution trace 1:
+------------------------------------------------------------------------------------
+#    t    Action type     MO       Location         Value               Rf  CV
+------------------------------------------------------------------------------------
+1    1    thread start    seq_cst  00007F9A44286110   0xdeadbeef              ( 0,  1)
+2    1    atomic write    seq_cst  00007FFEF7FAF2A0   0                       ( 0,  2)
+3    1    atomic write    seq_cst  00007FFEF7FAF2A4   0                       ( 0,  3)
+4    1    atomic write    seq_cst  00007FFEF7FAF2A8   0                       ( 0,  4)
+5    1    atomic read     acquire  00007FFEF7FAF2A0   0                   2   ( 0,  5)
+6    1    atomic rmw      acq_rel  00007FFEF7FAF2A0   0                 (1)  2   ( 0,  6)
+7    1    atomic read     acquire  00007FFEF7FAF2A4   0                   3   ( 0,  7)
+8    1    atomic rmw      relaxed  00007FFEF7FAF2A8   0                 (1)  4   ( 0,  8)
+9    1    pthread create  seq_cst  00007FFEF7FAF1D8   0x7ffef7faef80          ( 0,  9)
+10   2    thread start    seq_cst  00007F9A45A8A550   0xdeadbeef              ( 0,  9, 10)
+11   1    pthread create  seq_cst  00007FFEF7FAF1D8   0x7ffef7faef80          ( 0, 11)
+12   3    thread start    seq_cst  00007F9A45C8B5A8   0xdeadbeef              ( 0, 11,  0, 12)
+13   2    atomic read     acquire  00007FFEF7FAF2A0   0x1                 6   ( 0,  9, 13)
+14   3    atomic read     acquire  00007FFEF7FAF2A0   0x1                 6   ( 0, 11,  0, 14)
+15   2    atomic rmw      acq_rel  00007FFEF7FAF2A0   0x1               (2)  6   ( 0,  9, 15)
+16   2    atomic read     acquire  00007FFEF7FAF2A4   0                   3   ( 0,  9, 16)
+17   3    atomic read     acq_rel  00007FFEF7FAF2A0   0x2                 15  ( 0, 11, 15, 17)
+18   2    atomic rmw      relaxed  00007FFEF7FAF2A8   0x1               (2)  8   ( 0,  9, 18)
+19   2    atomic read     acquire  00007FFEF7FAF2A0   0x2                 15  ( 0,  9, 19)
+20   3    thread yield    seq_cst  00007F9A45C8B5A8   0xdeadbeef              ( 0, 11, 15, 20)
+21   3    atomic rmw      acq_rel  00007FFEF7FAF2A0   0x2               (3)  15  ( 0, 11, 15, 21)
+22   3    atomic read     acquire  00007FFEF7FAF2A4   0                   3   ( 0, 11, 15, 22)
+23   2    atomic read     acquire  00007FFEF7FAF2A0   0x3                 21  ( 0, 11, 23, 21)
+24   3    atomic rmw      relaxed  00007FFEF7FAF2A8   0x2               (3)  18  ( 0, 11, 15, 24)
+25   2    thread yield    seq_cst  00007F9A45A8A550   0xdeadbeef              ( 0, 11, 25, 21)
+26   2    atomic rmw      acquire  00007FFEF7FAF2A0   0x3               (10003)  21  ( 0, 11, 26, 21)
+27   2    atomic read     acquire  00007FFEF7FAF2A8   0x3                 24  ( 0, 11, 27, 21)
+28   3    atomic read     acquire  00007FFEF7FAF2A0   0x3                 21  ( 0, 11, 15, 28)
+29   2    atomic rmw      release  00007FFEF7FAF2A4   0                 (1)  3   ( 0, 11, 29, 21)
+30   2    atomic read     acquire  00007FFEF7FAF2A0   0x10003             26  ( 0, 11, 30, 21)
+31   2    atomic rmw      acquire  00007FFEF7FAF2A0   0x10003           (20003)  26  ( 0, 11, 31, 21)
+32   3    atomic read     acquire  00007FFEF7FAF2A0   0x20003             31  ( 0, 11, 15, 32)
+33   2    atomic read     acquire  00007FFEF7FAF2A8   0x3                 24  ( 0, 11, 33, 21)
+34   3    thread yield    seq_cst  00007F9A45C8B5A8   0xdeadbeef              ( 0, 11, 15, 34)
+35   2    atomic rmw      release  00007FFEF7FAF2A4   0x1               (2)  29  ( 0, 11, 35, 21)
+36   2    atomic read     acquire  00007FFEF7FAF2A0   0x20003             31  ( 0, 11, 36, 21)
+37   2    atomic rmw      acquire  00007FFEF7FAF2A0   0x20003           (30003)  31  ( 0, 11, 37, 21)
+38   2    atomic read     acquire  00007FFEF7FAF2A8   0x3                 24  ( 0, 11, 38, 21)
+39   3    atomic read     acquire  00007FFEF7FAF2A0   0x30003             37  ( 0, 11, 15, 39)
+40   3    thread yield    seq_cst  00007F9A45C8B5A8   0xdeadbeef              ( 0, 11, 15, 40)
+41   3    thread finish   seq_cst  00007F9A45C8B5A8   0xdeadbeef              ( 0, 11, 15, 41)
+42   2    atomic rmw      release  00007FFEF7FAF2A4   0x2               (3)  35  ( 0, 11, 42, 21)
+43   2    atomic read     acquire  00007FFEF7FAF2A0   0x30003             37  ( 0, 11, 43, 21)
+44   2    thread finish   seq_cst  00007F9A45A8A550   0xdeadbeef              ( 0, 11, 44, 21)
+45   1    pthread join    seq_cst  00007F9A45A8A550   0x2                     ( 0, 45, 44, 21)
+46   1    pthread join    seq_cst  00007F9A45C8B5A8   0x3                     ( 0, 46, 44, 41)
+47   1    thread finish   seq_cst  00007F9A44286110   0xdeadbeef              ( 0, 47, 44, 41)
+HASH 3588340525
+------------------------------------------------------------------------------------
+
+Program output from execution 2:
+---- BEGIN PROGRAM OUTPUT ----
+0 reader(s), 0 writer(s)
+Adding initial element
+Start threads
+Read: 17
+Read: 1
+Read: 1
+Threads complete
+---- END PROGRAM OUTPUT   ----
+
+Execution trace 2:
+------------------------------------------------------------------------------------
+#    t    Action type     MO       Location         Value               Rf  CV
+------------------------------------------------------------------------------------
+1    1    thread start    seq_cst  00007F9A44286110   0xdeadbeef              ( 0,  1)
+2    1    atomic write    seq_cst  00007FFEF7FAF2A0   0                       ( 0,  2)
+3    1    atomic write    seq_cst  00007FFEF7FAF2A4   0                       ( 0,  3)
+4    1    atomic write    seq_cst  00007FFEF7FAF2A8   0                       ( 0,  4)
+5    1    atomic read     acquire  00007FFEF7FAF2A0   0                   2   ( 0,  5)
+6    1    atomic rmw      acq_rel  00007FFEF7FAF2A0   0                 (1)  2   ( 0,  6)
+7    1    atomic read     acquire  00007FFEF7FAF2A4   0                   3   ( 0,  7)
+8    1    atomic rmw      relaxed  00007FFEF7FAF2A8   0                 (1)  4   ( 0,  8)
+9    1    pthread create  seq_cst  00007FFEF7FAF1D8   0x7ffef7faef80          ( 0,  9)
+10   2    thread start    seq_cst  00007F9A45A8A550   0xdeadbeef              ( 0,  9, 10)
+11   1    pthread create  seq_cst  00007FFEF7FAF1D8   0x7ffef7faef80          ( 0, 11)
+12   3    thread start    seq_cst  00007F9A45C8B5A8   0xdeadbeef              ( 0, 11,  0, 12)
+13   2    atomic read     acquire  00007FFEF7FAF2A0   0x1                 6   ( 0,  9, 13)
+14   2    atomic rmw      acq_rel  00007FFEF7FAF2A0   0x1               (2)  6   ( 0,  9, 14)
+15   3    atomic read     acquire  00007FFEF7FAF2A0   0x2                 14  ( 0, 11, 14, 15)
+16   2    atomic read     acquire  00007FFEF7FAF2A4   0                   3   ( 0,  9, 16)
+17   3    atomic rmw      acq_rel  00007FFEF7FAF2A0   0x2               (3)  14  ( 0, 11, 14, 17)
+18   2    atomic rmw      relaxed  00007FFEF7FAF2A8   0x1               (2)  8   ( 0,  9, 18)
+19   2    atomic read     acquire  00007FFEF7FAF2A0   0x2                 14  ( 0,  9, 19)
+20   3    atomic read     acquire  00007FFEF7FAF2A4   0                   3   ( 0, 11, 14, 20)
+21   2    atomic read     acquire  00007FFEF7FAF2A0   0x3                 17  ( 0, 11, 21, 17)
+22   2    thread yield    seq_cst  00007F9A45A8A550   0xdeadbeef              ( 0, 11, 22, 17)
+23   3    atomic rmw      relaxed  00007FFEF7FAF2A8   0x2               (3)  18  ( 0, 11, 14, 23)
+24   2    atomic rmw      acquire  00007FFEF7FAF2A0   0x3               (10003)  17  ( 0, 11, 24, 17)
+25   2    atomic read     acquire  00007FFEF7FAF2A8   0x3                 23  ( 0, 11, 25, 17)
+26   3    atomic read     acquire  00007FFEF7FAF2A0   0x3                 17  ( 0, 11, 14, 26)
+27   2    atomic rmw      release  00007FFEF7FAF2A4   0                 (1)  3   ( 0, 11, 27, 17)
+28   3    atomic read     acquire  00007FFEF7FAF2A0   0x10003             24  ( 0, 11, 14, 28)
+29   3    thread yield    seq_cst  00007F9A45C8B5A8   0xdeadbeef              ( 0, 11, 14, 29)
+30   2    atomic read     acquire  00007FFEF7FAF2A0   0x10003             24  ( 0, 11, 30, 17)
+31   3    atomic rmw      acquire  00007FFEF7FAF2A0   0x10003           (20003)  24  ( 0, 11, 14, 31)
+32   2    atomic read     acquire  00007FFEF7FAF2A0   0x20003             31  ( 0, 11, 32, 17)
+33   3    atomic read     acquire  00007FFEF7FAF2A8   0x3                 23  ( 0, 11, 14, 33)
+34   3    atomic rmw      release  00007FFEF7FAF2A4   0x1               (2)  27  ( 0, 11, 14, 34)
+35   3    atomic read     acquire  00007FFEF7FAF2A0   0x20003             31  ( 0, 11, 14, 35)
+36   3    atomic rmw      acquire  00007FFEF7FAF2A0   0x20003           (30003)  31  ( 0, 11, 14, 36)
+37   2    thread yield    seq_cst  00007F9A45A8A550   0xdeadbeef              ( 0, 11, 37, 17)
+38   3    atomic read     acquire  00007FFEF7FAF2A8   0x3                 23  ( 0, 11, 14, 38)
+39   2    atomic read     acquire  00007FFEF7FAF2A0   0x30003             36  ( 0, 11, 39, 17)
+40   2    thread yield    seq_cst  00007F9A45A8A550   0xdeadbeef              ( 0, 11, 40, 17)
+41   2    thread finish   seq_cst  00007F9A45A8A550   0xdeadbeef              ( 0, 11, 41, 17)
+42   3    atomic rmw      release  00007FFEF7FAF2A4   0x2               (3)  34  ( 0, 11, 14, 42)
+43   1    pthread join    seq_cst  00007F9A45A8A550   0x2                     ( 0, 43, 41, 17)
+44   3    atomic read     acquire  00007FFEF7FAF2A0   0x30003             36  ( 0, 11, 14, 44)
+45   3    thread finish   seq_cst  00007F9A45C8B5A8   0xdeadbeef              ( 0, 11, 14, 45)
+46   1    pthread join    seq_cst  00007F9A45C8B5A8   0x3                     ( 0, 46, 41, 45)
+47   1    thread finish   seq_cst  00007F9A44286110   0xdeadbeef              ( 0, 47, 41, 45)
+HASH 1702673132
+------------------------------------------------------------------------------------
+
+Program output from execution 3:
+---- BEGIN PROGRAM OUTPUT ----
+0 reader(s), 0 writer(s)
+Adding initial element
+Start threads
+Read: 17
+Read: 1
+Read: 1
+Threads complete
+---- END PROGRAM OUTPUT   ----
+
+Execution trace 3:
+------------------------------------------------------------------------------------
+#    t    Action type     MO       Location         Value               Rf  CV
+------------------------------------------------------------------------------------
+1    1    thread start    seq_cst  00007F9A44286110   0xdeadbeef              ( 0,  1)
+2    1    atomic write    seq_cst  00007FFEF7FAF2A0   0                       ( 0,  2)
+3    1    atomic write    seq_cst  00007FFEF7FAF2A4   0                       ( 0,  3)
+4    1    atomic write    seq_cst  00007FFEF7FAF2A8   0                       ( 0,  4)
+5    1    atomic read     acquire  00007FFEF7FAF2A0   0                   2   ( 0,  5)
+6    1    atomic rmw      acq_rel  00007FFEF7FAF2A0   0                 (1)  2   ( 0,  6)
+7    1    atomic read     acquire  00007FFEF7FAF2A4   0                   3   ( 0,  7)
+8    1    atomic rmw      relaxed  00007FFEF7FAF2A8   0                 (1)  4   ( 0,  8)
+9    1    pthread create  seq_cst  00007FFEF7FAF1D8   0x7ffef7faef80          ( 0,  9)
+10   2    thread start    seq_cst  00007F9A45A8A550   0xdeadbeef              ( 0,  9, 10)
+11   1    pthread create  seq_cst  00007FFEF7FAF1D8   0x7ffef7faef80          ( 0, 11)
+12   3    thread start    seq_cst  00007F9A45C8B5A8   0xdeadbeef              ( 0, 11,  0, 12)
+13   2    atomic read     acquire  00007FFEF7FAF2A0   0x1                 6   ( 0,  9, 13)
+14   2    atomic rmw      acq_rel  00007FFEF7FAF2A0   0x1               (2)  6   ( 0,  9, 14)
+15   3    atomic read     acquire  00007FFEF7FAF2A0   0x2                 14  ( 0, 11, 14, 15)
+16   2    atomic read     acquire  00007FFEF7FAF2A4   0                   3   ( 0,  9, 16)
+17   2    atomic rmw      relaxed  00007FFEF7FAF2A8   0x1               (2)  8   ( 0,  9, 17)
+18   2    atomic read     acquire  00007FFEF7FAF2A0   0x2                 14  ( 0,  9, 18)
+19   3    atomic rmw      acq_rel  00007FFEF7FAF2A0   0x2               (3)  14  ( 0, 11, 14, 19)
+20   2    atomic read     acquire  00007FFEF7FAF2A0   0x3                 19  ( 0, 11, 20, 19)
+21   2    thread yield    seq_cst  00007F9A45A8A550   0xdeadbeef              ( 0, 11, 21, 19)
+22   2    atomic rmw      acquire  00007FFEF7FAF2A0   0x3               (10003)  19  ( 0, 11, 22, 19)
+23   3    atomic read     acquire  00007FFEF7FAF2A4   0                   3   ( 0, 11, 14, 23)
+24   3    atomic rmw      relaxed  00007FFEF7FAF2A8   0x2               (3)  17  ( 0, 11, 14, 24)
+25   3    atomic read     acquire  00007FFEF7FAF2A0   0x10003             22  ( 0, 11, 14, 25)
+26   2    atomic read     acquire  00007FFEF7FAF2A8   0x2                 17  ( 0, 11, 26, 19)
+27   3    atomic rmw      acquire  00007FFEF7FAF2A0   0x10003           (20003)  22  ( 0, 11, 14, 27)
+28   2    thread yield    seq_cst  00007F9A45A8A550   0xdeadbeef              ( 0, 11, 28, 19)
+29   2    atomic read     acquire  00007FFEF7FAF2A8   0x3                 24  ( 0, 11, 29, 19)
+30   3    atomic read     acquire  00007FFEF7FAF2A8   0x3                 24  ( 0, 11, 14, 30)
+31   3    atomic rmw      release  00007FFEF7FAF2A4   0                 (1)  3   ( 0, 11, 14, 31)
+32   3    atomic read     acquire  00007FFEF7FAF2A0   0x20003             27  ( 0, 11, 14, 32)
+33   3    atomic rmw      acquire  00007FFEF7FAF2A0   0x20003           (30003)  27  ( 0, 11, 14, 33)
+34   2    atomic rmw      release  00007FFEF7FAF2A4   0x1               (2)  31  ( 0, 11, 34, 19)
+35   3    atomic read     acquire  00007FFEF7FAF2A8   0x3                 24  ( 0, 11, 14, 35)
+36   2    atomic read     acquire  00007FFEF7FAF2A0   0x10003             22  ( 0, 11, 36, 19)
+37   2    atomic read     acquire  00007FFEF7FAF2A0   0x30003             33  ( 0, 11, 37, 19)
+38   3    atomic rmw      release  00007FFEF7FAF2A4   0x2               (3)  34  ( 0, 11, 14, 38)
+39   2    thread yield    seq_cst  00007F9A45A8A550   0xdeadbeef              ( 0, 11, 39, 19)
+40   2    thread finish   seq_cst  00007F9A45A8A550   0xdeadbeef              ( 0, 11, 40, 19)
+41   3    atomic read     acquire  00007FFEF7FAF2A0   0x30003             33  ( 0, 11, 14, 41)
+42   3    thread finish   seq_cst  00007F9A45C8B5A8   0xdeadbeef              ( 0, 11, 14, 42)
+43   1    pthread join    seq_cst  00007F9A45A8A550   0x2                     ( 0, 43, 40, 19)
+44   1    pthread join    seq_cst  00007F9A45C8B5A8   0x3                     ( 0, 44, 40, 42)
+45   1    thread finish   seq_cst  00007F9A44286110   0xdeadbeef              ( 0, 45, 40, 42)
+HASH 1560598656
+------------------------------------------------------------------------------------
+
+Program output from execution 4:
+---- BEGIN PROGRAM OUTPUT ----
+0 reader(s), 0 writer(s)
+Adding initial element
+Start threads
+Read: 17
+Read: 1
+Read: 1
+Threads complete
+---- END PROGRAM OUTPUT   ----
+
+Execution trace 4:
+------------------------------------------------------------------------------------
+#    t    Action type     MO       Location         Value               Rf  CV
+------------------------------------------------------------------------------------
+1    1    thread start    seq_cst  00007F9A44286110   0xdeadbeef              ( 0,  1)
+2    1    atomic write    seq_cst  00007FFEF7FAF2A0   0                       ( 0,  2)
+3    1    atomic write    seq_cst  00007FFEF7FAF2A4   0                       ( 0,  3)
+4    1    atomic write    seq_cst  00007FFEF7FAF2A8   0                       ( 0,  4)
+5    1    atomic read     acquire  00007FFEF7FAF2A0   0                   2   ( 0,  5)
+6    1    atomic rmw      acq_rel  00007FFEF7FAF2A0   0                 (1)  2   ( 0,  6)
+7    1    atomic read     acquire  00007FFEF7FAF2A4   0                   3   ( 0,  7)
+8    1    atomic rmw      relaxed  00007FFEF7FAF2A8   0                 (1)  4   ( 0,  8)
+9    1    pthread create  seq_cst  00007FFEF7FAF1D8   0x7ffef7faef80          ( 0,  9)
+10   2    thread start    seq_cst  00007F9A45A8A550   0xdeadbeef              ( 0,  9, 10)
+11   1    pthread create  seq_cst  00007FFEF7FAF1D8   0x7ffef7faef80          ( 0, 11)
+12   3    thread start    seq_cst  00007F9A45C8B5A8   0xdeadbeef              ( 0, 11,  0, 12)
+13   3    atomic read     acquire  00007FFEF7FAF2A0   0x1                 6   ( 0, 11,  0, 13)
+14   3    atomic rmw      acq_rel  00007FFEF7FAF2A0   0x1               (2)  6   ( 0, 11,  0, 14)
+15   2    atomic read     acquire  00007FFEF7FAF2A0   0x2                 14  ( 0, 11, 15, 14)
+16   3    atomic read     acquire  00007FFEF7FAF2A4   0                   3   ( 0, 11,  0, 16)
+17   2    atomic rmw      acq_rel  00007FFEF7FAF2A0   0x2               (3)  14  ( 0, 11, 17, 14)
+18   2    atomic read     acquire  00007FFEF7FAF2A4   0                   3   ( 0, 11, 18, 14)
+19   2    atomic rmw      relaxed  00007FFEF7FAF2A8   0x1               (2)  8   ( 0, 11, 19, 14)
+20   3    atomic rmw      relaxed  00007FFEF7FAF2A8   0x2               (3)  19  ( 0, 11,  0, 20)
+21   2    atomic read     acquire  00007FFEF7FAF2A0   0x3                 17  ( 0, 11, 21, 14)
+22   2    atomic rmw      acquire  00007FFEF7FAF2A0   0x3               (10003)  17  ( 0, 11, 22, 14)
+23   3    atomic read     acquire  00007FFEF7FAF2A0   0x10003             22  ( 0, 11, 17, 23)
+24   2    atomic read     acquire  00007FFEF7FAF2A8   0x3                 20  ( 0, 11, 24, 14)
+25   3    atomic rmw      acquire  00007FFEF7FAF2A0   0x10003           (20003)  22  ( 0, 11, 17, 25)
+26   3    atomic read     acquire  00007FFEF7FAF2A8   0x3                 20  ( 0, 11, 17, 26)
+27   2    atomic rmw      release  00007FFEF7FAF2A4   0                 (1)  3   ( 0, 11, 27, 14)
+28   3    atomic rmw      release  00007FFEF7FAF2A4   0x1               (2)  27  ( 0, 11, 17, 28)
+29   2    atomic read     acquire  00007FFEF7FAF2A0   0x10003             22  ( 0, 11, 29, 14)
+30   3    atomic read     acquire  00007FFEF7FAF2A0   0x20003             25  ( 0, 11, 17, 30)
+31   3    atomic rmw      acquire  00007FFEF7FAF2A0   0x20003           (30003)  25  ( 0, 11, 17, 31)
+32   2    atomic read     acquire  00007FFEF7FAF2A0   0x20003             25  ( 0, 11, 32, 14)
+33   2    thread yield    seq_cst  00007F9A45A8A550   0xdeadbeef              ( 0, 11, 33, 14)
+34   2    atomic read     acquire  00007FFEF7FAF2A0   0x30003             31  ( 0, 11, 34, 14)
+35   2    thread yield    seq_cst  00007F9A45A8A550   0xdeadbeef              ( 0, 11, 35, 14)
+36   2    thread finish   seq_cst  00007F9A45A8A550   0xdeadbeef              ( 0, 11, 36, 14)
+37   3    atomic read     acquire  00007FFEF7FAF2A8   0x3                 20  ( 0, 11, 17, 37)
+38   3    atomic rmw      release  00007FFEF7FAF2A4   0x2               (3)  28  ( 0, 11, 17, 38)
+39   3    atomic read     acquire  00007FFEF7FAF2A0   0x30003             31  ( 0, 11, 17, 39)
+40   3    thread finish   seq_cst  00007F9A45C8B5A8   0xdeadbeef              ( 0, 11, 17, 40)
+41   1    pthread join    seq_cst  00007F9A45A8A550   0x2                     ( 0, 41, 36, 14)
+42   1    pthread join    seq_cst  00007F9A45C8B5A8   0x3                     ( 0, 42, 36, 40)
+43   1    thread finish   seq_cst  00007F9A44286110   0xdeadbeef              ( 0, 43, 36, 40)
+HASH 393909270
+------------------------------------------------------------------------------------
+
+Program output from execution 5:
+---- BEGIN PROGRAM OUTPUT ----
+0 reader(s), 0 writer(s)
+Adding initial element
+Start threads
+Read: 17
+Read: 1
+Read: 1
+Threads complete
+---- END PROGRAM OUTPUT   ----
+
+Execution trace 5:
+------------------------------------------------------------------------------------
+#    t    Action type     MO       Location         Value               Rf  CV
+------------------------------------------------------------------------------------
+1    1    thread start    seq_cst  00007F9A44286110   0xdeadbeef              ( 0,  1)
+2    1    atomic write    seq_cst  00007FFEF7FAF2A0   0                       ( 0,  2)
+3    1    atomic write    seq_cst  00007FFEF7FAF2A4   0                       ( 0,  3)
+4    1    atomic write    seq_cst  00007FFEF7FAF2A8   0                       ( 0,  4)
+5    1    atomic read     acquire  00007FFEF7FAF2A0   0                   2   ( 0,  5)
+6    1    atomic rmw      acq_rel  00007FFEF7FAF2A0   0                 (1)  2   ( 0,  6)
+7    1    atomic read     acquire  00007FFEF7FAF2A4   0                   3   ( 0,  7)
+8    1    atomic rmw      relaxed  00007FFEF7FAF2A8   0                 (1)  4   ( 0,  8)
+9    1    pthread create  seq_cst  00007FFEF7FAF1D8   0x7ffef7faef80          ( 0,  9)
+10   2    thread start    seq_cst  00007F9A45A8A550   0xdeadbeef              ( 0,  9, 10)
+11   1    pthread create  seq_cst  00007FFEF7FAF1D8   0x7ffef7faef80          ( 0, 11)
+12   3    thread start    seq_cst  00007F9A45C8B5A8   0xdeadbeef              ( 0, 11,  0, 12)
+13   2    atomic read     acquire  00007FFEF7FAF2A0   0x1                 6   ( 0,  9, 13)
+14   3    atomic read     acquire  00007FFEF7FAF2A0   0x1                 6   ( 0, 11,  0, 14)
+15   2    atomic rmw      acq_rel  00007FFEF7FAF2A0   0x1               (2)  6   ( 0,  9, 15)
+16   2    atomic read     acquire  00007FFEF7FAF2A4   0                   3   ( 0,  9, 16)
+17   2    atomic rmw      relaxed  00007FFEF7FAF2A8   0x1               (2)  8   ( 0,  9, 17)
+18   3    atomic read     acq_rel  00007FFEF7FAF2A0   0x2                 15  ( 0, 11, 15, 18)
+19   2    atomic read     acquire  00007FFEF7FAF2A0   0x2                 15  ( 0,  9, 19)
+20   3    thread yield    seq_cst  00007F9A45C8B5A8   0xdeadbeef              ( 0, 11, 15, 20)
+21   2    atomic rmw      acquire  00007FFEF7FAF2A0   0x2               (10002)  15  ( 0,  9, 21)
+22   3    atomic read     acq_rel  00007FFEF7FAF2A0   0x10002             21  ( 0, 11, 15, 22)
+23   3    thread yield    seq_cst  00007F9A45C8B5A8   0xdeadbeef              ( 0, 11, 15, 23)
+24   3    atomic rmw      acq_rel  00007FFEF7FAF2A0   0x10002           (10003)  21  ( 0, 11, 15, 24)
+25   2    atomic read     acquire  00007FFEF7FAF2A8   0x2                 17  ( 0,  9, 25)
+26   3    atomic read     acquire  00007FFEF7FAF2A4   0                   3   ( 0, 11, 15, 26)
+27   3    thread yield    seq_cst  00007F9A45C8B5A8   0xdeadbeef              ( 0, 11, 15, 27)
+28   2    atomic rmw      release  00007FFEF7FAF2A4   0                 (1)  3   ( 0,  9, 28)
+29   3    atomic read     acquire  00007FFEF7FAF2A4   0x1                 28  ( 0, 11, 28, 29)
+30   3    atomic rmw      relaxed  00007FFEF7FAF2A8   0x2               (3)  17  ( 0, 11, 28, 30)
+31   3    atomic read     acquire  00007FFEF7FAF2A0   0x10003             24  ( 0, 11, 28, 31)
+32   2    atomic read     acquire  00007FFEF7FAF2A0   0x10002             21  ( 0,  9, 32)
+33   3    atomic rmw      acquire  00007FFEF7FAF2A0   0x10003           (20003)  24  ( 0, 11, 28, 33)
+34   2    atomic read     acquire  00007FFEF7FAF2A0   0x20003             33  ( 0, 11, 34, 24)
+35   2    thread yield    seq_cst  00007F9A45A8A550   0xdeadbeef              ( 0, 11, 35, 24)
+36   2    atomic rmw      acquire  00007FFEF7FAF2A0   0x20003           (30003)  33  ( 0, 11, 36, 24)
+37   3    atomic read     acquire  00007FFEF7FAF2A8   0x3                 30  ( 0, 11, 28, 37)
+38   2    atomic read     acquire  00007FFEF7FAF2A8   0x3                 30  ( 0, 11, 38, 24)
+39   2    atomic rmw      release  00007FFEF7FAF2A4   0x1               (2)  28  ( 0, 11, 39, 24)
+40   3    atomic rmw      release  00007FFEF7FAF2A4   0x2               (3)  39  ( 0, 11, 28, 40)
+41   2    atomic read     acquire  00007FFEF7FAF2A0   0x30003             36  ( 0, 11, 41, 24)
+42   2    thread finish   seq_cst  00007F9A45A8A550   0xdeadbeef              ( 0, 11, 42, 24)
+43   3    atomic read     acquire  00007FFEF7FAF2A0   0x30003             36  ( 0, 11, 28, 43)
+44   3    thread finish   seq_cst  00007F9A45C8B5A8   0xdeadbeef              ( 0, 11, 28, 44)
+45   1    pthread join    seq_cst  00007F9A45A8A550   0x2                     ( 0, 45, 42, 24)
+46   1    pthread join    seq_cst  00007F9A45C8B5A8   0x3                     ( 0, 46, 42, 44)
+47   1    thread finish   seq_cst  00007F9A44286110   0xdeadbeef              ( 0, 47, 42, 44)
+HASH 2349218003
+------------------------------------------------------------------------------------
+
+Program output from execution 6:
+---- BEGIN PROGRAM OUTPUT ----
+0 reader(s), 0 writer(s)
+Adding initial element
+Start threads
+Read: 17
+Read: 1
+Read: 1
+Threads complete
+---- END PROGRAM OUTPUT   ----
+
+Execution trace 6:
+------------------------------------------------------------------------------------
+#    t    Action type     MO       Location         Value               Rf  CV
+------------------------------------------------------------------------------------
+1    1    thread start    seq_cst  00007F9A44286110   0xdeadbeef              ( 0,  1)
+2    1    atomic write    seq_cst  00007FFEF7FAF2A0   0                       ( 0,  2)
+3    1    atomic write    seq_cst  00007FFEF7FAF2A4   0                       ( 0,  3)
+4    1    atomic write    seq_cst  00007FFEF7FAF2A8   0                       ( 0,  4)
+5    1    atomic read     acquire  00007FFEF7FAF2A0   0                   2   ( 0,  5)
+6    1    atomic rmw      acq_rel  00007FFEF7FAF2A0   0                 (1)  2   ( 0,  6)
+7    1    atomic read     acquire  00007FFEF7FAF2A4   0                   3   ( 0,  7)
+8    1    atomic rmw      relaxed  00007FFEF7FAF2A8   0                 (1)  4   ( 0,  8)
+9    1    pthread create  seq_cst  00007FFEF7FAF1D8   0x7ffef7faef80          ( 0,  9)
+10   2    thread start    seq_cst  00007F9A45A8A550   0xdeadbeef              ( 0,  9, 10)
+11   1    pthread create  seq_cst  00007FFEF7FAF1D8   0x7ffef7faef80          ( 0, 11)
+12   3    thread start    seq_cst  00007F9A45C8B5A8   0xdeadbeef              ( 0, 11,  0, 12)
+13   3    atomic read     acquire  00007FFEF7FAF2A0   0x1                 6   ( 0, 11,  0, 13)
+14   2    atomic read     acquire  00007FFEF7FAF2A0   0x1                 6   ( 0,  9, 14)
+15   2    atomic rmw      acq_rel  00007FFEF7FAF2A0   0x1               (2)  6   ( 0,  9, 15)
+16   2    atomic read     acquire  00007FFEF7FAF2A4   0                   3   ( 0,  9, 16)
+17   3    atomic read     acq_rel  00007FFEF7FAF2A0   0x2                 15  ( 0, 11, 15, 17)
+18   3    thread yield    seq_cst  00007F9A45C8B5A8   0xdeadbeef              ( 0, 11, 15, 18)
+19   2    atomic rmw      relaxed  00007FFEF7FAF2A8   0x1               (2)  8   ( 0,  9, 19)
+20   3    atomic rmw      acq_rel  00007FFEF7FAF2A0   0x2               (3)  15  ( 0, 11, 15, 20)
+21   2    atomic read     acquire  00007FFEF7FAF2A0   0x3                 20  ( 0, 11, 21, 20)
+22   3    atomic read     acquire  00007FFEF7FAF2A4   0                   3   ( 0, 11, 15, 22)
+23   3    atomic rmw      relaxed  00007FFEF7FAF2A8   0x2               (3)  19  ( 0, 11, 15, 23)
+24   3    atomic read     acquire  00007FFEF7FAF2A0   0x3                 20  ( 0, 11, 15, 24)
+25   2    atomic rmw      acquire  00007FFEF7FAF2A0   0x3               (10003)  20  ( 0, 11, 25, 20)
+26   3    atomic read     acquire  00007FFEF7FAF2A0   0x10003             25  ( 0, 11, 15, 26)
+27   2    atomic read     acquire  00007FFEF7FAF2A8   0x2                 19  ( 0, 11, 27, 20)
+28   3    thread yield    seq_cst  00007F9A45C8B5A8   0xdeadbeef              ( 0, 11, 15, 28)
+29   2    thread yield    seq_cst  00007F9A45A8A550   0xdeadbeef              ( 0, 11, 29, 20)
+30   3    atomic rmw      acquire  00007FFEF7FAF2A0   0x10003           (20003)  25  ( 0, 11, 15, 30)
+31   2    atomic read     acquire  00007FFEF7FAF2A8   0x2                 19  ( 0, 11, 31, 20)
+32   2    thread yield    seq_cst  00007F9A45A8A550   0xdeadbeef              ( 0, 11, 32, 20)
+33   2    atomic read     acquire  00007FFEF7FAF2A8   0x3                 23  ( 0, 11, 33, 20)
+34   3    atomic read     acquire  00007FFEF7FAF2A8   0x3                 23  ( 0, 11, 15, 34)
+35   3    atomic rmw      release  00007FFEF7FAF2A4   0                 (1)  3   ( 0, 11, 15, 35)
+36   3    atomic read     acquire  00007FFEF7FAF2A0   0x20003             30  ( 0, 11, 15, 36)
+37   3    atomic rmw      acquire  00007FFEF7FAF2A0   0x20003           (30003)  30  ( 0, 11, 15, 37)
+38   2    atomic rmw      release  00007FFEF7FAF2A4   0x1               (2)  35  ( 0, 11, 38, 20)
+39   2    atomic read     acquire  00007FFEF7FAF2A0   0x10003             25  ( 0, 11, 39, 20)
+40   2    atomic read     acquire  00007FFEF7FAF2A0   0x20003             30  ( 0, 11, 40, 20)
+41   3    atomic read     acquire  00007FFEF7FAF2A8   0x3                 23  ( 0, 11, 15, 41)
+42   2    thread yield    seq_cst  00007F9A45A8A550   0xdeadbeef              ( 0, 11, 42, 20)
+43   2    atomic read     acquire  00007FFEF7FAF2A0   0x30003             37  ( 0, 11, 43, 20)
+44   2    thread yield    seq_cst  00007F9A45A8A550   0xdeadbeef              ( 0, 11, 44, 20)
+45   2    thread finish   seq_cst  00007F9A45A8A550   0xdeadbeef              ( 0, 11, 45, 20)
+46   1    pthread join    seq_cst  00007F9A45A8A550   0x2                     ( 0, 46, 45, 20)
+47   3    atomic rmw      release  00007FFEF7FAF2A4   0x2               (3)  38  ( 0, 11, 15, 47)
+48   3    atomic read     acquire  00007FFEF7FAF2A0   0x30003             37  ( 0, 11, 15, 48)
+49   3    thread finish   seq_cst  00007F9A45C8B5A8   0xdeadbeef              ( 0, 11, 15, 49)
+50   1    pthread join    seq_cst  00007F9A45C8B5A8   0x3                     ( 0, 50, 45, 49)
+51   1    thread finish   seq_cst  00007F9A44286110   0xdeadbeef              ( 0, 51, 45, 49)
+HASH 215968295
+------------------------------------------------------------------------------------
+
+Program output from execution 7:
+---- BEGIN PROGRAM OUTPUT ----
+0 reader(s), 0 writer(s)
+Adding initial element
+Start threads
+Read: 17
+Read: 1
+Read: 1
+Threads complete
+---- END PROGRAM OUTPUT   ----
+
+Execution trace 7:
+------------------------------------------------------------------------------------
+#    t    Action type     MO       Location         Value               Rf  CV
+------------------------------------------------------------------------------------
+1    1    thread start    seq_cst  00007F9A44286110   0xdeadbeef              ( 0,  1)
+2    1    atomic write    seq_cst  00007FFEF7FAF2A0   0                       ( 0,  2)
+3    1    atomic write    seq_cst  00007FFEF7FAF2A4   0                       ( 0,  3)
+4    1    atomic write    seq_cst  00007FFEF7FAF2A8   0                       ( 0,  4)
+5    1    atomic read     acquire  00007FFEF7FAF2A0   0                   2   ( 0,  5)
+6    1    atomic rmw      acq_rel  00007FFEF7FAF2A0   0                 (1)  2   ( 0,  6)
+7    1    atomic read     acquire  00007FFEF7FAF2A4   0                   3   ( 0,  7)
+8    1    atomic rmw      relaxed  00007FFEF7FAF2A8   0                 (1)  4   ( 0,  8)
+9    1    pthread create  seq_cst  00007FFEF7FAF1D8   0x7ffef7faef80          ( 0,  9)
+10   2    thread start    seq_cst  00007F9A45A8A550   0xdeadbeef              ( 0,  9, 10)
+11   1    pthread create  seq_cst  00007FFEF7FAF1D8   0x7ffef7faef80          ( 0, 11)
+12   3    thread start    seq_cst  00007F9A45C8B5A8   0xdeadbeef              ( 0, 11,  0, 12)
+13   2    atomic read     acquire  00007FFEF7FAF2A0   0x1                 6   ( 0,  9, 13)
+14   3    atomic read     acquire  00007FFEF7FAF2A0   0x1                 6   ( 0, 11,  0, 14)
+15   3    atomic rmw      acq_rel  00007FFEF7FAF2A0   0x1               (2)  6   ( 0, 11,  0, 15)
+16   3    atomic read     acquire  00007FFEF7FAF2A4   0                   3   ( 0, 11,  0, 16)
+17   3    atomic rmw      relaxed  00007FFEF7FAF2A8   0x1               (2)  8   ( 0, 11,  0, 17)
+18   2    atomic read     acq_rel  00007FFEF7FAF2A0   0x2                 15  ( 0, 11, 18, 15)
+19   2    thread yield    seq_cst  00007F9A45A8A550   0xdeadbeef              ( 0, 11, 19, 15)
+20   2    atomic rmw      acq_rel  00007FFEF7FAF2A0   0x2               (3)  15  ( 0, 11, 20, 15)
+21   3    atomic read     acquire  00007FFEF7FAF2A0   0x3                 20  ( 0, 11, 20, 21)
+22   3    atomic rmw      acquire  00007FFEF7FAF2A0   0x3               (10003)  20  ( 0, 11, 20, 22)
+23   2    atomic read     acquire  00007FFEF7FAF2A4   0                   3   ( 0, 11, 23, 15)
+24   2    atomic rmw      relaxed  00007FFEF7FAF2A8   0x2               (3)  17  ( 0, 11, 24, 15)
+25   3    atomic read     acquire  00007FFEF7FAF2A8   0x3                 24  ( 0, 11, 20, 25)
+26   3    atomic rmw      release  00007FFEF7FAF2A4   0                 (1)  3   ( 0, 11, 20, 26)
+27   3    atomic read     acquire  00007FFEF7FAF2A0   0x10003             22  ( 0, 11, 20, 27)
+28   3    atomic rmw      acquire  00007FFEF7FAF2A0   0x10003           (20003)  22  ( 0, 11, 20, 28)
+29   2    atomic read     acquire  00007FFEF7FAF2A0   0x3                 20  ( 0, 11, 29, 15)
+30   2    atomic read     acquire  00007FFEF7FAF2A0   0x20003             28  ( 0, 11, 30, 15)
+31   3    atomic read     acquire  00007FFEF7FAF2A8   0x3                 24  ( 0, 11, 20, 31)
+32   2    thread yield    seq_cst  00007F9A45A8A550   0xdeadbeef              ( 0, 11, 32, 15)
+33   3    atomic rmw      release  00007FFEF7FAF2A4   0x1               (2)  26  ( 0, 11, 20, 33)
+34   2    atomic rmw      acquire  00007FFEF7FAF2A0   0x20003           (30003)  28  ( 0, 11, 34, 15)
+35   2    atomic read     acquire  00007FFEF7FAF2A8   0x3                 24  ( 0, 11, 35, 15)
+36   3    atomic read     acquire  00007FFEF7FAF2A0   0x20003             28  ( 0, 11, 20, 36)
+37   2    atomic rmw      release  00007FFEF7FAF2A4   0x2               (3)  33  ( 0, 11, 37, 15)
+38   3    atomic read     acquire  00007FFEF7FAF2A0   0x30003             34  ( 0, 11, 20, 38)
+39   3    thread yield    seq_cst  00007F9A45C8B5A8   0xdeadbeef              ( 0, 11, 20, 39)
+40   3    thread finish   seq_cst  00007F9A45C8B5A8   0xdeadbeef              ( 0, 11, 20, 40)
+41   2    atomic read     acquire  00007FFEF7FAF2A0   0x30003             34  ( 0, 11, 41, 15)
+42   2    thread finish   seq_cst  00007F9A45A8A550   0xdeadbeef              ( 0, 11, 42, 15)
+43   1    pthread join    seq_cst  00007F9A45A8A550   0x2                     ( 0, 43, 42, 15)
+44   1    pthread join    seq_cst  00007F9A45C8B5A8   0x3                     ( 0, 44, 42, 40)
+45   1    thread finish   seq_cst  00007F9A44286110   0xdeadbeef              ( 0, 45, 42, 40)
+HASH 3019273211
+------------------------------------------------------------------------------------
+
+Program output from execution 8:
+---- BEGIN PROGRAM OUTPUT ----
+0 reader(s), 0 writer(s)
+Adding initial element
+Start threads
+Read: 17
+Read: 1
+Read: 1
+Threads complete
+---- END PROGRAM OUTPUT   ----
+
+Execution trace 8:
+------------------------------------------------------------------------------------
+#    t    Action type     MO       Location         Value               Rf  CV
+------------------------------------------------------------------------------------
+1    1    thread start    seq_cst  00007F9A44286110   0xdeadbeef              ( 0,  1)
+2    1    atomic write    seq_cst  00007FFEF7FAF2A0   0                       ( 0,  2)
+3    1    atomic write    seq_cst  00007FFEF7FAF2A4   0                       ( 0,  3)
+4    1    atomic write    seq_cst  00007FFEF7FAF2A8   0                       ( 0,  4)
+5    1    atomic read     acquire  00007FFEF7FAF2A0   0                   2   ( 0,  5)
+6    1    atomic rmw      acq_rel  00007FFEF7FAF2A0   0                 (1)  2   ( 0,  6)
+7    1    atomic read     acquire  00007FFEF7FAF2A4   0                   3   ( 0,  7)
+8    1    atomic rmw      relaxed  00007FFEF7FAF2A8   0                 (1)  4   ( 0,  8)
+9    1    pthread create  seq_cst  00007FFEF7FAF1D8   0x7ffef7faef80          ( 0,  9)
+10   2    thread start    seq_cst  00007F9A45A8A550   0xdeadbeef              ( 0,  9, 10)
+11   1    pthread create  seq_cst  00007FFEF7FAF1D8   0x7ffef7faef80          ( 0, 11)
+12   3    thread start    seq_cst  00007F9A45C8B5A8   0xdeadbeef              ( 0, 11,  0, 12)
+13   3    atomic read     acquire  00007FFEF7FAF2A0   0x1                 6   ( 0, 11,  0, 13)
+14   2    atomic read     acquire  00007FFEF7FAF2A0   0x1                 6   ( 0,  9, 14)
+15   3    atomic rmw      acq_rel  00007FFEF7FAF2A0   0x1               (2)  6   ( 0, 11,  0, 15)
+16   3    atomic read     acquire  00007FFEF7FAF2A4   0                   3   ( 0, 11,  0, 16)
+17   3    atomic rmw      relaxed  00007FFEF7FAF2A8   0x1               (2)  8   ( 0, 11,  0, 17)
+18   2    atomic read     acq_rel  00007FFEF7FAF2A0   0x2                 15  ( 0, 11, 18, 15)
+19   3    atomic read     acquire  00007FFEF7FAF2A0   0x2                 15  ( 0, 11,  0, 19)
+20   2    thread yield    seq_cst  00007F9A45A8A550   0xdeadbeef              ( 0, 11, 20, 15)
+21   2    atomic rmw      acq_rel  00007FFEF7FAF2A0   0x2               (3)  15  ( 0, 11, 21, 15)
+22   3    atomic read     acquire  00007FFEF7FAF2A0   0x3                 21  ( 0, 11, 21, 22)
+23   2    atomic read     acquire  00007FFEF7FAF2A4   0                   3   ( 0, 11, 23, 15)
+24   3    thread yield    seq_cst  00007F9A45C8B5A8   0xdeadbeef              ( 0, 11, 21, 24)
+25   2    atomic rmw      relaxed  00007FFEF7FAF2A8   0x2               (3)  17  ( 0, 11, 25, 15)
+26   2    atomic read     acquire  00007FFEF7FAF2A0   0x3                 21  ( 0, 11, 26, 15)
+27   2    atomic rmw      acquire  00007FFEF7FAF2A0   0x3               (10003)  21  ( 0, 11, 27, 15)
+28   3    atomic read     acquire  00007FFEF7FAF2A0   0x10003             27  ( 0, 11, 21, 28)
+29   2    atomic read     acquire  00007FFEF7FAF2A8   0x3                 25  ( 0, 11, 29, 15)
+30   2    atomic rmw      release  00007FFEF7FAF2A4   0                 (1)  3   ( 0, 11, 30, 15)
+31   3    thread yield    seq_cst  00007F9A45C8B5A8   0xdeadbeef              ( 0, 11, 21, 31)
+32   3    atomic rmw      acquire  00007FFEF7FAF2A0   0x10003           (20003)  27  ( 0, 11, 21, 32)
+33   2    atomic read     acquire  00007FFEF7FAF2A0   0x10003             27  ( 0, 11, 33, 15)
+34   3    atomic read     acquire  00007FFEF7FAF2A8   0x2                 17  ( 0, 11, 21, 34)
+35   2    atomic read     acquire  00007FFEF7FAF2A0   0x20003             32  ( 0, 11, 35, 15)
+36   2    thread yield    seq_cst  00007F9A45A8A550   0xdeadbeef              ( 0, 11, 36, 15)
+37   3    thread yield    seq_cst  00007F9A45C8B5A8   0xdeadbeef              ( 0, 11, 21, 37)
+38   3    atomic read     acquire  00007FFEF7FAF2A8   0x2                 17  ( 0, 11, 21, 38)
+39   3    thread yield    seq_cst  00007F9A45C8B5A8   0xdeadbeef              ( 0, 11, 21, 39)
+40   3    atomic read     acquire  00007FFEF7FAF2A8   0x3                 25  ( 0, 11, 21, 40)
+41   3    atomic rmw      release  00007FFEF7FAF2A4   0x1               (2)  30  ( 0, 11, 21, 41)
+42   3    atomic read     acquire  00007FFEF7FAF2A0   0x20003             32  ( 0, 11, 21, 42)
+43   2    atomic rmw      acquire  00007FFEF7FAF2A0   0x20003           (30003)  32  ( 0, 11, 43, 15)
+44   3    atomic read     acquire  00007FFEF7FAF2A0   0x30003             43  ( 0, 11, 21, 44)
+45   3    thread yield    seq_cst  00007F9A45C8B5A8   0xdeadbeef              ( 0, 11, 21, 45)
+46   3    thread finish   seq_cst  00007F9A45C8B5A8   0xdeadbeef              ( 0, 11, 21, 46)
+47   2    atomic read     acquire  00007FFEF7FAF2A8   0x3                 25  ( 0, 11, 47, 15)
+48   2    atomic rmw      release  00007FFEF7FAF2A4   0x2               (3)  41  ( 0, 11, 48, 15)
+49   2    atomic read     acquire  00007FFEF7FAF2A0   0x30003             43  ( 0, 11, 49, 15)
+50   2    thread finish   seq_cst  00007F9A45A8A550   0xdeadbeef              ( 0, 11, 50, 15)
+51   1    pthread join    seq_cst  00007F9A45A8A550   0x2                     ( 0, 51, 50, 15)
+52   1    pthread join    seq_cst  00007F9A45C8B5A8   0x3                     ( 0, 52, 50, 46)
+53   1    thread finish   seq_cst  00007F9A44286110   0xdeadbeef              ( 0, 53, 50, 46)
+HASH 3917306966
+------------------------------------------------------------------------------------
+
+Program output from execution 9:
+---- BEGIN PROGRAM OUTPUT ----
+0 reader(s), 0 writer(s)
+Adding initial element
+Start threads
+Read: 17
+Read: 1
+Read: 1
+Threads complete
+---- END PROGRAM OUTPUT   ----
+
+Execution trace 9:
+------------------------------------------------------------------------------------
+#    t    Action type     MO       Location         Value               Rf  CV
+------------------------------------------------------------------------------------
+1    1    thread start    seq_cst  00007F9A44286110   0xdeadbeef              ( 0,  1)
+2    1    atomic write    seq_cst  00007FFEF7FAF2A0   0                       ( 0,  2)
+3    1    atomic write    seq_cst  00007FFEF7FAF2A4   0                       ( 0,  3)
+4    1    atomic write    seq_cst  00007FFEF7FAF2A8   0                       ( 0,  4)
+5    1    atomic read     acquire  00007FFEF7FAF2A0   0                   2   ( 0,  5)
+6    1    atomic rmw      acq_rel  00007FFEF7FAF2A0   0                 (1)  2   ( 0,  6)
+7    1    atomic read     acquire  00007FFEF7FAF2A4   0                   3   ( 0,  7)
+8    1    atomic rmw      relaxed  00007FFEF7FAF2A8   0                 (1)  4   ( 0,  8)
+9    1    pthread create  seq_cst  00007FFEF7FAF1D8   0x7ffef7faef80          ( 0,  9)
+10   2    thread start    seq_cst  00007F9A45A8A550   0xdeadbeef              ( 0,  9, 10)
+11   1    pthread create  seq_cst  00007FFEF7FAF1D8   0x7ffef7faef80          ( 0, 11)
+12   3    thread start    seq_cst  00007F9A45C8B5A8   0xdeadbeef              ( 0, 11,  0, 12)
+13   2    atomic read     acquire  00007FFEF7FAF2A0   0x1                 6   ( 0,  9, 13)
+14   3    atomic read     acquire  00007FFEF7FAF2A0   0x1                 6   ( 0, 11,  0, 14)
+15   3    atomic rmw      acq_rel  00007FFEF7FAF2A0   0x1               (2)  6   ( 0, 11,  0, 15)
+16   3    atomic read     acquire  00007FFEF7FAF2A4   0                   3   ( 0, 11,  0, 16)
+17   3    atomic rmw      relaxed  00007FFEF7FAF2A8   0x1               (2)  8   ( 0, 11,  0, 17)
+18   2    atomic read     acq_rel  00007FFEF7FAF2A0   0x2                 15  ( 0, 11, 18, 15)
+19   2    thread yield    seq_cst  00007F9A45A8A550   0xdeadbeef              ( 0, 11, 19, 15)
+20   3    atomic read     acquire  00007FFEF7FAF2A0   0x2                 15  ( 0, 11,  0, 20)
+21   3    atomic rmw      acquire  00007FFEF7FAF2A0   0x2               (10002)  15  ( 0, 11,  0, 21)
+22   3    atomic read     acquire  00007FFEF7FAF2A8   0x2                 17  ( 0, 11,  0, 22)
+23   3    atomic rmw      release  00007FFEF7FAF2A4   0                 (1)  3   ( 0, 11,  0, 23)
+24   2    atomic read     acq_rel  00007FFEF7FAF2A0   0x10002             21  ( 0, 11, 24, 15)
+25   3    atomic read     acquire  00007FFEF7FAF2A0   0x10002             21  ( 0, 11,  0, 25)
+26   3    atomic rmw      acquire  00007FFEF7FAF2A0   0x10002           (20002)  21  ( 0, 11,  0, 26)
+27   3    atomic read     acquire  00007FFEF7FAF2A8   0x2                 17  ( 0, 11,  0, 27)
+28   3    atomic rmw      release  00007FFEF7FAF2A4   0x1               (2)  23  ( 0, 11,  0, 28)
+29   3    atomic read     acquire  00007FFEF7FAF2A0   0x20002             26  ( 0, 11,  0, 29)
+30   3    thread finish   seq_cst  00007F9A45C8B5A8   0xdeadbeef              ( 0, 11,  0, 30)
+31   2    thread yield    seq_cst  00007F9A45A8A550   0xdeadbeef              ( 0, 11, 31, 15)
+32   2    atomic read     acq_rel  00007FFEF7FAF2A0   0x20002             26  ( 0, 11, 32, 15)
+33   2    thread yield    seq_cst  00007F9A45A8A550   0xdeadbeef              ( 0, 11, 33, 15)
+34   2    atomic rmw      acq_rel  00007FFEF7FAF2A0   0x20002           (20003)  26  ( 0, 11, 34, 15)
+35   2    atomic read     acquire  00007FFEF7FAF2A4   0                   3   ( 0, 11, 35, 15)
+36   2    thread yield    seq_cst  00007F9A45A8A550   0xdeadbeef              ( 0, 11, 36, 15)
+37   2    atomic read     acquire  00007FFEF7FAF2A4   0                   3   ( 0, 11, 37, 15)
+38   2    thread yield    seq_cst  00007F9A45A8A550   0xdeadbeef              ( 0, 11, 38, 15)
+39   2    atomic read     acquire  00007FFEF7FAF2A4   0                   3   ( 0, 11, 39, 15)
+40   2    thread yield    seq_cst  00007F9A45A8A550   0xdeadbeef              ( 0, 11, 40, 15)
+41   2    atomic read     acquire  00007FFEF7FAF2A4   0                   3   ( 0, 11, 41, 15)
+42   2    thread yield    seq_cst  00007F9A45A8A550   0xdeadbeef              ( 0, 11, 42, 15)
+43   2    atomic read     acquire  00007FFEF7FAF2A4   0                   3   ( 0, 11, 43, 15)
+44   2    thread yield    seq_cst  00007F9A45A8A550   0xdeadbeef              ( 0, 11, 44, 15)
+45   2    atomic read     acquire  00007FFEF7FAF2A4   0x1                 23  ( 0, 11, 45, 23)
+46   2    thread yield    seq_cst  00007F9A45A8A550   0xdeadbeef              ( 0, 11, 46, 23)
+47   2    atomic read     acquire  00007FFEF7FAF2A4   0x2                 28  ( 0, 11, 47, 28)
+48   2    atomic rmw      relaxed  00007FFEF7FAF2A8   0x2               (3)  17  ( 0, 11, 48, 28)
+49   2    atomic read     acquire  00007FFEF7FAF2A0   0x20003             34  ( 0, 11, 49, 28)
+50   2    atomic rmw      acquire  00007FFEF7FAF2A0   0x20003           (30003)  34  ( 0, 11, 50, 28)
+51   2    atomic read     acquire  00007FFEF7FAF2A8   0x3                 48  ( 0, 11, 51, 28)
+52   2    atomic rmw      release  00007FFEF7FAF2A4   0x2               (3)  28  ( 0, 11, 52, 28)
+53   2    atomic read     acquire  00007FFEF7FAF2A0   0x30003             50  ( 0, 11, 53, 28)
+54   2    thread finish   seq_cst  00007F9A45A8A550   0xdeadbeef              ( 0, 11, 54, 28)
+55   1    pthread join    seq_cst  00007F9A45A8A550   0x2                     ( 0, 55, 54, 28)
+56   1    pthread join    seq_cst  00007F9A45C8B5A8   0x3                     ( 0, 56, 54, 30)
+57   1    thread finish   seq_cst  00007F9A44286110   0xdeadbeef              ( 0, 57, 54, 30)
+HASH 3017981376
+------------------------------------------------------------------------------------
+
+Program output from execution 10:
+---- BEGIN PROGRAM OUTPUT ----
+0 reader(s), 0 writer(s)
+Adding initial element
+Start threads
+Read: 1
+Read: 1
+Read: 17
+Threads complete
+---- END PROGRAM OUTPUT   ----
+
+Execution trace 10:
+------------------------------------------------------------------------------------
+#    t    Action type     MO       Location         Value               Rf  CV
+------------------------------------------------------------------------------------
+1    1    thread start    seq_cst  00007F9A44286110   0xdeadbeef              ( 0,  1)
+2    1    atomic write    seq_cst  00007FFEF7FAF2A0   0                       ( 0,  2)
+3    1    atomic write    seq_cst  00007FFEF7FAF2A4   0                       ( 0,  3)
+4    1    atomic write    seq_cst  00007FFEF7FAF2A8   0                       ( 0,  4)
+5    1    atomic read     acquire  00007FFEF7FAF2A0   0                   2   ( 0,  5)
+6    1    atomic rmw      acq_rel  00007FFEF7FAF2A0   0                 (1)  2   ( 0,  6)
+7    1    atomic read     acquire  00007FFEF7FAF2A4   0                   3   ( 0,  7)
+8    1    atomic rmw      relaxed  00007FFEF7FAF2A8   0                 (1)  4   ( 0,  8)
+9    1    pthread create  seq_cst  00007FFEF7FAF1D8   0x7ffef7faef80          ( 0,  9)
+10   2    thread start    seq_cst  00007F9A45A8A550   0xdeadbeef              ( 0,  9, 10)
+11   1    pthread create  seq_cst  00007FFEF7FAF1D8   0x7ffef7faef80          ( 0, 11)
+12   3    thread start    seq_cst  00007F9A45C8B5A8   0xdeadbeef              ( 0, 11,  0, 12)
+13   3    atomic read     acquire  00007FFEF7FAF2A0   0x1                 6   ( 0, 11,  0, 13)
+14   3    atomic rmw      acq_rel  00007FFEF7FAF2A0   0x1               (2)  6   ( 0, 11,  0, 14)
+15   2    atomic read     acquire  00007FFEF7FAF2A0   0x1                 6   ( 0,  9, 15)
+16   2    atomic read     acq_rel  00007FFEF7FAF2A0   0x2                 14  ( 0, 11, 16, 14)
+17   2    thread yield    seq_cst  00007F9A45A8A550   0xdeadbeef              ( 0, 11, 17, 14)
+18   3    atomic read     acquire  00007FFEF7FAF2A4   0                   3   ( 0, 11,  0, 18)
+19   3    atomic rmw      relaxed  00007FFEF7FAF2A8   0x1               (2)  8   ( 0, 11,  0, 19)
+20   2    atomic rmw      acq_rel  00007FFEF7FAF2A0   0x2               (3)  14  ( 0, 11, 20, 14)
+21   2    atomic read     acquire  00007FFEF7FAF2A4   0                   3   ( 0, 11, 21, 14)
+22   3    atomic read     acquire  00007FFEF7FAF2A0   0x3                 20  ( 0, 11, 20, 22)
+23   3    atomic rmw      acquire  00007FFEF7FAF2A0   0x3               (10003)  20  ( 0, 11, 20, 23)
+24   2    atomic rmw      relaxed  00007FFEF7FAF2A8   0x2               (3)  19  ( 0, 11, 24, 14)
+25   3    atomic read     acquire  00007FFEF7FAF2A8   0x2                 19  ( 0, 11, 20, 25)
+26   3    thread yield    seq_cst  00007F9A45C8B5A8   0xdeadbeef              ( 0, 11, 20, 26)
+27   2    atomic read     acquire  00007FFEF7FAF2A0   0x10003             23  ( 0, 11, 27, 14)
+28   2    atomic rmw      acquire  00007FFEF7FAF2A0   0x10003           (20003)  23  ( 0, 11, 28, 14)
+29   2    atomic read     acquire  00007FFEF7FAF2A8   0x3                 24  ( 0, 11, 29, 14)
+30   2    atomic rmw      release  00007FFEF7FAF2A4   0                 (1)  3   ( 0, 11, 30, 14)
+31   3    atomic read     acquire  00007FFEF7FAF2A8   0x2                 19  ( 0, 11, 20, 31)
+32   3    thread yield    seq_cst  00007F9A45C8B5A8   0xdeadbeef              ( 0, 11, 20, 32)
+33   3    atomic read     acquire  00007FFEF7FAF2A8   0x2                 19  ( 0, 11, 20, 33)
+34   3    thread yield    seq_cst  00007F9A45C8B5A8   0xdeadbeef              ( 0, 11, 20, 34)
+35   2    atomic read     acquire  00007FFEF7FAF2A0   0x20003             28  ( 0, 11, 35, 14)
+36   3    atomic read     acquire  00007FFEF7FAF2A8   0x2                 19  ( 0, 11, 20, 36)
+37   3    thread yield    seq_cst  00007F9A45C8B5A8   0xdeadbeef              ( 0, 11, 20, 37)
+38   2    atomic rmw      acquire  00007FFEF7FAF2A0   0x20003           (30003)  28  ( 0, 11, 38, 14)
+39   3    atomic read     acquire  00007FFEF7FAF2A8   0x2                 19  ( 0, 11, 20, 39)
+40   2    atomic read     acquire  00007FFEF7FAF2A8   0x3                 24  ( 0, 11, 40, 14)
+41   2    atomic rmw      release  00007FFEF7FAF2A4   0x1               (2)  30  ( 0, 11, 41, 14)
+42   3    thread yield    seq_cst  00007F9A45C8B5A8   0xdeadbeef              ( 0, 11, 20, 42)
+43   2    atomic read     acquire  00007FFEF7FAF2A0   0x30003             38  ( 0, 11, 43, 14)
+44   2    thread finish   seq_cst  00007F9A45A8A550   0xdeadbeef              ( 0, 11, 44, 14)
+45   1    pthread join    seq_cst  00007F9A45A8A550   0x2                     ( 0, 45, 44, 14)
+46   3    atomic read     acquire  00007FFEF7FAF2A8   0x2                 19  ( 0, 11, 20, 46)
+47   3    thread yield    seq_cst  00007F9A45C8B5A8   0xdeadbeef              ( 0, 11, 20, 47)
+48   3    atomic read     acquire  00007FFEF7FAF2A8   0x3                 24  ( 0, 11, 20, 48)
+49   3    atomic rmw      release  00007FFEF7FAF2A4   0x2               (3)  41  ( 0, 11, 20, 49)
+50   3    atomic read     acquire  00007FFEF7FAF2A0   0x10003             23  ( 0, 11, 20, 50)
+51   3    atomic read     acquire  00007FFEF7FAF2A0   0x30003             38  ( 0, 11, 20, 51)
+52   3    thread yield    seq_cst  00007F9A45C8B5A8   0xdeadbeef              ( 0, 11, 20, 52)
+53   3    thread finish   seq_cst  00007F9A45C8B5A8   0xdeadbeef              ( 0, 11, 20, 53)
+54   1    pthread join    seq_cst  00007F9A45C8B5A8   0x3                     ( 0, 54, 44, 53)
+55   1    thread finish   seq_cst  00007F9A44286110   0xdeadbeef              ( 0, 55, 44, 53)
+HASH 2421582062
+------------------------------------------------------------------------------------
+
+******* Model-checking complete: *******
+Number of complete, bug-free executions: 10
+Number of buggy executions: 0
+Total executions: 10

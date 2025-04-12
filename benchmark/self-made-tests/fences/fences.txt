@@ -1,0 +1,35 @@
+Execution trace 10:
+------------------------------------------------------------------------------------
+#    t    Action type     MO       Location         Value               Rf  CV
+------------------------------------------------------------------------------------
+1    1    thread start    seq_cst  00007FB26F670110   0xdeadbeef              ( 0,  1)
+2    1    pthread create  seq_cst  00007FFF30842D20   0x7fff30842ca0          ( 0,  2)
+3    2    thread start    seq_cst  00007FB270DF1A98   0xdeadbeef              ( 0,  2,  3)
+3    2    nonatomic write  relaxed  00000000004040A0   0x4                     ( 0,  0,  3)
+4    1    pthread create  seq_cst  00007FFF30842D18   0x7fff30842ca0          ( 0,  4)
+5    3    thread start    seq_cst  00007FB270FF3058   0xdeadbeef              ( 0,  4,  0,  5)
+6    3    atomic read     relaxed  00000000004040B0   0                   0   ( 0,  4,  0,  6)
+7    3    thread sleep    seq_cst  0000000000000000   0x3e8                   ( 0,  4,  0,  7)
+8    2    fence           release  0000000000000007   0xdeadbeef              ( 0,  2,  8)
+9    2    atomic write    relaxed  00000000004040B0   0x1                     ( 0,  2,  9)
+10   2    thread sleep    seq_cst  0000000000000000   0x3e8                   ( 0,  2, 10)
+11   3    atomic read     relaxed  00000000004040B0   0                   0   ( 0,  4,  0, 11)
+12   3    thread sleep    seq_cst  0000000000000000   0x3e8                   ( 0,  4,  0, 12)
+13   2    atomic read     acquire  00000000004040A0   0x4                 3   ( 0,  2, 13)
+14   2    thread finish   seq_cst  00007FB270DF1A98   0xdeadbeef              ( 0,  2, 14)
+15   1    pthread join    seq_cst  00007FB270DF1A98   0x2                     ( 0, 15, 14)
+16   3    atomic read     relaxed  00000000004040B0   0                   0   ( 0,  4,  0, 16)
+17   3    thread sleep    seq_cst  0000000000000000   0x3e8                   ( 0,  4,  0, 17)
+18   3    atomic read     relaxed  00000000004040B0   0                   0   ( 0,  4,  0, 18)
+19   3    thread sleep    seq_cst  0000000000000000   0x3e8                   ( 0,  4,  0, 19)
+20   3    atomic read     relaxed  00000000004040B0   0                   0   ( 0,  4,  0, 20)
+21   3    thread sleep    seq_cst  0000000000000000   0x3e8                   ( 0,  4,  0, 21)
+22   3    atomic read     relaxed  00000000004040B0   0x1                 9   ( 0,  4,  0, 22)
+23   3    fence           acquire  0000000000000007   0xdeadbeef              ( 0,  4,  8, 23)
+24   3    thread sleep    seq_cst  0000000000000000   0x3e8                   ( 0,  4,  8, 24)
+25   3    atomic read     acquire  00000000004040A0   0x4                 3   ( 0,  4,  8, 25)
+26   3    thread finish   seq_cst  00007FB270FF3058   0xdeadbeef              ( 0,  4,  8, 26)
+27   1    pthread join    seq_cst  00007FB270FF3058   0x3                     ( 0, 27, 14, 26)
+28   1    thread finish   seq_cst  00007FB26F670110   0xdeadbeef              ( 0, 28, 14, 26)
+HASH 901735816
+------------------------------------------------------------------------------------

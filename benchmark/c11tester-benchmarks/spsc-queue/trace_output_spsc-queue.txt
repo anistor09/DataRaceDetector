@@ -1,0 +1,346 @@
+C11Tester
+Copyright (c) 2013 and 2019 Regents of the University of California. All rights reserved.
+Distributed under the GPLv2
+Written by Weiyu Luo, Brian Norris, and Brian Demsky
+
+Program output from execution 1:
+---- BEGIN PROGRAM OUTPUT ----
+---- END PROGRAM OUTPUT   ----
+
+Execution trace 1:
+------------------------------------------------------------------------------------
+#    t    Action type     MO       Location         Value               Rf  CV
+------------------------------------------------------------------------------------
+1    1    thread start    seq_cst  00007F4641EED110   0xdeadbeef              ( 0,  1)
+2    1    atomic write    seq_cst  00000000272E0EC0   0                       ( 0,  2)
+3    1    atomic write    seq_cst  00000000272E0F60   0                       ( 0,  3)
+4    1    pthread create  seq_cst  00007FFF2F137F38   0x7fff2f137e20          ( 0,  4)
+5    2    thread start    seq_cst  00007F46436F01A0   0xdeadbeef              ( 0,  4,  5)
+6    1    pthread create  seq_cst  00007FFF2F137F38   0x7fff2f137e20          ( 0,  6)
+7    3    thread start    seq_cst  00007F46439F1208   0xdeadbeef              ( 0,  6,  0,  7)
+8    3    atomic read     acquire  00000000272E0F60   0                   3   ( 0,  6,  0,  8)
+9    3    atomic rmw      seq_cst  00000000272E0EC0   0                 (80000000)  2   ( 0,  6,  0,  9)
+10   3    atomic read     acquire  00000000272E0F60   0                   3   ( 0,  6,  0, 10)
+11   3    atomic read     seq_cst  00000000272E0EC0   0x80000000          9   ( 0,  6,  0, 11)
+12   3    lock            seq_cst  00007F4643C732E8   0xdeadbeef              ( 0,  6,  0, 12)
+13   2    atomic write    seq_cst  00007F463C000B60   0                       ( 0,  4, 13)
+14   2    atomic write    release  00000000272E0F60   0x7f463c000b60          ( 0,  4, 14)
+15   2    atomic read     relaxed  00000000272E0EC0   0x80000000          9   ( 0,  4, 15)
+16   3    atomic read     seq_cst  00000000272E0EC0   0x80000000          9   ( 0,  6,  0, 16)
+17   3    wait            seq_cst  00007F4643CF52A0   0x7f4643c732e8          ( 0,  6,  0, 17)
+18   2    lock            seq_cst  00007F4643C732E8   0xdeadbeef              ( 0,  6, 18, 17)
+19   2    atomic rmw      relaxed  00000000272E0EC0   0x80000000        (1)  9   ( 0,  6, 19, 17)
+20   2    unlock          seq_cst  00007F4643C732E8   0xdeadbeef              ( 0,  6, 20, 17)
+21   2    notify all      seq_cst  00007F4643CF52A0   0xdeadbeef              ( 0,  6, 21, 17)
+22   2    thread finish   seq_cst  00007F46436F01A0   0xdeadbeef              ( 0,  6, 22, 17)
+23   1    pthread join    seq_cst  00007F46436F01A0   0x2                     ( 0, 23, 22, 17)
+24   3    lock            seq_cst  00007F4643C732E8   0xdeadbeef              ( 0,  6, 20, 24)
+25   3    unlock          seq_cst  00007F4643C732E8   0xdeadbeef              ( 0,  6, 20, 25)
+26   3    unlock          seq_cst  00007F4643C732E8   0xdeadbeef              ( 0,  6, 20, 26)
+27   3    atomic read     acquire  00000000272E0F60   0x7f463c000b60      14  ( 0,  6, 20, 27)
+28   3    thread finish   seq_cst  00007F46439F1208   0xdeadbeef              ( 0,  6, 20, 28)
+29   1    pthread join    seq_cst  00007F46439F1208   0x3                     ( 0, 29, 22, 28)
+30   1    thread finish   seq_cst  00007F4641EED110   0xdeadbeef              ( 0, 30, 22, 28)
+HASH 3533919974
+------------------------------------------------------------------------------------
+
+Program output from execution 2:
+---- BEGIN PROGRAM OUTPUT ----
+---- END PROGRAM OUTPUT   ----
+
+Execution trace 2:
+------------------------------------------------------------------------------------
+#    t    Action type     MO       Location         Value               Rf  CV
+------------------------------------------------------------------------------------
+1    1    thread start    seq_cst  00007F4641EED110   0xdeadbeef              ( 0,  1)
+2    1    atomic write    seq_cst  00000000272E0EC0   0                       ( 0,  2)
+3    1    atomic write    seq_cst  00000000272E0F60   0                       ( 0,  3)
+4    1    pthread create  seq_cst  00007FFF2F137F38   0x7fff2f137e20          ( 0,  4)
+5    2    thread start    seq_cst  00007F46436F01A0   0xdeadbeef              ( 0,  4,  5)
+6    1    pthread create  seq_cst  00007FFF2F137F38   0x7fff2f137e20          ( 0,  6)
+7    3    thread start    seq_cst  00007F46439F1208   0xdeadbeef              ( 0,  6,  0,  7)
+8    2    atomic write    seq_cst  00007F463C000B60   0                       ( 0,  4,  8)
+9    2    atomic write    release  00000000272E0F60   0x7f463c000b60          ( 0,  4,  9)
+10   3    atomic read     acquire  00000000272E0F60   0                   3   ( 0,  6,  0, 10)
+11   3    atomic rmw      seq_cst  00000000272E0EC0   0                 (80000000)  2   ( 0,  6,  0, 11)
+12   3    atomic read     acquire  00000000272E0F60   0x7f463c000b60      9   ( 0,  6,  9, 12)
+13   3    thread finish   seq_cst  00007F46439F1208   0xdeadbeef              ( 0,  6,  9, 13)
+14   2    atomic read     relaxed  00000000272E0EC0   0                   2   ( 0,  4, 14)
+15   2    thread finish   seq_cst  00007F46436F01A0   0xdeadbeef              ( 0,  4, 15)
+16   1    pthread join    seq_cst  00007F46436F01A0   0x2                     ( 0, 16, 15)
+17   1    pthread join    seq_cst  00007F46439F1208   0x3                     ( 0, 17, 15, 13)
+18   1    thread finish   seq_cst  00007F4641EED110   0xdeadbeef              ( 0, 18, 15, 13)
+HASH 3959709358
+------------------------------------------------------------------------------------
+
+Program output from execution 3:
+---- BEGIN PROGRAM OUTPUT ----
+---- END PROGRAM OUTPUT   ----
+
+Execution trace 3:
+------------------------------------------------------------------------------------
+#    t    Action type     MO       Location         Value               Rf  CV
+------------------------------------------------------------------------------------
+1    1    thread start    seq_cst  00007F4641EED110   0xdeadbeef              ( 0,  1)
+2    1    atomic write    seq_cst  00000000272E0EC0   0                       ( 0,  2)
+3    1    atomic write    seq_cst  00000000272E0F60   0                       ( 0,  3)
+4    1    pthread create  seq_cst  00007FFF2F137F38   0x7fff2f137e20          ( 0,  4)
+5    2    thread start    seq_cst  00007F46436F01A0   0xdeadbeef              ( 0,  4,  5)
+6    1    pthread create  seq_cst  00007FFF2F137F38   0x7fff2f137e20          ( 0,  6)
+7    3    thread start    seq_cst  00007F46439F1208   0xdeadbeef              ( 0,  6,  0,  7)
+8    3    atomic read     acquire  00000000272E0F60   0                   3   ( 0,  6,  0,  8)
+9    3    atomic rmw      seq_cst  00000000272E0EC0   0                 (80000000)  2   ( 0,  6,  0,  9)
+10   3    atomic read     acquire  00000000272E0F60   0                   3   ( 0,  6,  0, 10)
+11   3    atomic read     seq_cst  00000000272E0EC0   0x80000000          9   ( 0,  6,  0, 11)
+12   3    lock            seq_cst  00007F4643C732E8   0xdeadbeef              ( 0,  6,  0, 12)
+13   2    atomic write    seq_cst  00007F463C000B60   0                       ( 0,  4, 13)
+14   2    atomic write    release  00000000272E0F60   0x7f463c000b60          ( 0,  4, 14)
+15   2    atomic read     relaxed  00000000272E0EC0   0x80000000          9   ( 0,  4, 15)
+16   3    atomic read     seq_cst  00000000272E0EC0   0x80000000          9   ( 0,  6,  0, 16)
+17   3    wait            seq_cst  00007F4643CF52A0   0x7f4643c732e8          ( 0,  6,  0, 17)
+18   2    lock            seq_cst  00007F4643C732E8   0xdeadbeef              ( 0,  6, 18, 17)
+19   2    atomic rmw      relaxed  00000000272E0EC0   0x80000000        (1)  9   ( 0,  6, 19, 17)
+20   2    unlock          seq_cst  00007F4643C732E8   0xdeadbeef              ( 0,  6, 20, 17)
+21   2    notify all      seq_cst  00007F4643CF52A0   0xdeadbeef              ( 0,  6, 21, 17)
+22   2    thread finish   seq_cst  00007F46436F01A0   0xdeadbeef              ( 0,  6, 22, 17)
+23   1    pthread join    seq_cst  00007F46436F01A0   0x2                     ( 0, 23, 22, 17)
+24   3    lock            seq_cst  00007F4643C732E8   0xdeadbeef              ( 0,  6, 20, 24)
+25   3    unlock          seq_cst  00007F4643C732E8   0xdeadbeef              ( 0,  6, 20, 25)
+26   3    unlock          seq_cst  00007F4643C732E8   0xdeadbeef              ( 0,  6, 20, 26)
+27   3    atomic read     acquire  00000000272E0F60   0x7f463c000b60      14  ( 0,  6, 20, 27)
+28   3    thread finish   seq_cst  00007F46439F1208   0xdeadbeef              ( 0,  6, 20, 28)
+29   1    pthread join    seq_cst  00007F46439F1208   0x3                     ( 0, 29, 22, 28)
+30   1    thread finish   seq_cst  00007F4641EED110   0xdeadbeef              ( 0, 30, 22, 28)
+HASH 3533919974
+------------------------------------------------------------------------------------
+
+Program output from execution 4:
+---- BEGIN PROGRAM OUTPUT ----
+---- END PROGRAM OUTPUT   ----
+
+Execution trace 4:
+------------------------------------------------------------------------------------
+#    t    Action type     MO       Location         Value               Rf  CV
+------------------------------------------------------------------------------------
+1    1    thread start    seq_cst  00007F4641EED110   0xdeadbeef              ( 0,  1)
+2    1    atomic write    seq_cst  00000000272E0EC0   0                       ( 0,  2)
+3    1    atomic write    seq_cst  00000000272E0F60   0                       ( 0,  3)
+4    1    pthread create  seq_cst  00007FFF2F137F38   0x7fff2f137e20          ( 0,  4)
+5    2    thread start    seq_cst  00007F46436F01A0   0xdeadbeef              ( 0,  4,  5)
+6    1    pthread create  seq_cst  00007FFF2F137F38   0x7fff2f137e20          ( 0,  6)
+7    3    thread start    seq_cst  00007F46439F1208   0xdeadbeef              ( 0,  6,  0,  7)
+8    2    atomic write    seq_cst  00007F463C000B60   0                       ( 0,  4,  8)
+9    2    atomic write    release  00000000272E0F60   0x7f463c000b60          ( 0,  4,  9)
+10   3    atomic read     acquire  00000000272E0F60   0x7f463c000b60      9   ( 0,  6,  9, 10)
+11   3    thread finish   seq_cst  00007F46439F1208   0xdeadbeef              ( 0,  6,  9, 11)
+12   2    atomic read     relaxed  00000000272E0EC0   0                   2   ( 0,  4, 12)
+13   2    thread finish   seq_cst  00007F46436F01A0   0xdeadbeef              ( 0,  4, 13)
+14   1    pthread join    seq_cst  00007F46436F01A0   0x2                     ( 0, 14, 13)
+15   1    pthread join    seq_cst  00007F46439F1208   0x3                     ( 0, 15, 13, 11)
+16   1    thread finish   seq_cst  00007F4641EED110   0xdeadbeef              ( 0, 16, 13, 11)
+HASH 4118386950
+------------------------------------------------------------------------------------
+
+Program output from execution 5:
+---- BEGIN PROGRAM OUTPUT ----
+---- END PROGRAM OUTPUT   ----
+
+Bug report: 1 bug detected
+  [BUG] Deadlock detected
+
+Execution trace 5: DETECTED BUG(S)
+------------------------------------------------------------------------------------
+#    t    Action type     MO       Location         Value               Rf  CV
+------------------------------------------------------------------------------------
+1    1    thread start    seq_cst  00007F4641EED110   0xdeadbeef              ( 0,  1)
+2    1    atomic write    seq_cst  00000000272E0EC0   0                       ( 0,  2)
+3    1    atomic write    seq_cst  00000000272E0F60   0                       ( 0,  3)
+4    1    pthread create  seq_cst  00007FFF2F137F38   0x7fff2f137e20          ( 0,  4)
+5    2    thread start    seq_cst  00007F46436F01A0   0xdeadbeef              ( 0,  4,  5)
+6    1    pthread create  seq_cst  00007FFF2F137F38   0x7fff2f137e20          ( 0,  6)
+7    3    thread start    seq_cst  00007F46439F1208   0xdeadbeef              ( 0,  6,  0,  7)
+8    3    atomic read     acquire  00000000272E0F60   0                   3   ( 0,  6,  0,  8)
+9    2    atomic write    seq_cst  00007F463C000B60   0                       ( 0,  4,  9)
+10   2    atomic write    release  00000000272E0F60   0x7f463c000b60          ( 0,  4, 10)
+11   2    atomic read     relaxed  00000000272E0EC0   0                   2   ( 0,  4, 11)
+12   2    thread finish   seq_cst  00007F46436F01A0   0xdeadbeef              ( 0,  4, 12)
+13   3    atomic rmw      seq_cst  00000000272E0EC0   0                 (80000000)  2   ( 0,  6,  0, 13)
+14   3    atomic read     acquire  00000000272E0F60   0                   3   ( 0,  6,  0, 14)
+15   3    atomic read     seq_cst  00000000272E0EC0   0x80000000          13  ( 0,  6,  0, 15)
+16   3    lock            seq_cst  00007F4643770BF0   0xdeadbeef              ( 0,  6,  0, 16)
+17   3    atomic read     seq_cst  00000000272E0EC0   0x80000000          13  ( 0,  6,  0, 17)
+18   1    pthread join    seq_cst  00007F46436F01A0   0x2                     ( 0, 18, 12)
+19   3    wait            seq_cst  00007F46437713A0   0x7f4643770bf0          ( 0,  6,  0, 19)
+HASH 3010404361
+------------------------------------------------------------------------------------
+
+Program output from execution 6:
+---- BEGIN PROGRAM OUTPUT ----
+---- END PROGRAM OUTPUT   ----
+
+Execution trace 6:
+------------------------------------------------------------------------------------
+#    t    Action type     MO       Location         Value               Rf  CV
+------------------------------------------------------------------------------------
+1    1    thread start    seq_cst  00007F4641EED110   0xdeadbeef              ( 0,  1)
+2    1    atomic write    seq_cst  00000000272E0EC0   0                       ( 0,  2)
+3    1    atomic write    seq_cst  00000000272E0F60   0                       ( 0,  3)
+4    1    pthread create  seq_cst  00007FFF2F137F38   0x7fff2f137e20          ( 0,  4)
+5    2    thread start    seq_cst  00007F46436F01A0   0xdeadbeef              ( 0,  4,  5)
+6    1    pthread create  seq_cst  00007FFF2F137F38   0x7fff2f137e20          ( 0,  6)
+7    3    thread start    seq_cst  00007F46439F1208   0xdeadbeef              ( 0,  6,  0,  7)
+8    3    atomic read     acquire  00000000272E0F60   0                   3   ( 0,  6,  0,  8)
+9    2    atomic write    seq_cst  00007F463C000B60   0                       ( 0,  4,  9)
+10   2    atomic write    release  00000000272E0F60   0x7f463c000b60          ( 0,  4, 10)
+11   2    atomic read     relaxed  00000000272E0EC0   0                   2   ( 0,  4, 11)
+12   2    thread finish   seq_cst  00007F46436F01A0   0xdeadbeef              ( 0,  4, 12)
+13   1    pthread join    seq_cst  00007F46436F01A0   0x2                     ( 0, 13, 12)
+14   3    atomic rmw      seq_cst  00000000272E0EC0   0                 (80000000)  2   ( 0,  6,  0, 14)
+15   3    atomic read     acquire  00000000272E0F60   0                   3   ( 0,  6,  0, 15)
+16   3    atomic read     seq_cst  00000000272E0EC0   0x80000000          14  ( 0,  6,  0, 16)
+17   3    lock            seq_cst  00007F4643771448   0xdeadbeef              ( 0,  6,  0, 17)
+18   3    atomic read     seq_cst  00000000272E0EC0   0x80000000          14  ( 0,  6,  0, 18)
+19   3    wait            seq_cst  00007F4643771B60   0x7f4643771448          ( 0,  6,  0, 19)
+20   3    lock            seq_cst  00007F4643771448   0xdeadbeef              ( 0,  6,  0, 20)
+21   3    unlock          seq_cst  00007F4643771448   0xdeadbeef              ( 0,  6,  0, 21)
+22   3    unlock          seq_cst  00007F4643771448   0xdeadbeef              ( 0,  6,  0, 22)
+23   3    atomic read     acquire  00000000272E0F60   0x7f463c000b60      10  ( 0,  6, 10, 23)
+24   3    thread finish   seq_cst  00007F46439F1208   0xdeadbeef              ( 0,  6, 10, 24)
+25   1    pthread join    seq_cst  00007F46439F1208   0x3                     ( 0, 25, 12, 24)
+26   1    thread finish   seq_cst  00007F4641EED110   0xdeadbeef              ( 0, 26, 12, 24)
+HASH 3391214596
+------------------------------------------------------------------------------------
+
+Program output from execution 7:
+---- BEGIN PROGRAM OUTPUT ----
+---- END PROGRAM OUTPUT   ----
+
+Execution trace 7:
+------------------------------------------------------------------------------------
+#    t    Action type     MO       Location         Value               Rf  CV
+------------------------------------------------------------------------------------
+1    1    thread start    seq_cst  00007F4641EED110   0xdeadbeef              ( 0,  1)
+2    1    atomic write    seq_cst  00000000272E0EC0   0                       ( 0,  2)
+3    1    atomic write    seq_cst  00000000272E0F60   0                       ( 0,  3)
+4    1    pthread create  seq_cst  00007FFF2F137F38   0x7fff2f137e20          ( 0,  4)
+5    2    thread start    seq_cst  00007F46436F01A0   0xdeadbeef              ( 0,  4,  5)
+6    1    pthread create  seq_cst  00007FFF2F137F38   0x7fff2f137e20          ( 0,  6)
+7    3    thread start    seq_cst  00007F46439F1208   0xdeadbeef              ( 0,  6,  0,  7)
+8    2    atomic write    seq_cst  00007F463C000B60   0                       ( 0,  4,  8)
+9    2    atomic write    release  00000000272E0F60   0x7f463c000b60          ( 0,  4,  9)
+10   3    atomic read     acquire  00000000272E0F60   0                   3   ( 0,  6,  0, 10)
+11   3    atomic rmw      seq_cst  00000000272E0EC0   0                 (80000000)  2   ( 0,  6,  0, 11)
+12   2    atomic read     relaxed  00000000272E0EC0   0                   2   ( 0,  4, 12)
+13   2    thread finish   seq_cst  00007F46436F01A0   0xdeadbeef              ( 0,  4, 13)
+14   3    atomic read     acquire  00000000272E0F60   0x7f463c000b60      9   ( 0,  6,  9, 14)
+15   3    thread finish   seq_cst  00007F46439F1208   0xdeadbeef              ( 0,  6,  9, 15)
+16   1    pthread join    seq_cst  00007F46436F01A0   0x2                     ( 0, 16, 13)
+17   1    pthread join    seq_cst  00007F46439F1208   0x3                     ( 0, 17, 13, 15)
+18   1    thread finish   seq_cst  00007F4641EED110   0xdeadbeef              ( 0, 18, 13, 15)
+HASH 3234725998
+------------------------------------------------------------------------------------
+
+Program output from execution 8:
+---- BEGIN PROGRAM OUTPUT ----
+---- END PROGRAM OUTPUT   ----
+
+Execution trace 8:
+------------------------------------------------------------------------------------
+#    t    Action type     MO       Location         Value               Rf  CV
+------------------------------------------------------------------------------------
+1    1    thread start    seq_cst  00007F4641EED110   0xdeadbeef              ( 0,  1)
+2    1    atomic write    seq_cst  00000000272E0EC0   0                       ( 0,  2)
+3    1    atomic write    seq_cst  00000000272E0F60   0                       ( 0,  3)
+4    1    pthread create  seq_cst  00007FFF2F137F38   0x7fff2f137e20          ( 0,  4)
+5    2    thread start    seq_cst  00007F46436F01A0   0xdeadbeef              ( 0,  4,  5)
+6    1    pthread create  seq_cst  00007FFF2F137F38   0x7fff2f137e20          ( 0,  6)
+7    3    thread start    seq_cst  00007F46439F1208   0xdeadbeef              ( 0,  6,  0,  7)
+8    3    atomic read     acquire  00000000272E0F60   0                   3   ( 0,  6,  0,  8)
+9    2    atomic write    seq_cst  00007F463C000B60   0                       ( 0,  4,  9)
+10   2    atomic write    release  00000000272E0F60   0x7f463c000b60          ( 0,  4, 10)
+11   2    atomic read     relaxed  00000000272E0EC0   0                   2   ( 0,  4, 11)
+12   2    thread finish   seq_cst  00007F46436F01A0   0xdeadbeef              ( 0,  4, 12)
+13   1    pthread join    seq_cst  00007F46436F01A0   0x2                     ( 0, 13, 12)
+14   3    atomic rmw      seq_cst  00000000272E0EC0   0                 (80000000)  2   ( 0,  6,  0, 14)
+15   3    atomic read     acquire  00000000272E0F60   0x7f463c000b60      10  ( 0,  6, 10, 15)
+16   3    thread finish   seq_cst  00007F46439F1208   0xdeadbeef              ( 0,  6, 10, 16)
+17   1    pthread join    seq_cst  00007F46439F1208   0x3                     ( 0, 17, 12, 16)
+18   1    thread finish   seq_cst  00007F4641EED110   0xdeadbeef              ( 0, 18, 12, 16)
+HASH 3963421213
+------------------------------------------------------------------------------------
+
+Program output from execution 9:
+---- BEGIN PROGRAM OUTPUT ----
+---- END PROGRAM OUTPUT   ----
+
+Execution trace 9:
+------------------------------------------------------------------------------------
+#    t    Action type     MO       Location         Value               Rf  CV
+------------------------------------------------------------------------------------
+1    1    thread start    seq_cst  00007F4641EED110   0xdeadbeef              ( 0,  1)
+2    1    atomic write    seq_cst  00000000272E0EC0   0                       ( 0,  2)
+3    1    atomic write    seq_cst  00000000272E0F60   0                       ( 0,  3)
+4    1    pthread create  seq_cst  00007FFF2F137F38   0x7fff2f137e20          ( 0,  4)
+5    2    thread start    seq_cst  00007F46436F01A0   0xdeadbeef              ( 0,  4,  5)
+6    1    pthread create  seq_cst  00007FFF2F137F38   0x7fff2f137e20          ( 0,  6)
+7    3    thread start    seq_cst  00007F46439F1208   0xdeadbeef              ( 0,  6,  0,  7)
+8    3    atomic read     acquire  00000000272E0F60   0                   3   ( 0,  6,  0,  8)
+9    2    atomic write    seq_cst  00007F463C000B60   0                       ( 0,  4,  9)
+10   2    atomic write    release  00000000272E0F60   0x7f463c000b60          ( 0,  4, 10)
+11   3    atomic rmw      seq_cst  00000000272E0EC0   0                 (80000000)  2   ( 0,  6,  0, 11)
+12   2    atomic read     relaxed  00000000272E0EC0   0x80000000          11  ( 0,  4, 12)
+13   3    atomic read     acquire  00000000272E0F60   0                   3   ( 0,  6,  0, 13)
+14   2    lock            seq_cst  00007F4643C74938   0xdeadbeef              ( 0,  4, 14)
+15   3    atomic read     seq_cst  00000000272E0EC0   0x80000000          11  ( 0,  6,  0, 15)
+16   2    atomic rmw      relaxed  00000000272E0EC0   0x80000000        (1)  11  ( 0,  4, 16)
+17   2    unlock          seq_cst  00007F4643C74938   0xdeadbeef              ( 0,  4, 17)
+18   2    thread finish   seq_cst  00007F46436F01A0   0xdeadbeef              ( 0,  4, 18)
+19   1    pthread join    seq_cst  00007F46436F01A0   0x2                     ( 0, 19, 18)
+20   3    lock            seq_cst  00007F4643C74938   0xdeadbeef              ( 0,  6, 17, 20)
+21   3    atomic read     seq_cst  00000000272E0EC0   0x1                 16  ( 0,  6, 17, 21)
+22   3    unlock          seq_cst  00007F4643C74938   0xdeadbeef              ( 0,  6, 17, 22)
+23   3    unlock          seq_cst  00007F4643C74938   0xdeadbeef              ( 0,  6, 17, 23)
+24   3    atomic read     acquire  00000000272E0F60   0x7f463c000b60      10  ( 0,  6, 17, 24)
+25   3    thread finish   seq_cst  00007F46439F1208   0xdeadbeef              ( 0,  6, 17, 25)
+26   1    pthread join    seq_cst  00007F46439F1208   0x3                     ( 0, 26, 18, 25)
+27   1    thread finish   seq_cst  00007F4641EED110   0xdeadbeef              ( 0, 27, 18, 25)
+HASH 2659941827
+------------------------------------------------------------------------------------
+
+Program output from execution 10:
+---- BEGIN PROGRAM OUTPUT ----
+---- END PROGRAM OUTPUT   ----
+
+Bug report: 1 bug detected
+  [BUG] Deadlock detected
+
+Execution trace 10: DETECTED BUG(S)
+------------------------------------------------------------------------------------
+#    t    Action type     MO       Location         Value               Rf  CV
+------------------------------------------------------------------------------------
+1    1    thread start    seq_cst  00007F4641EED110   0xdeadbeef              ( 0,  1)
+2    1    atomic write    seq_cst  00000000272E0EC0   0                       ( 0,  2)
+3    1    atomic write    seq_cst  00000000272E0F60   0                       ( 0,  3)
+4    1    pthread create  seq_cst  00007FFF2F137F38   0x7fff2f137e20          ( 0,  4)
+5    2    thread start    seq_cst  00007F46436F01A0   0xdeadbeef              ( 0,  4,  5)
+6    1    pthread create  seq_cst  00007FFF2F137F38   0x7fff2f137e20          ( 0,  6)
+7    3    thread start    seq_cst  00007F46439F1208   0xdeadbeef              ( 0,  6,  0,  7)
+8    3    atomic read     acquire  00000000272E0F60   0                   3   ( 0,  6,  0,  8)
+9    3    atomic rmw      seq_cst  00000000272E0EC0   0                 (80000000)  2   ( 0,  6,  0,  9)
+10   3    atomic read     acquire  00000000272E0F60   0                   3   ( 0,  6,  0, 10)
+11   3    atomic read     seq_cst  00000000272E0EC0   0x80000000          9   ( 0,  6,  0, 11)
+12   3    lock            seq_cst  00007F4643C732E8   0xdeadbeef              ( 0,  6,  0, 12)
+13   2    atomic write    seq_cst  00007F463C000B60   0                       ( 0,  4, 13)
+14   2    atomic write    release  00000000272E0F60   0x7f463c000b60          ( 0,  4, 14)
+15   3    atomic read     seq_cst  00000000272E0EC0   0x80000000          9   ( 0,  6,  0, 15)
+16   3    wait            seq_cst  00007F4643C74CF0   0x7f4643c732e8          ( 0,  6,  0, 16)
+17   2    atomic read     relaxed  00000000272E0EC0   0                   2   ( 0,  4, 17)
+18   2    thread finish   seq_cst  00007F46436F01A0   0xdeadbeef              ( 0,  4, 18)
+19   1    pthread join    seq_cst  00007F46436F01A0   0x2                     ( 0, 19, 18)
+HASH 4209750001
+------------------------------------------------------------------------------------
+
+******* Model-checking complete: *******
+Number of complete, bug-free executions: 8
+Number of buggy executions: 2
+Total executions: 10

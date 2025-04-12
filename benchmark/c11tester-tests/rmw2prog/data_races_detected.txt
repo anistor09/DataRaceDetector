@@ -1,0 +1,11 @@
+Data race detected between
+ThreadAction(id=6, thread_id=2, action_type='nonatomic write', memory_order='relaxed', location='0000000000404078', value='0x13b')
+ThreadAction(id=8, thread_id=3, action_type='nonatomic write', memory_order='relaxed', location='0000000000404078', value='0x5')
+
+Data race detected between
+ThreadAction(id=6, thread_id=2, action_type='nonatomic write', memory_order='relaxed', location='0000000000404078', value='0x13b')
+ThreadAction(id=13, thread_id=3, action_type='atomic read', memory_order='acquire', location='0000000000404078', value='0x13b', read_from=5)
+
+Data race detected between
+ThreadAction(id=8, thread_id=3, action_type='nonatomic write', memory_order='relaxed', location='0000000000404078', value='0x5')
+ThreadAction(id=10, thread_id=2, action_type='atomic read', memory_order='acquire', location='0000000000404078', value='0x13b', read_from=5)

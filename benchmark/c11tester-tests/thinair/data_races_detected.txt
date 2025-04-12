@@ -1,0 +1,3 @@
+Data race detected between
+ThreadAction(id=8, thread_id=3, action_type='nonatomic write', memory_order='relaxed', location='0000000000404084', value='0x1')
+ThreadAction(id=11, thread_id=2, action_type='atomic read', memory_order='acquire', location='0000000000404084', value='0x1', read_from=7)
