@@ -7,11 +7,12 @@ sys.setrecursionlimit(1000000)
 
 
 def main():
-    trace_name = "benchmark/self-made-tests/fences/fences.txt"
+    trace_name = "trace.txt"
     # 1) Parse input
     execution_trace_list = parse_trace(trace_name)
     for trace in execution_trace_list:
         hb_graph = HBGraph(trace)
+        print(hb_graph)
         data_races = hb_graph.detect_data_races()
         if not data_races:
             print("No data races found in this program")

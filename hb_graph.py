@@ -51,15 +51,15 @@ class HBGraph:
                             f_acquire = closest_fence_rightside.get(read.id)
                             # Fence-fence synchronization
                             if f_release is not None and f_acquire is not None:
-                                self.add_edge(f_release, f_acquire)
+                                self.add_edge(f_release, f_acquire, edge_type="sw")
                             # Fence-atomic synchronization
                             # the read has to be acquire, write can be any memory order, f_release is before write in thread A
                             if f_release is not None and read.memory_order in ("acquire", "seq_cst"):
-                                self.add_edge(f_release, read.id)
+                                self.add_edge(f_release, read.id, edge_type="sw")
                             # Atomic-fence synchronization
                             # the write has to be release, atomic read before fence in thread B, read has any memory order
                             if f_acquire is not None and write.memory_order in ("release", "seq_cst"):
-                                self.add_edge(write.id, f_acquire)
+                                self.add_edge(write.id, f_acquire, edge_type="sw")
 
     def __init__(self, trace:TraceStruct):
         # unique thread id trace size
@@ -77,6 +77,11 @@ class HBGraph:
         last_thread_create: Optional[int] = None
         thread_to_last_action:Dict[int,int] = {}
 
+        # The next 3 data structures are used only for plotting purposes
+        self.sw_edges: Set[Tuple[int, int]] = set()
+        self.po_edges: Set[Tuple[int, int]] = set()
+        self.action_types: Dict[int, str] = {}
+
         self.add_fences_sw_edges(trace)
 
         for action_group in trace.actions:
@@ -84,13 +89,13 @@ class HBGraph:
                 # adds to action to the list of actions per location
                 self.location_to_actions[action.location].append(action.id)
                 self.simple_action_list.append(action)
-
+                self.action_types[action.id] = action.action_type
 
                 # mutexes
                 # Create a SW edge from the last unlock on the same mutex to the current lock.
                 if action.action_type == "lock":
                     if action.location in mutex_last_unlock:
-                        self.add_edge(mutex_last_unlock[action.location], action.id)
+                        self.add_edge(mutex_last_unlock[action.location], action.id, edge_type="sw")
                 elif action.action_type == "unlock":
                     mutex_last_unlock[action.location] = action.id
                 # Condition variable wait
@@ -113,7 +118,7 @@ class HBGraph:
                 if action.memory_order == "acquire" and action.read_from:
                     for possible_parent in trace.actions[action.read_from]:
                         if possible_parent.memory_order == "release" and possible_parent.value == action.value and possible_parent.location == action.location:
-                            self.add_edge(possible_parent.id, action.id)
+                            self.add_edge(possible_parent.id, action.id, edge_type="sw")
 
                 if action.action_type == "thread start":
                     # if it's thread 1 since it does not have a thread that started it
@@ -122,26 +127,33 @@ class HBGraph:
                         # first thread
                         continue
                     # po edge between parent and child thread
-                    self.add_edge(last_thread_create, action.id)
+                    self.add_edge(last_thread_create, action.id, edge_type="po")
                     thread_to_last_action[action.thread_id] = action.id
                     # thread was just created
                     continue
                 
                 if action.action_type == "pthread join":
                     end_thread = int(action.value, 16)
-                    self.add_edge(thread_to_last_action[end_thread], action.id)
+                    self.add_edge(thread_to_last_action[end_thread], action.id, edge_type="po")
 
                 if action.action_type == "pthread create":
                     last_thread_create = action.id
 
                 # po edge from same thread to same thread
-                self.add_edge(thread_to_last_action[action.thread_id], action.id)
+                self.add_edge(thread_to_last_action[action.thread_id], action.id, edge_type="po")
                 # mark action as last processed action in thread
                 thread_to_last_action[action.thread_id] = action.id
         
 
-    def add_edge(self, parent, node):
+    # def add_edge(self, parent, node):
+    #     self.edges[parent].append(node)
+
+    def add_edge(self, parent, node, edge_type: Optional[str] = None):
         self.edges[parent].append(node)
+        if edge_type == "sw":
+            self.sw_edges.add((parent, node))
+        elif edge_type == "po":
+            self.po_edges.add((parent, node))
 
     def format_address_value_location(self, hex_value):
         formatted = f"{int(hex_value, 16):016X}"
@@ -159,6 +171,18 @@ class HBGraph:
         for loc, ids in self.location_to_actions.items():
             ids_str = ", ".join(map(str, ids))
             result.append(f"    {loc}: [{ids_str}]")
+
+        result.append("  SW Edges:")
+        for (src, dst) in sorted(self.sw_edges):
+            result.append(f"    {src} -> {dst}")
+
+        result.append("  PO Edges:")
+        for (src, dst) in sorted(self.po_edges):
+            result.append(f"    {src} -> {dst}")
+
+        result.append("  Action ID to Type:")
+        for action_id, action_type in sorted(self.action_types.items()):
+            result.append(f"    {action_id}: {action_type}")
         
         return "\n".join(result)
     

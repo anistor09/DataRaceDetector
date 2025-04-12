@@ -48,7 +48,7 @@ def parse_trace(file_name):
                             "pthread create", "pthread join",
                             "thread start", "thread sleep",
                             "nonatomic write", "thread finish", "notify all",
-                            "atomic rmw",
+                            "atomic rmw", "thread create", "thread join"
                         }
                         if combined in known_two_word_actions:
                             action_type = combined
