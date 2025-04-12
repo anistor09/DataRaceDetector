@@ -1,52 +1,53 @@
 # NA-Race Detector
 
-## Overview
-This project detects **non-atomic data races (NA-races)** in execution traces of **C++ concurrent programs**. It processes an input trace, builds a **happens-before (HB) relation** using **thread start/finish and sequential execution**, and identifies data races where **at least one access is non-atomic**.
+## 🧠 Overview
 
-## How It Works
-1. **Reads** an execution trace from the console **(all lines at once)**.
-2. **Parses** only the first five columns:  
-   - **Event ID (EID)**  
-   - **Thread ID (T)**  
-   - **Action Type** (`thread start`, `non-atomic write`, `atomic read`, etc.)  
-   - **Memory Order (MO)** (`non-atomic`, `relaxed`, `seq_cst`, etc.)  
-   - **Memory Location** (`&g_counter`, `&g_atomicCounter`, etc.)  
-   - Everything after the **memory location is ignored**.
-3. **Builds a happens-before (HB) relation**:
-   - Orders events **within the same thread**.
-   - Orders **thread start** → first event and **last event** → **thread finish**.
-4. **Computes HB transitive closure** to determine **concurrent** events.
-5. **Detects NA-races** by checking:
-   - **Same memory location**
-   - **At least one write**
-   - **At least one non-atomic**
-   - **No happens-before relation** (concurrent accesses)
-6. **Outputs the detected NA-races** or confirms none were found.
+This project detects **non-atomic data races (NA-races)** in execution traces of **C++ concurrent programs**. It parses a trace of program execution, builds a **happens-before (HB) graph** using synchronization events and program order, and identifies potential data races where **at least one access is non-atomic**.
 
-## Input Format
-Each execution trace line should follow this format:
+---
 
+## 🚀 How It Works
 
-- **EID**: Unique Event ID
-- **T**: Thread ID
-- **Action Type**: Memory action (`read`, `write`, `atomic write`, etc.)
-- **MO (Memory Order)**: `non-atomic`, `relaxed`, `seq_cst`
-- **Location**: The shared variable (`&g_counter`)
-- **Everything after the memory location is ignored**.
+1. **Parse Execution Trace**  
+   Reads the execution trace (e.g., `signal_wait.txt`) and converts it into structured trace events.
 
-Example:
-Execution trace 1:
-------------------------------------------------------------------------------------
-#    t    Action type     MO       Location         Value               
-------------------------------------------------------------------------------------
-1    1    thread start    seq_cst  00007F2D69CFE110   0xdeadbeef              
-2    1    thread create   seq_cst  00007FFCF04A85D8   0x7ffcf04a8560  
+2. **Build Happens-Before (HB) Graph**  
+   Constructs a graph capturing the HB relations between events, based on:
+   - Program order (sequential execution within a thread)
+   - Synchronization primitives (e.g., `signal/wait`)
 
-## How to Use
-1. Run the script:
-2. **Enter trace data line by line**, then **press Ctrl+D** (Linux/macOS) or **Ctrl+Z + Enter** (Windows).
-3. The program will **analyze the trace** and output **detected non-atomic data races**.
+3. **Detect NA-Races**  
+   Identifies pairs of conflicting memory accesses (i.e., accesses to the same variable where at least one is a write) that are not ordered by the HB relation — and where **at least one is non-atomic**.
 
+## 📌 Usage
+
+1. Place your execution trace file in the `benchmark/` directory (e.g., `benchmark/DavidBenchmarks/signal_wait.txt`).
+
+2. Run the main script:
+
+```bash
+python main.py
+```
+
+3. Output will list all detected non-atomic data races, or indicate that none were found.
+
+---
+
+## 🧪 Example Output
+
+```
+Data race detected between
+[Thread 1] Write x at Line 42 (non-atomic)
+[Thread 2] Read x at Line 37 (atomic)
+```
+
+Or:
+
+```
+No data races found in this program
+```
+
+---
 
 ## Ce mai avem de facut
 1. Exemple mici (testele pe care le-am facut Nicu si David)
