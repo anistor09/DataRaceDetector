@@ -21,7 +21,7 @@ This project detects **non-atomic data races (NA-races)** in execution traces of
 
 ## 📌 Usage
 
-1. Place your execution trace file in the `benchmark/` directory (e.g., `benchmark/DavidBenchmarks/signal_wait.txt`).
+1. Place your execution trace file in the `benchmark/` directory.
 
 2. Run the main script:
 
