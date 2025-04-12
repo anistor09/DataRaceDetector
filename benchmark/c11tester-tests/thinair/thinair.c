@@ -14,7 +14,7 @@ static void a(void *obj)
 {
     usleep(1000); // 1 millisecond
 
-    int r1 = *x;
+    int r1 = x_val;
     *y = r1;
     printf("r1=%d %d\n", r1, y_val);
 }
@@ -23,7 +23,7 @@ static void b(void *obj)
 {
     usleep(1000); // 1 millisecond
 
-    int r2 = *y;
+    int r2 = y_val;
     *x = r2;
     *x = r2 + 1;
     printf("r2=%d %d\n", r2, x_val);

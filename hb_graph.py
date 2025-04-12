@@ -56,6 +56,7 @@ class HBGraph:
         self.trace:TraceStruct = trace
         # memory location to actions
         self.location_to_actions: Dict[str , List[int]] = defaultdict(lambda: [])
+        self.simple_action_list: List[ThreadAction] = []
         # last unlocked mutex for sw between unlock -> lock for a mutex location
         mutex_last_unlock: Dict[str, int] = {}
 
@@ -68,7 +69,7 @@ class HBGraph:
             for action in action_group: 
                 # adds to action to the list of actions per location
                 self.location_to_actions[action.location].append(action.id)
-
+                self.simple_action_list.append(action)
                 # mutexes
                 if action.action_type == "lock":
                     if action.location in mutex_last_unlock:
@@ -190,28 +191,23 @@ class HBGraph:
         return happensBefore
 
     def _get_action_by_id(self, action_id: int) -> ThreadAction:
-        for group in self.trace.actions:
-            for action in group:
-                if action.id == action_id:
-                    return action
-
+        return self.simple_action_list[action_id]
+    
     def detect_data_races(self) -> List[Tuple[ThreadAction, ThreadAction]]:
         dependency_sets = self._compute_dependency_sets()
         races = []
 
         for location, action_ids in self.location_to_actions.items():
             for i in range(len(action_ids)):
-                for j in range(i + 1, len(action_ids)):
-                    id1, id2 = action_ids[i], action_ids[j]
-                    a1 = self._get_action_by_id(id1)
-                    a2 = self._get_action_by_id(id2)
-
-                    if a1.thread_id == a2.thread_id:
-                        continue
-                    if "nonatomic write" not in a1.action_type and "nonatomic write" not in a2.action_type:
-                        continue
-                    if id2 not in dependency_sets[id1] and id1 not in dependency_sets[id2]:
-                        races.append((a1, a2))
+                id1 = action_ids[i]
+                a1 = self._get_action_by_id(id1)
+                if a1.action_type == "nonatomic write":
+                    for j in range(1, len(action_ids)):
+                        id2 = action_ids[j]
+                        a2 = self._get_action_by_id(id2)
+                        if not (j <= i and a2.action_type == "nonatomic write"):
+                            if id2 not in dependency_sets[id1] and id1 not in dependency_sets[id2]:
+                                races.append((a1, a2))
         return races
 
     def _compute_dependency_sets(self) -> List[set]:

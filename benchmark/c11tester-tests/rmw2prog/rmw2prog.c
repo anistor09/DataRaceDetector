@@ -1,4 +1,4 @@
-GNU nano 4.8                                                                                                                c11tester-tests/test/rmw2prog.c                                                                                                                           #include <stdio.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
 #include <pthread.h>
@@ -36,6 +36,7 @@ void *b(void *obj)
     *x = 5;
 
     printf("v3 = %llu, v4 = %llu\n", v3, v4);
+    printf("Auxiliar_print x = %llu, y = %llu\n", x_val, y_val);
     return NULL;
 }
 
