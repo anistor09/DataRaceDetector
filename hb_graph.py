@@ -120,7 +120,7 @@ class HBGraph:
                         if possible_parent.memory_order == "release" and possible_parent.value == action.value and possible_parent.location == action.location:
                             self.add_edge(possible_parent.id, action.id, edge_type="sw")
 
-                if action.action_type == "thread start":
+                if action.action_type == "thread start" or action.action_type == "pthread start":
                     # if it's thread 1 since it does not have a thread that started it
                     if not last_thread_create:
                         thread_to_last_action[action.thread_id] = action.id
@@ -132,11 +132,11 @@ class HBGraph:
                     # thread was just created
                     continue
                 
-                if action.action_type == "pthread join":
+                if action.action_type == "pthread join" or action.action_type == "thread join":
                     end_thread = int(action.value, 16)
                     self.add_edge(thread_to_last_action[end_thread], action.id, edge_type="po")
 
-                if action.action_type == "pthread create":
+                if action.action_type == "pthread create" or action.action_type == "thread create":
                     last_thread_create = action.id
 
                 # po edge from same thread to same thread
@@ -180,9 +180,11 @@ class HBGraph:
         for (src, dst) in sorted(self.po_edges):
             result.append(f"    {src} -> {dst}")
 
-        result.append("  Action ID to Type:")
-        for action_id, action_type in sorted(self.action_types.items()):
-            result.append(f"    {action_id}: {action_type}")
+        result.append("  Action ID -> (ThreadID, ActionType):")
+        for action_id in sorted(self.action_types.keys()):
+            thread_id = self._get_action_by_id(action_id).thread_id
+            action_type = self.action_types[action_id]
+            result.append(f"    {action_id} -> (thread: {thread_id}, {action_type})")
         
         return "\n".join(result)
     

@@ -7,7 +7,7 @@ sys.setrecursionlimit(1000000)
 
 
 def main():
-    trace_name = "trace.txt"
+    trace_name = "benchmark/c11tester-tests/userprog/userprog.txt"
     # 1) Parse input
     execution_trace_list = parse_trace(trace_name)
     for trace in execution_trace_list:
