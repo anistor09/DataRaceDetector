@@ -34,9 +34,14 @@ class HBGraph:
                 elif action.action_type == "atomic read":
                     closest_fence_rightside[action.id] = prefix_fence_for_thread[tid]
 
-        # for the relaxed case of memory order of read and write, since sw edges for release acquire are already there
-        # goes through the reads, see if it has read froms, if it has it gets the closest release fence to the left of
-        # the write and adds a sw edge to the closest edge to the right of the read
+        # For each atomic read:
+        # - Check if it has a read-from relationship (it reads a value written by some write).
+        # - Look up the closest release-side fence before the write (in its thread).
+        # - Look up the closest acquire-side fence after the read (in its thread).
+        # Then add the appropriate edges based on C++11 synchronization rules:
+        # - Fence-to-Fence: release fence → acquire fence
+        # - Fence-to-Read: release fence → acquire read
+        # - Write-to-Fence: release write → acquire fence
         for action_group in trace.actions:
             for read in action_group:
                 if read.action_type == "atomic read" and read.read_from is not None:
@@ -44,8 +49,17 @@ class HBGraph:
                         if write.action_type == "atomic write" and write.location == read.location:
                             f_release = closest_fence_leftside.get(write.id)
                             f_acquire = closest_fence_rightside.get(read.id)
+                            # Fence-fence synchronization
                             if f_release is not None and f_acquire is not None:
                                 self.add_edge(f_release, f_acquire)
+                            # Fence-atomic synchronization
+                            # the read has to be acquire, write can be any memory order, f_release is before write in thread A
+                            if f_release is not None and read.memory_order in ("acquire", "seq_cst"):
+                                self.add_edge(f_release, read.id)
+                            # Atomic-fence synchronization
+                            # the write has to be release, atomic read before fence in thread B, read has any memory order
+                            if f_acquire is not None and write.memory_order in ("release", "seq_cst"):
+                                self.add_edge(write.id, f_acquire)
 
     def __init__(self, trace:TraceStruct):
         # unique thread id trace size
@@ -70,29 +84,31 @@ class HBGraph:
                 # adds to action to the list of actions per location
                 self.location_to_actions[action.location].append(action.id)
                 self.simple_action_list.append(action)
+
+
                 # mutexes
+                # Create a SW edge from the last unlock on the same mutex to the current lock.
                 if action.action_type == "lock":
                     if action.location in mutex_last_unlock:
                         self.add_edge(mutex_last_unlock[action.location], action.id)
                 elif action.action_type == "unlock":
                     mutex_last_unlock[action.location] = action.id
-                # condition variables (notify/wait)
-                # treat wait as an unlock: it releases a mutex (given by `value`),
-                # so we update mutex_last_unlock to allow a SW edge to the next lock.
-                # we don't track which notify triggered it—C++tester ensures correct thread is awakened.
-                # for broadcast if more threads are awakened, only one will actually execute, the others only when
-                # this chosen one will release the mutex.
-
-                # Under broadcast, only one thread resumes first (as per trace order).
-                # That thread unlocks the mutex, allowing the next resumed thread to lock it.
-                # Each resumed thread thus gets a SW edge from the previous one via lock/unlock.
-                # This creates transitive HB edges from the broadcast thread to all resumed threads,
+                # Condition variable wait
+                # Treat 'wait' as an implicit unlock of the associated mutex (stored in `value`).
+                # This allows a SW edge from the wait to the next lock on the same mutex.
+                #
+                # Note: We do NOT explicitly add notify edges.
+                # C++Tester guarantees the correct thread resumes from notify_one or notify_all.
+                #
+                # In broadcast cases (notify_all), only one thread proceeds first.
+                # When it unlocks the mutex, the next awakened thread can lock it, and so on.
+                # This builds transitive HB edges across resumed threads naturally through lock/unlock edges.
                 # so explicit notify one / notify all edges are unnecessary.
                 elif action.action_type == "wait":
                     address = self.format_address_value_location(action.value)
                     mutex_last_unlock[address] = action.id
 
-
+                # write release -> rf -> read acquire
                 # goes through action_group to find a possible sw parent
                 if action.memory_order == "acquire" and action.read_from:
                     for possible_parent in trace.actions[action.read_from]:
