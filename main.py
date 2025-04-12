@@ -12,7 +12,7 @@ sys.setrecursionlimit(1000000)
 
 
 def main():
-    trace_name = "benchmark/DavidBenchmarks/signal_wait.txt"
+    trace_name = "benchmark/self-made-tests/fences/fences.txt"
     # trace_name = "benchmark/NicuTest/trace_outputNicu.txt"
     # 1) Parse input
     execution_trace_list = parse_trace(trace_name)
