@@ -36,9 +36,16 @@ python main.py
 ## 🧪 Example Output
 
 ```
+
+--Output for execution trace 10
 Data race detected between
-[Thread 1] Write x at Line 42 (non-atomic)
-[Thread 2] Read x at Line 37 (atomic)
+ThreadAction(id=13, thread_id=3, action_type='nonatomic write', memory_order='relaxed', location='0000000000404088', value='0x2a')
+ThreadAction(id=7, thread_id=2, action_type='atomic read', memory_order='acquire', location='0000000000404088', value='0', read_from=0)
+
+Data race detected between
+ThreadAction(id=8, thread_id=2, action_type='nonatomic write', memory_order='relaxed', location='0000000000404084', value='0')
+ThreadAction(id=12, thread_id=3, action_type='atomic read', memory_order='acquire', location='0000000000404084', value='0', read_from=7)
+
 ```
 
 Or:
