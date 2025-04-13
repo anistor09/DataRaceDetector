@@ -12,10 +12,6 @@ ThreadAction(id=10, thread_id=5, action_type='nonatomic write', memory_order='re
 ThreadAction(id=27, thread_id=3, action_type='atomic read', memory_order='acquire', location='00000000004040A0', value='0x100000001', read_from=15)
 
 Data race detected between
-ThreadAction(id=10, thread_id=5, action_type='nonatomic write', memory_order='relaxed', location='00000000004040A0', value='0x200000002')
-ThreadAction(id=36, thread_id=1, action_type='atomic read', memory_order='acquire', location='00000000004040A0', value='0x200000002', read_from=9)
-
-Data race detected between
 ThreadAction(id=20, thread_id=3, action_type='nonatomic write', memory_order='relaxed', location='00000000004040A0', value='0x100000001')
 ThreadAction(id=22, thread_id=4, action_type='atomic read', memory_order='acquire', location='00000000004040A0', value='0x200000002', read_from=9)
 
@@ -24,8 +20,8 @@ ThreadAction(id=20, thread_id=3, action_type='nonatomic write', memory_order='re
 ThreadAction(id=26, thread_id=5, action_type='atomic read', memory_order='acquire', location='00000000004040A0', value='0x200000002', read_from=9)
 
 Data race detected between
-ThreadAction(id=20, thread_id=3, action_type='nonatomic write', memory_order='relaxed', location='00000000004040A0', value='0x100000001')
-ThreadAction(id=36, thread_id=1, action_type='atomic read', memory_order='acquire', location='00000000004040A0', value='0x200000002', read_from=9)
+ThreadAction(id=16, thread_id=4, action_type='nonatomic write', memory_order='relaxed', location='00000000004040A4', value='0x200000002')
+ThreadAction(id=12, thread_id=5, action_type='atomic read', memory_order='acquire', location='00000000004040A4', value='0x300000000', read_from=0)
 
 Data race detected between
 ThreadAction(id=16, thread_id=4, action_type='nonatomic write', memory_order='relaxed', location='00000000004040A4', value='0x200000002')
@@ -36,16 +32,12 @@ ThreadAction(id=16, thread_id=4, action_type='nonatomic write', memory_order='re
 ThreadAction(id=25, thread_id=3, action_type='atomic read', memory_order='acquire', location='00000000004040A4', value='0x200000002', read_from=14)
 
 Data race detected between
-ThreadAction(id=16, thread_id=4, action_type='nonatomic write', memory_order='relaxed', location='00000000004040A4', value='0x200000002')
-ThreadAction(id=35, thread_id=1, action_type='atomic read', memory_order='acquire', location='00000000004040A4', value='0x200000002', read_from=14)
+ThreadAction(id=19, thread_id=3, action_type='nonatomic write', memory_order='relaxed', location='00000000004040A4', value='0x200000001')
+ThreadAction(id=12, thread_id=5, action_type='atomic read', memory_order='acquire', location='00000000004040A4', value='0x300000000', read_from=0)
 
 Data race detected between
 ThreadAction(id=19, thread_id=3, action_type='nonatomic write', memory_order='relaxed', location='00000000004040A4', value='0x200000001')
 ThreadAction(id=21, thread_id=4, action_type='atomic read', memory_order='acquire', location='00000000004040A4', value='0x200000002', read_from=14)
-
-Data race detected between
-ThreadAction(id=19, thread_id=3, action_type='nonatomic write', memory_order='relaxed', location='00000000004040A4', value='0x200000001')
-ThreadAction(id=35, thread_id=1, action_type='atomic read', memory_order='acquire', location='00000000004040A4', value='0x200000002', read_from=14)
 
 Data race detected between
 ThreadAction(id=17, thread_id=4, action_type='nonatomic write', memory_order='relaxed', location='00000000004040A8', value='0x2')
@@ -54,10 +46,6 @@ ThreadAction(id=28, thread_id=5, action_type='atomic read', memory_order='acquir
 Data race detected between
 ThreadAction(id=17, thread_id=4, action_type='nonatomic write', memory_order='relaxed', location='00000000004040A8', value='0x2')
 ThreadAction(id=30, thread_id=3, action_type='atomic read', memory_order='acquire', location='00000000004040A8', value='0x2', read_from=14)
-
-Data race detected between
-ThreadAction(id=17, thread_id=4, action_type='nonatomic write', memory_order='relaxed', location='00000000004040A8', value='0x2')
-ThreadAction(id=37, thread_id=1, action_type='atomic read', memory_order='acquire', location='00000000004040A8', value='0x2', read_from=14)
 
 
 
@@ -75,20 +63,12 @@ ThreadAction(id=11, thread_id=4, action_type='nonatomic write', memory_order='re
 ThreadAction(id=20, thread_id=5, action_type='atomic read', memory_order='acquire', location='00000000004040A4', value='0x100000001', read_from=12)
 
 Data race detected between
-ThreadAction(id=11, thread_id=4, action_type='nonatomic write', memory_order='relaxed', location='00000000004040A4', value='0x300000002')
-ThreadAction(id=34, thread_id=1, action_type='atomic read', memory_order='acquire', location='00000000004040A4', value='0x100000001', read_from=12)
-
-Data race detected between
 ThreadAction(id=16, thread_id=3, action_type='nonatomic write', memory_order='relaxed', location='00000000004040A4', value='0x100000001')
 ThreadAction(id=20, thread_id=5, action_type='atomic read', memory_order='acquire', location='00000000004040A4', value='0x100000001', read_from=12)
 
 Data race detected between
 ThreadAction(id=16, thread_id=3, action_type='nonatomic write', memory_order='relaxed', location='00000000004040A4', value='0x100000001')
 ThreadAction(id=21, thread_id=4, action_type='atomic read', memory_order='acquire', location='00000000004040A4', value='0x100000001', read_from=12)
-
-Data race detected between
-ThreadAction(id=16, thread_id=3, action_type='nonatomic write', memory_order='relaxed', location='00000000004040A4', value='0x100000001')
-ThreadAction(id=34, thread_id=1, action_type='atomic read', memory_order='acquire', location='00000000004040A4', value='0x100000001', read_from=12)
 
 Data race detected between
 ThreadAction(id=13, thread_id=5, action_type='nonatomic write', memory_order='relaxed', location='00000000004040A0', value='0x200000002')
@@ -99,20 +79,12 @@ ThreadAction(id=13, thread_id=5, action_type='nonatomic write', memory_order='re
 ThreadAction(id=23, thread_id=3, action_type='atomic read', memory_order='acquire', location='00000000004040A0', value='0x200000002', read_from=11)
 
 Data race detected between
-ThreadAction(id=13, thread_id=5, action_type='nonatomic write', memory_order='relaxed', location='00000000004040A0', value='0x200000002')
-ThreadAction(id=35, thread_id=1, action_type='atomic read', memory_order='acquire', location='00000000004040A0', value='0x200000002', read_from=11)
-
-Data race detected between
 ThreadAction(id=14, thread_id=5, action_type='nonatomic write', memory_order='relaxed', location='00000000004040A8', value='0x3')
 ThreadAction(id=24, thread_id=4, action_type='atomic read', memory_order='acquire', location='00000000004040A8', value='0x3', read_from=11)
 
 Data race detected between
 ThreadAction(id=14, thread_id=5, action_type='nonatomic write', memory_order='relaxed', location='00000000004040A8', value='0x3')
 ThreadAction(id=26, thread_id=3, action_type='atomic read', memory_order='acquire', location='00000000004040A8', value='0x3', read_from=11)
-
-Data race detected between
-ThreadAction(id=14, thread_id=5, action_type='nonatomic write', memory_order='relaxed', location='00000000004040A8', value='0x3')
-ThreadAction(id=36, thread_id=1, action_type='atomic read', memory_order='acquire', location='00000000004040A8', value='0x3', read_from=11)
 
 
 
@@ -126,10 +98,6 @@ ThreadAction(id=12, thread_id=4, action_type='nonatomic write', memory_order='re
 ThreadAction(id=28, thread_id=5, action_type='atomic read', memory_order='acquire', location='00000000004040A4', value='0x300000002', read_from=11)
 
 Data race detected between
-ThreadAction(id=12, thread_id=4, action_type='nonatomic write', memory_order='relaxed', location='00000000004040A4', value='0x300000002')
-ThreadAction(id=33, thread_id=1, action_type='atomic read', memory_order='acquire', location='00000000004040A4', value='0x300000002', read_from=11)
-
-Data race detected between
 ThreadAction(id=14, thread_id=5, action_type='nonatomic write', memory_order='relaxed', location='00000000004040A0', value='0x200000002')
 ThreadAction(id=18, thread_id=4, action_type='atomic read', memory_order='acquire', location='00000000004040A0', value='0x200000002', read_from=12)
 
@@ -138,20 +106,12 @@ ThreadAction(id=14, thread_id=5, action_type='nonatomic write', memory_order='re
 ThreadAction(id=20, thread_id=3, action_type='atomic read', memory_order='acquire', location='00000000004040A0', value='0x200000002', read_from=12)
 
 Data race detected between
-ThreadAction(id=14, thread_id=5, action_type='nonatomic write', memory_order='relaxed', location='00000000004040A0', value='0x200000002')
-ThreadAction(id=34, thread_id=1, action_type='atomic read', memory_order='acquire', location='00000000004040A0', value='0x200000002', read_from=12)
-
-Data race detected between
 ThreadAction(id=15, thread_id=5, action_type='nonatomic write', memory_order='relaxed', location='00000000004040A8', value='0x3')
 ThreadAction(id=22, thread_id=4, action_type='atomic read', memory_order='acquire', location='00000000004040A8', value='0x3', read_from=12)
 
 Data race detected between
 ThreadAction(id=15, thread_id=5, action_type='nonatomic write', memory_order='relaxed', location='00000000004040A8', value='0x3')
 ThreadAction(id=24, thread_id=3, action_type='atomic read', memory_order='acquire', location='00000000004040A8', value='0x3', read_from=12)
-
-Data race detected between
-ThreadAction(id=15, thread_id=5, action_type='nonatomic write', memory_order='relaxed', location='00000000004040A8', value='0x3')
-ThreadAction(id=35, thread_id=1, action_type='atomic read', memory_order='acquire', location='00000000004040A8', value='0x3', read_from=12)
 
 
 
@@ -169,20 +129,12 @@ ThreadAction(id=10, thread_id=3, action_type='nonatomic write', memory_order='re
 ThreadAction(id=31, thread_id=5, action_type='atomic read', memory_order='acquire', location='00000000004040A4', value='0x200000002', read_from=12)
 
 Data race detected between
-ThreadAction(id=10, thread_id=3, action_type='nonatomic write', memory_order='relaxed', location='00000000004040A4', value='0x1')
-ThreadAction(id=36, thread_id=1, action_type='atomic read', memory_order='acquire', location='00000000004040A4', value='0x1', read_from=9)
-
-Data race detected between
 ThreadAction(id=15, thread_id=4, action_type='nonatomic write', memory_order='relaxed', location='00000000004040A4', value='0x200000002')
 ThreadAction(id=13, thread_id=3, action_type='atomic read', memory_order='acquire', location='00000000004040A4', value='0x1', read_from=9)
 
 Data race detected between
 ThreadAction(id=15, thread_id=4, action_type='nonatomic write', memory_order='relaxed', location='00000000004040A4', value='0x200000002')
 ThreadAction(id=31, thread_id=5, action_type='atomic read', memory_order='acquire', location='00000000004040A4', value='0x200000002', read_from=12)
-
-Data race detected between
-ThreadAction(id=15, thread_id=4, action_type='nonatomic write', memory_order='relaxed', location='00000000004040A4', value='0x200000002')
-ThreadAction(id=36, thread_id=1, action_type='atomic read', memory_order='acquire', location='00000000004040A4', value='0x1', read_from=9)
 
 Data race detected between
 ThreadAction(id=11, thread_id=3, action_type='nonatomic write', memory_order='relaxed', location='00000000004040A0', value='0x100000001')
@@ -197,20 +149,12 @@ ThreadAction(id=11, thread_id=3, action_type='nonatomic write', memory_order='re
 ThreadAction(id=32, thread_id=5, action_type='atomic read', memory_order='acquire', location='00000000004040A0', value='0x200000002', read_from=17)
 
 Data race detected between
-ThreadAction(id=11, thread_id=3, action_type='nonatomic write', memory_order='relaxed', location='00000000004040A0', value='0x100000001')
-ThreadAction(id=37, thread_id=1, action_type='atomic read', memory_order='acquire', location='00000000004040A0', value='0x200000002', read_from=17)
-
-Data race detected between
 ThreadAction(id=22, thread_id=5, action_type='nonatomic write', memory_order='relaxed', location='00000000004040A0', value='0x200000002')
 ThreadAction(id=17, thread_id=3, action_type='atomic read', memory_order='acquire', location='00000000004040A0', value='0x100000001', read_from=9)
 
 Data race detected between
 ThreadAction(id=22, thread_id=5, action_type='nonatomic write', memory_order='relaxed', location='00000000004040A0', value='0x200000002')
 ThreadAction(id=25, thread_id=4, action_type='atomic read', memory_order='acquire', location='00000000004040A0', value='0x100000001', read_from=9)
-
-Data race detected between
-ThreadAction(id=22, thread_id=5, action_type='nonatomic write', memory_order='relaxed', location='00000000004040A0', value='0x200000002')
-ThreadAction(id=37, thread_id=1, action_type='atomic read', memory_order='acquire', location='00000000004040A0', value='0x200000002', read_from=17)
 
 Data race detected between
 ThreadAction(id=16, thread_id=4, action_type='nonatomic write', memory_order='relaxed', location='00000000004040A8', value='0x2')
@@ -225,20 +169,12 @@ ThreadAction(id=16, thread_id=4, action_type='nonatomic write', memory_order='re
 ThreadAction(id=33, thread_id=5, action_type='atomic read', memory_order='acquire', location='00000000004040A8', value='0x3', read_from=17)
 
 Data race detected between
-ThreadAction(id=16, thread_id=4, action_type='nonatomic write', memory_order='relaxed', location='00000000004040A8', value='0x2')
-ThreadAction(id=38, thread_id=1, action_type='atomic read', memory_order='acquire', location='00000000004040A8', value='0x2', read_from=12)
-
-Data race detected between
 ThreadAction(id=23, thread_id=5, action_type='nonatomic write', memory_order='relaxed', location='00000000004040A8', value='0x3')
 ThreadAction(id=18, thread_id=3, action_type='atomic read', memory_order='acquire', location='00000000004040A8', value='0', read_from=0)
 
 Data race detected between
 ThreadAction(id=23, thread_id=5, action_type='nonatomic write', memory_order='relaxed', location='00000000004040A8', value='0x3')
 ThreadAction(id=26, thread_id=4, action_type='atomic read', memory_order='acquire', location='00000000004040A8', value='0x2', read_from=12)
-
-Data race detected between
-ThreadAction(id=23, thread_id=5, action_type='nonatomic write', memory_order='relaxed', location='00000000004040A8', value='0x3')
-ThreadAction(id=38, thread_id=1, action_type='atomic read', memory_order='acquire', location='00000000004040A8', value='0x2', read_from=12)
 
 
 
@@ -256,20 +192,12 @@ ThreadAction(id=10, thread_id=4, action_type='nonatomic write', memory_order='re
 ThreadAction(id=24, thread_id=3, action_type='atomic read', memory_order='acquire', location='00000000004040A4', value='0x300000001', read_from=10)
 
 Data race detected between
-ThreadAction(id=10, thread_id=4, action_type='nonatomic write', memory_order='relaxed', location='00000000004040A4', value='0x200000002')
-ThreadAction(id=36, thread_id=1, action_type='atomic read', memory_order='acquire', location='00000000004040A4', value='0x200000002', read_from=9)
-
-Data race detected between
 ThreadAction(id=14, thread_id=3, action_type='nonatomic write', memory_order='relaxed', location='00000000004040A4', value='0x300000001')
 ThreadAction(id=15, thread_id=4, action_type='atomic read', memory_order='acquire', location='00000000004040A4', value='0x200000002', read_from=9)
 
 Data race detected between
 ThreadAction(id=14, thread_id=3, action_type='nonatomic write', memory_order='relaxed', location='00000000004040A4', value='0x300000001')
 ThreadAction(id=23, thread_id=5, action_type='atomic read', memory_order='acquire', location='00000000004040A4', value='0x200000002', read_from=9)
-
-Data race detected between
-ThreadAction(id=14, thread_id=3, action_type='nonatomic write', memory_order='relaxed', location='00000000004040A4', value='0x300000001')
-ThreadAction(id=36, thread_id=1, action_type='atomic read', memory_order='acquire', location='00000000004040A4', value='0x200000002', read_from=9)
 
 Data race detected between
 ThreadAction(id=11, thread_id=4, action_type='nonatomic write', memory_order='relaxed', location='00000000004040A8', value='0x2')
@@ -282,10 +210,6 @@ ThreadAction(id=28, thread_id=5, action_type='atomic read', memory_order='acquir
 Data race detected between
 ThreadAction(id=11, thread_id=4, action_type='nonatomic write', memory_order='relaxed', location='00000000004040A8', value='0x2')
 ThreadAction(id=31, thread_id=3, action_type='atomic read', memory_order='acquire', location='00000000004040A8', value='0x2', read_from=9)
-
-Data race detected between
-ThreadAction(id=11, thread_id=4, action_type='nonatomic write', memory_order='relaxed', location='00000000004040A8', value='0x2')
-ThreadAction(id=38, thread_id=1, action_type='atomic read', memory_order='acquire', location='00000000004040A8', value='0x2', read_from=9)
 
 Data race detected between
 ThreadAction(id=22, thread_id=2, action_type='nonatomic write', memory_order='relaxed', location='00000000004040A8', value='0x1')
@@ -300,10 +224,6 @@ ThreadAction(id=22, thread_id=2, action_type='nonatomic write', memory_order='re
 ThreadAction(id=31, thread_id=3, action_type='atomic read', memory_order='acquire', location='00000000004040A8', value='0x2', read_from=9)
 
 Data race detected between
-ThreadAction(id=22, thread_id=2, action_type='nonatomic write', memory_order='relaxed', location='00000000004040A8', value='0x1')
-ThreadAction(id=38, thread_id=1, action_type='atomic read', memory_order='acquire', location='00000000004040A8', value='0x2', read_from=9)
-
-Data race detected between
 ThreadAction(id=13, thread_id=3, action_type='nonatomic write', memory_order='relaxed', location='00000000004040A0', value='0x100000001')
 ThreadAction(id=16, thread_id=4, action_type='atomic read', memory_order='acquire', location='00000000004040A0', value='0x100000001', read_from=10)
 
@@ -316,20 +236,12 @@ ThreadAction(id=13, thread_id=3, action_type='nonatomic write', memory_order='re
 ThreadAction(id=25, thread_id=5, action_type='atomic read', memory_order='acquire', location='00000000004040A0', value='0x100000001', read_from=10)
 
 Data race detected between
-ThreadAction(id=13, thread_id=3, action_type='nonatomic write', memory_order='relaxed', location='00000000004040A0', value='0x100000001')
-ThreadAction(id=37, thread_id=1, action_type='atomic read', memory_order='acquire', location='00000000004040A0', value='0x100000001', read_from=10)
-
-Data race detected between
 ThreadAction(id=18, thread_id=5, action_type='nonatomic write', memory_order='relaxed', location='00000000004040A0', value='0x100000002')
 ThreadAction(id=16, thread_id=4, action_type='atomic read', memory_order='acquire', location='00000000004040A0', value='0x100000001', read_from=10)
 
 Data race detected between
 ThreadAction(id=18, thread_id=5, action_type='nonatomic write', memory_order='relaxed', location='00000000004040A0', value='0x100000002')
 ThreadAction(id=26, thread_id=3, action_type='atomic read', memory_order='acquire', location='00000000004040A0', value='0x100000001', read_from=10)
-
-Data race detected between
-ThreadAction(id=18, thread_id=5, action_type='nonatomic write', memory_order='relaxed', location='00000000004040A0', value='0x100000002')
-ThreadAction(id=37, thread_id=1, action_type='atomic read', memory_order='acquire', location='00000000004040A0', value='0x100000001', read_from=10)
 
 
 
@@ -355,10 +267,6 @@ ThreadAction(id=10, thread_id=2, action_type='nonatomic write', memory_order='re
 ThreadAction(id=33, thread_id=4, action_type='atomic read', memory_order='acquire', location='00000000004040A8', value='0x2', read_from=11)
 
 Data race detected between
-ThreadAction(id=10, thread_id=2, action_type='nonatomic write', memory_order='relaxed', location='00000000004040A8', value='0x1')
-ThreadAction(id=39, thread_id=1, action_type='atomic read', memory_order='acquire', location='00000000004040A8', value='0x2', read_from=11)
-
-Data race detected between
 ThreadAction(id=16, thread_id=4, action_type='nonatomic write', memory_order='relaxed', location='00000000004040A8', value='0x2')
 ThreadAction(id=20, thread_id=3, action_type='atomic read', memory_order='acquire', location='00000000004040A8', value='0x1', read_from=9)
 
@@ -371,20 +279,12 @@ ThreadAction(id=16, thread_id=4, action_type='nonatomic write', memory_order='re
 ThreadAction(id=29, thread_id=5, action_type='atomic read', memory_order='acquire', location='00000000004040A8', value='0x3', read_from=17)
 
 Data race detected between
-ThreadAction(id=16, thread_id=4, action_type='nonatomic write', memory_order='relaxed', location='00000000004040A8', value='0x2')
-ThreadAction(id=39, thread_id=1, action_type='atomic read', memory_order='acquire', location='00000000004040A8', value='0x2', read_from=11)
-
-Data race detected between
 ThreadAction(id=24, thread_id=5, action_type='nonatomic write', memory_order='relaxed', location='00000000004040A8', value='0x3')
 ThreadAction(id=20, thread_id=3, action_type='atomic read', memory_order='acquire', location='00000000004040A8', value='0x1', read_from=9)
 
 Data race detected between
 ThreadAction(id=24, thread_id=5, action_type='nonatomic write', memory_order='relaxed', location='00000000004040A8', value='0x3')
 ThreadAction(id=33, thread_id=4, action_type='atomic read', memory_order='acquire', location='00000000004040A8', value='0x2', read_from=11)
-
-Data race detected between
-ThreadAction(id=24, thread_id=5, action_type='nonatomic write', memory_order='relaxed', location='00000000004040A8', value='0x3')
-ThreadAction(id=39, thread_id=1, action_type='atomic read', memory_order='acquire', location='00000000004040A8', value='0x2', read_from=11)
 
 Data race detected between
 ThreadAction(id=12, thread_id=3, action_type='nonatomic write', memory_order='relaxed', location='00000000004040A4', value='0x1')
@@ -399,20 +299,12 @@ ThreadAction(id=12, thread_id=3, action_type='nonatomic write', memory_order='re
 ThreadAction(id=31, thread_id=4, action_type='atomic read', memory_order='acquire', location='00000000004040A4', value='0x200000002', read_from=11)
 
 Data race detected between
-ThreadAction(id=12, thread_id=3, action_type='nonatomic write', memory_order='relaxed', location='00000000004040A4', value='0x1')
-ThreadAction(id=37, thread_id=1, action_type='atomic read', memory_order='acquire', location='00000000004040A4', value='0x1', read_from=10)
-
-Data race detected between
 ThreadAction(id=15, thread_id=4, action_type='nonatomic write', memory_order='relaxed', location='00000000004040A4', value='0x200000002')
 ThreadAction(id=17, thread_id=3, action_type='atomic read', memory_order='acquire', location='00000000004040A4', value='0x1', read_from=10)
 
 Data race detected between
 ThreadAction(id=15, thread_id=4, action_type='nonatomic write', memory_order='relaxed', location='00000000004040A4', value='0x200000002')
 ThreadAction(id=26, thread_id=5, action_type='atomic read', memory_order='acquire', location='00000000004040A4', value='0x1', read_from=10)
-
-Data race detected between
-ThreadAction(id=15, thread_id=4, action_type='nonatomic write', memory_order='relaxed', location='00000000004040A4', value='0x200000002')
-ThreadAction(id=37, thread_id=1, action_type='atomic read', memory_order='acquire', location='00000000004040A4', value='0x1', read_from=10)
 
 Data race detected between
 ThreadAction(id=13, thread_id=3, action_type='nonatomic write', memory_order='relaxed', location='00000000004040A0', value='0x100000001')
@@ -427,20 +319,12 @@ ThreadAction(id=13, thread_id=3, action_type='nonatomic write', memory_order='re
 ThreadAction(id=32, thread_id=4, action_type='atomic read', memory_order='acquire', location='00000000004040A0', value='0x100000002', read_from=17)
 
 Data race detected between
-ThreadAction(id=13, thread_id=3, action_type='nonatomic write', memory_order='relaxed', location='00000000004040A0', value='0x100000001')
-ThreadAction(id=38, thread_id=1, action_type='atomic read', memory_order='acquire', location='00000000004040A0', value='0x100000001', read_from=10)
-
-Data race detected between
 ThreadAction(id=23, thread_id=5, action_type='nonatomic write', memory_order='relaxed', location='00000000004040A0', value='0x100000002')
 ThreadAction(id=18, thread_id=3, action_type='atomic read', memory_order='acquire', location='00000000004040A0', value='0x100000001', read_from=10)
 
 Data race detected between
 ThreadAction(id=23, thread_id=5, action_type='nonatomic write', memory_order='relaxed', location='00000000004040A0', value='0x100000002')
 ThreadAction(id=32, thread_id=4, action_type='atomic read', memory_order='acquire', location='00000000004040A0', value='0x100000002', read_from=17)
-
-Data race detected between
-ThreadAction(id=23, thread_id=5, action_type='nonatomic write', memory_order='relaxed', location='00000000004040A0', value='0x100000002')
-ThreadAction(id=38, thread_id=1, action_type='atomic read', memory_order='acquire', location='00000000004040A0', value='0x100000001', read_from=10)
 
 
 
@@ -458,20 +342,12 @@ ThreadAction(id=10, thread_id=3, action_type='nonatomic write', memory_order='re
 ThreadAction(id=30, thread_id=5, action_type='atomic read', memory_order='acquire', location='00000000004040A4', value='0x100000001', read_from=9)
 
 Data race detected between
-ThreadAction(id=10, thread_id=3, action_type='nonatomic write', memory_order='relaxed', location='00000000004040A4', value='0x100000001')
-ThreadAction(id=36, thread_id=1, action_type='atomic read', memory_order='acquire', location='00000000004040A4', value='0x100000001', read_from=9)
-
-Data race detected between
 ThreadAction(id=15, thread_id=4, action_type='nonatomic write', memory_order='relaxed', location='00000000004040A4', value='0x200000002')
 ThreadAction(id=17, thread_id=3, action_type='atomic read', memory_order='acquire', location='00000000004040A4', value='0x100000001', read_from=9)
 
 Data race detected between
 ThreadAction(id=15, thread_id=4, action_type='nonatomic write', memory_order='relaxed', location='00000000004040A4', value='0x200000002')
 ThreadAction(id=30, thread_id=5, action_type='atomic read', memory_order='acquire', location='00000000004040A4', value='0x100000001', read_from=9)
-
-Data race detected between
-ThreadAction(id=15, thread_id=4, action_type='nonatomic write', memory_order='relaxed', location='00000000004040A4', value='0x200000002')
-ThreadAction(id=36, thread_id=1, action_type='atomic read', memory_order='acquire', location='00000000004040A4', value='0x100000001', read_from=9)
 
 Data race detected between
 ThreadAction(id=11, thread_id=3, action_type='nonatomic write', memory_order='relaxed', location='00000000004040A0', value='0x200000001')
@@ -486,20 +362,12 @@ ThreadAction(id=11, thread_id=3, action_type='nonatomic write', memory_order='re
 ThreadAction(id=32, thread_id=5, action_type='atomic read', memory_order='acquire', location='00000000004040A0', value='0x200000001', read_from=9)
 
 Data race detected between
-ThreadAction(id=11, thread_id=3, action_type='nonatomic write', memory_order='relaxed', location='00000000004040A0', value='0x200000001')
-ThreadAction(id=37, thread_id=1, action_type='atomic read', memory_order='acquire', location='00000000004040A0', value='0x200000001', read_from=9)
-
-Data race detected between
 ThreadAction(id=22, thread_id=5, action_type='nonatomic write', memory_order='relaxed', location='00000000004040A0', value='0x200000002')
 ThreadAction(id=18, thread_id=3, action_type='atomic read', memory_order='acquire', location='00000000004040A0', value='0x200000001', read_from=9)
 
 Data race detected between
 ThreadAction(id=22, thread_id=5, action_type='nonatomic write', memory_order='relaxed', location='00000000004040A0', value='0x200000002')
 ThreadAction(id=25, thread_id=4, action_type='atomic read', memory_order='acquire', location='00000000004040A0', value='0x200000001', read_from=9)
-
-Data race detected between
-ThreadAction(id=22, thread_id=5, action_type='nonatomic write', memory_order='relaxed', location='00000000004040A0', value='0x200000002')
-ThreadAction(id=37, thread_id=1, action_type='atomic read', memory_order='acquire', location='00000000004040A0', value='0x200000001', read_from=9)
 
 Data race detected between
 ThreadAction(id=14, thread_id=4, action_type='nonatomic write', memory_order='relaxed', location='00000000004040A8', value='0x2')
@@ -514,20 +382,12 @@ ThreadAction(id=14, thread_id=4, action_type='nonatomic write', memory_order='re
 ThreadAction(id=33, thread_id=5, action_type='atomic read', memory_order='acquire', location='00000000004040A8', value='0x3', read_from=17)
 
 Data race detected between
-ThreadAction(id=14, thread_id=4, action_type='nonatomic write', memory_order='relaxed', location='00000000004040A8', value='0x2')
-ThreadAction(id=38, thread_id=1, action_type='atomic read', memory_order='acquire', location='00000000004040A8', value='0x3', read_from=17)
-
-Data race detected between
 ThreadAction(id=23, thread_id=5, action_type='nonatomic write', memory_order='relaxed', location='00000000004040A8', value='0x3')
 ThreadAction(id=19, thread_id=3, action_type='atomic read', memory_order='acquire', location='00000000004040A8', value='0x2', read_from=11)
 
 Data race detected between
 ThreadAction(id=23, thread_id=5, action_type='nonatomic write', memory_order='relaxed', location='00000000004040A8', value='0x3')
 ThreadAction(id=26, thread_id=4, action_type='atomic read', memory_order='acquire', location='00000000004040A8', value='0x2', read_from=11)
-
-Data race detected between
-ThreadAction(id=23, thread_id=5, action_type='nonatomic write', memory_order='relaxed', location='00000000004040A8', value='0x3')
-ThreadAction(id=38, thread_id=1, action_type='atomic read', memory_order='acquire', location='00000000004040A8', value='0x3', read_from=17)
 
 
 
@@ -541,10 +401,6 @@ ThreadAction(id=10, thread_id=4, action_type='nonatomic write', memory_order='re
 ThreadAction(id=21, thread_id=5, action_type='atomic read', memory_order='acquire', location='00000000004040A4', value='0x100000002', read_from=9)
 
 Data race detected between
-ThreadAction(id=10, thread_id=4, action_type='nonatomic write', memory_order='relaxed', location='00000000004040A4', value='0x100000002')
-ThreadAction(id=33, thread_id=1, action_type='atomic read', memory_order='acquire', location='00000000004040A4', value='0x100000002', read_from=9)
-
-Data race detected between
 ThreadAction(id=14, thread_id=5, action_type='nonatomic write', memory_order='relaxed', location='00000000004040A0', value='0x200000002')
 ThreadAction(id=19, thread_id=3, action_type='atomic read', memory_order='acquire', location='00000000004040A0', value='0x200000002', read_from=12)
 
@@ -553,20 +409,12 @@ ThreadAction(id=14, thread_id=5, action_type='nonatomic write', memory_order='re
 ThreadAction(id=22, thread_id=4, action_type='atomic read', memory_order='acquire', location='00000000004040A0', value='0x200000002', read_from=12)
 
 Data race detected between
-ThreadAction(id=14, thread_id=5, action_type='nonatomic write', memory_order='relaxed', location='00000000004040A0', value='0x200000002')
-ThreadAction(id=34, thread_id=1, action_type='atomic read', memory_order='acquire', location='00000000004040A0', value='0x200000002', read_from=12)
-
-Data race detected between
 ThreadAction(id=15, thread_id=5, action_type='nonatomic write', memory_order='relaxed', location='00000000004040A8', value='0x3')
 ThreadAction(id=23, thread_id=4, action_type='atomic read', memory_order='acquire', location='00000000004040A8', value='0x3', read_from=12)
 
 Data race detected between
 ThreadAction(id=15, thread_id=5, action_type='nonatomic write', memory_order='relaxed', location='00000000004040A8', value='0x3')
 ThreadAction(id=26, thread_id=3, action_type='atomic read', memory_order='acquire', location='00000000004040A8', value='0x3', read_from=12)
-
-Data race detected between
-ThreadAction(id=15, thread_id=5, action_type='nonatomic write', memory_order='relaxed', location='00000000004040A8', value='0x3')
-ThreadAction(id=35, thread_id=1, action_type='atomic read', memory_order='acquire', location='00000000004040A8', value='0x3', read_from=12)
 
 
 
@@ -584,20 +432,12 @@ ThreadAction(id=11, thread_id=5, action_type='nonatomic write', memory_order='re
 ThreadAction(id=28, thread_id=3, action_type='atomic read', memory_order='acquire', location='00000000004040A8', value='0x2', read_from=11)
 
 Data race detected between
-ThreadAction(id=11, thread_id=5, action_type='nonatomic write', memory_order='relaxed', location='00000000004040A8', value='0x3')
-ThreadAction(id=37, thread_id=1, action_type='atomic read', memory_order='acquire', location='00000000004040A8', value='0x2', read_from=11)
-
-Data race detected between
 ThreadAction(id=14, thread_id=4, action_type='nonatomic write', memory_order='relaxed', location='00000000004040A8', value='0x2')
 ThreadAction(id=28, thread_id=3, action_type='atomic read', memory_order='acquire', location='00000000004040A8', value='0x2', read_from=11)
 
 Data race detected between
 ThreadAction(id=14, thread_id=4, action_type='nonatomic write', memory_order='relaxed', location='00000000004040A8', value='0x2')
 ThreadAction(id=30, thread_id=5, action_type='atomic read', memory_order='acquire', location='00000000004040A8', value='0x2', read_from=11)
-
-Data race detected between
-ThreadAction(id=14, thread_id=4, action_type='nonatomic write', memory_order='relaxed', location='00000000004040A8', value='0x2')
-ThreadAction(id=37, thread_id=1, action_type='atomic read', memory_order='acquire', location='00000000004040A8', value='0x2', read_from=11)
 
 Data race detected between
 ThreadAction(id=13, thread_id=4, action_type='nonatomic write', memory_order='relaxed', location='00000000004040A4', value='0x200000002')
@@ -612,10 +452,6 @@ ThreadAction(id=13, thread_id=4, action_type='nonatomic write', memory_order='re
 ThreadAction(id=25, thread_id=5, action_type='atomic read', memory_order='acquire', location='00000000004040A4', value='0x300000001', read_from=12)
 
 Data race detected between
-ThreadAction(id=13, thread_id=4, action_type='nonatomic write', memory_order='relaxed', location='00000000004040A4', value='0x200000002')
-ThreadAction(id=35, thread_id=1, action_type='atomic read', memory_order='acquire', location='00000000004040A4', value='0x200000002', read_from=11)
-
-Data race detected between
 ThreadAction(id=16, thread_id=3, action_type='nonatomic write', memory_order='relaxed', location='00000000004040A4', value='0x300000001')
 ThreadAction(id=18, thread_id=4, action_type='atomic read', memory_order='acquire', location='00000000004040A4', value='0x200000002', read_from=11)
 
@@ -624,20 +460,12 @@ ThreadAction(id=16, thread_id=3, action_type='nonatomic write', memory_order='re
 ThreadAction(id=25, thread_id=5, action_type='atomic read', memory_order='acquire', location='00000000004040A4', value='0x300000001', read_from=12)
 
 Data race detected between
-ThreadAction(id=16, thread_id=3, action_type='nonatomic write', memory_order='relaxed', location='00000000004040A4', value='0x300000001')
-ThreadAction(id=35, thread_id=1, action_type='atomic read', memory_order='acquire', location='00000000004040A4', value='0x200000002', read_from=11)
-
-Data race detected between
 ThreadAction(id=17, thread_id=3, action_type='nonatomic write', memory_order='relaxed', location='00000000004040A0', value='0x100000001')
 ThreadAction(id=19, thread_id=4, action_type='atomic read', memory_order='acquire', location='00000000004040A0', value='0x200000000', read_from=0)
 
 Data race detected between
 ThreadAction(id=17, thread_id=3, action_type='nonatomic write', memory_order='relaxed', location='00000000004040A0', value='0x100000001')
 ThreadAction(id=27, thread_id=5, action_type='atomic read', memory_order='acquire', location='00000000004040A0', value='0x100000001', read_from=12)
-
-Data race detected between
-ThreadAction(id=17, thread_id=3, action_type='nonatomic write', memory_order='relaxed', location='00000000004040A0', value='0x100000001')
-ThreadAction(id=36, thread_id=1, action_type='atomic read', memory_order='acquire', location='00000000004040A0', value='0x100000001', read_from=12)
 
 
 
@@ -655,20 +483,12 @@ ThreadAction(id=10, thread_id=3, action_type='nonatomic write', memory_order='re
 ThreadAction(id=27, thread_id=4, action_type='atomic read', memory_order='acquire', location='00000000004040A4', value='0x200000002', read_from=12)
 
 Data race detected between
-ThreadAction(id=10, thread_id=3, action_type='nonatomic write', memory_order='relaxed', location='00000000004040A4', value='0x300000001')
-ThreadAction(id=34, thread_id=1, action_type='atomic read', memory_order='acquire', location='00000000004040A4', value='0x300000001', read_from=9)
-
-Data race detected between
 ThreadAction(id=16, thread_id=4, action_type='nonatomic write', memory_order='relaxed', location='00000000004040A4', value='0x200000002')
 ThreadAction(id=17, thread_id=3, action_type='atomic read', memory_order='acquire', location='00000000004040A4', value='0x300000001', read_from=9)
 
 Data race detected between
 ThreadAction(id=16, thread_id=4, action_type='nonatomic write', memory_order='relaxed', location='00000000004040A4', value='0x200000002')
 ThreadAction(id=19, thread_id=5, action_type='atomic read', memory_order='acquire', location='00000000004040A4', value='0x300000001', read_from=9)
-
-Data race detected between
-ThreadAction(id=16, thread_id=4, action_type='nonatomic write', memory_order='relaxed', location='00000000004040A4', value='0x200000002')
-ThreadAction(id=34, thread_id=1, action_type='atomic read', memory_order='acquire', location='00000000004040A4', value='0x300000001', read_from=9)
 
 Data race detected between
 ThreadAction(id=11, thread_id=3, action_type='nonatomic write', memory_order='relaxed', location='00000000004040A0', value='0x200000001')
@@ -679,20 +499,12 @@ ThreadAction(id=11, thread_id=3, action_type='nonatomic write', memory_order='re
 ThreadAction(id=28, thread_id=4, action_type='atomic read', memory_order='acquire', location='00000000004040A0', value='0x200000001', read_from=9)
 
 Data race detected between
-ThreadAction(id=11, thread_id=3, action_type='nonatomic write', memory_order='relaxed', location='00000000004040A0', value='0x200000001')
-ThreadAction(id=35, thread_id=1, action_type='atomic read', memory_order='acquire', location='00000000004040A0', value='0x200000001', read_from=9)
-
-Data race detected between
 ThreadAction(id=15, thread_id=4, action_type='nonatomic write', memory_order='relaxed', location='00000000004040A8', value='0x2')
 ThreadAction(id=23, thread_id=3, action_type='atomic read', memory_order='acquire', location='00000000004040A8', value='0x2', read_from=12)
 
 Data race detected between
 ThreadAction(id=15, thread_id=4, action_type='nonatomic write', memory_order='relaxed', location='00000000004040A8', value='0x2')
 ThreadAction(id=25, thread_id=5, action_type='atomic read', memory_order='acquire', location='00000000004040A8', value='0x2', read_from=12)
-
-Data race detected between
-ThreadAction(id=15, thread_id=4, action_type='nonatomic write', memory_order='relaxed', location='00000000004040A8', value='0x2')
-ThreadAction(id=36, thread_id=1, action_type='atomic read', memory_order='acquire', location='00000000004040A8', value='0x2', read_from=12)
 
 
 

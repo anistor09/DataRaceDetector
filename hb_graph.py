@@ -180,11 +180,13 @@ class HBGraph:
         for (src, dst) in sorted(self.po_edges):
             result.append(f"    {src} -> {dst}")
 
-        result.append("  Action ID -> (ThreadID, ActionType):")
+        result.append("  Action ID -> (TID, Type, Location):")
         for action_id in sorted(self.action_types.keys()):
-            thread_id = self._get_action_by_id(action_id).thread_id
+            action = self._get_action_by_id(action_id)
+            thread_id = action.thread_id
             action_type = self.action_types[action_id]
-            result.append(f"    {action_id} -> (thread: {thread_id}, {action_type})")
+            location = action.location
+            result.append(f"    {action_id} -> (T{thread_id}, {action_type}, loc: {location})")
         
         return "\n".join(result)
     
@@ -244,7 +246,7 @@ class HBGraph:
                 id1 = action_ids[i]
                 a1 = self._get_action_by_id(id1)
                 if a1.action_type == "nonatomic write":
-                    for j in range(1, len(action_ids)):
+                    for j in range(0, len(action_ids)):
                         id2 = action_ids[j]
                         a2 = self._get_action_by_id(id2)
                         if not (j <= i and a2.action_type == "nonatomic write"):

@@ -1,11 +1,19 @@
 --Output for execution trace 1
 Data race detected between
+ThreadAction(id=13, thread_id=3, action_type='nonatomic write', memory_order='relaxed', location='0000000000404088', value='0x2a')
+ThreadAction(id=7, thread_id=2, action_type='atomic read', memory_order='acquire', location='0000000000404088', value='0', read_from=0)
+
+Data race detected between
 ThreadAction(id=8, thread_id=2, action_type='nonatomic write', memory_order='relaxed', location='0000000000404084', value='0')
 ThreadAction(id=12, thread_id=3, action_type='atomic read', memory_order='acquire', location='0000000000404084', value='0', read_from=7)
 
 
 
 --Output for execution trace 2
+Data race detected between
+ThreadAction(id=13, thread_id=3, action_type='nonatomic write', memory_order='relaxed', location='0000000000404088', value='0x2a')
+ThreadAction(id=7, thread_id=2, action_type='atomic read', memory_order='acquire', location='0000000000404088', value='0', read_from=0)
+
 Data race detected between
 ThreadAction(id=8, thread_id=2, action_type='nonatomic write', memory_order='relaxed', location='0000000000404084', value='0')
 ThreadAction(id=12, thread_id=3, action_type='atomic read', memory_order='acquire', location='0000000000404084', value='0', read_from=7)
@@ -14,12 +22,20 @@ ThreadAction(id=12, thread_id=3, action_type='atomic read', memory_order='acquir
 
 --Output for execution trace 3
 Data race detected between
+ThreadAction(id=13, thread_id=3, action_type='nonatomic write', memory_order='relaxed', location='0000000000404088', value='0x2a')
+ThreadAction(id=7, thread_id=2, action_type='atomic read', memory_order='acquire', location='0000000000404088', value='0', read_from=0)
+
+Data race detected between
 ThreadAction(id=8, thread_id=2, action_type='nonatomic write', memory_order='relaxed', location='0000000000404084', value='0')
 ThreadAction(id=12, thread_id=3, action_type='atomic read', memory_order='acquire', location='0000000000404084', value='0', read_from=7)
 
 
 
 --Output for execution trace 4
+Data race detected between
+ThreadAction(id=12, thread_id=2, action_type='nonatomic write', memory_order='relaxed', location='0000000000404084', value='0x2a0000002a')
+ThreadAction(id=7, thread_id=3, action_type='atomic read', memory_order='acquire', location='0000000000404084', value='0x1e', read_from=0)
+
 Data race detected between
 ThreadAction(id=8, thread_id=3, action_type='nonatomic write', memory_order='relaxed', location='0000000000404088', value='0x2a')
 ThreadAction(id=11, thread_id=2, action_type='atomic read', memory_order='acquire', location='0000000000404088', value='0x2a', read_from=7)
@@ -28,12 +44,20 @@ ThreadAction(id=11, thread_id=2, action_type='atomic read', memory_order='acquir
 
 --Output for execution trace 5
 Data race detected between
+ThreadAction(id=13, thread_id=3, action_type='nonatomic write', memory_order='relaxed', location='0000000000404088', value='0x2a')
+ThreadAction(id=7, thread_id=2, action_type='atomic read', memory_order='acquire', location='0000000000404088', value='0', read_from=0)
+
+Data race detected between
 ThreadAction(id=8, thread_id=2, action_type='nonatomic write', memory_order='relaxed', location='0000000000404084', value='0')
 ThreadAction(id=12, thread_id=3, action_type='atomic read', memory_order='acquire', location='0000000000404084', value='0', read_from=7)
 
 
 
 --Output for execution trace 6
+Data race detected between
+ThreadAction(id=13, thread_id=3, action_type='nonatomic write', memory_order='relaxed', location='0000000000404088', value='0x2a')
+ThreadAction(id=7, thread_id=2, action_type='atomic read', memory_order='acquire', location='0000000000404088', value='0', read_from=0)
+
 Data race detected between
 ThreadAction(id=8, thread_id=2, action_type='nonatomic write', memory_order='relaxed', location='0000000000404084', value='0')
 ThreadAction(id=12, thread_id=3, action_type='atomic read', memory_order='acquire', location='0000000000404084', value='0', read_from=7)
@@ -42,12 +66,20 @@ ThreadAction(id=12, thread_id=3, action_type='atomic read', memory_order='acquir
 
 --Output for execution trace 7
 Data race detected between
+ThreadAction(id=12, thread_id=2, action_type='nonatomic write', memory_order='relaxed', location='0000000000404084', value='0x2a0000002a')
+ThreadAction(id=7, thread_id=3, action_type='atomic read', memory_order='acquire', location='0000000000404084', value='0x1e', read_from=0)
+
+Data race detected between
 ThreadAction(id=8, thread_id=3, action_type='nonatomic write', memory_order='relaxed', location='0000000000404088', value='0x2a')
 ThreadAction(id=11, thread_id=2, action_type='atomic read', memory_order='acquire', location='0000000000404088', value='0x2a', read_from=7)
 
 
 
 --Output for execution trace 8
+Data race detected between
+ThreadAction(id=13, thread_id=3, action_type='nonatomic write', memory_order='relaxed', location='0000000000404088', value='0x2a')
+ThreadAction(id=7, thread_id=2, action_type='atomic read', memory_order='acquire', location='0000000000404088', value='0', read_from=0)
+
 Data race detected between
 ThreadAction(id=8, thread_id=2, action_type='nonatomic write', memory_order='relaxed', location='0000000000404084', value='0')
 ThreadAction(id=12, thread_id=3, action_type='atomic read', memory_order='acquire', location='0000000000404084', value='0', read_from=7)
@@ -56,12 +88,20 @@ ThreadAction(id=12, thread_id=3, action_type='atomic read', memory_order='acquir
 
 --Output for execution trace 9
 Data race detected between
+ThreadAction(id=13, thread_id=3, action_type='nonatomic write', memory_order='relaxed', location='0000000000404088', value='0x2a')
+ThreadAction(id=7, thread_id=2, action_type='atomic read', memory_order='acquire', location='0000000000404088', value='0', read_from=0)
+
+Data race detected between
 ThreadAction(id=8, thread_id=2, action_type='nonatomic write', memory_order='relaxed', location='0000000000404084', value='0')
 ThreadAction(id=12, thread_id=3, action_type='atomic read', memory_order='acquire', location='0000000000404084', value='0', read_from=7)
 
 
 
 --Output for execution trace 10
+Data race detected between
+ThreadAction(id=13, thread_id=3, action_type='nonatomic write', memory_order='relaxed', location='0000000000404088', value='0x2a')
+ThreadAction(id=7, thread_id=2, action_type='atomic read', memory_order='acquire', location='0000000000404088', value='0', read_from=0)
+
 Data race detected between
 ThreadAction(id=8, thread_id=2, action_type='nonatomic write', memory_order='relaxed', location='0000000000404084', value='0')
 ThreadAction(id=12, thread_id=3, action_type='atomic read', memory_order='acquire', location='0000000000404084', value='0', read_from=7)
