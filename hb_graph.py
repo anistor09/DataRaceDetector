@@ -34,32 +34,64 @@ class HBGraph:
                 elif action.action_type == "atomic read":
                     closest_fence_rightside[action.id] = prefix_fence_for_thread[tid]
 
-        # For each atomic read:
-        # - Check if it has a read-from relationship (it reads a value written by some write).
-        # - Look up the closest release-side fence before the write (in its thread).
-        # - Look up the closest acquire-side fence after the read (in its thread).
-        # Then add the appropriate edges based on C++11 synchronization rules:
-        # - Fence-to-Fence: release fence → acquire fence
-        # - Fence-to-Read: release fence → acquire read
-        # - Write-to-Fence: release write → acquire fence
-        for action_group in trace.actions:
-            for read in action_group:
-                if read.action_type == "atomic read" and read.read_from is not None:
-                    for write in trace.actions[read.read_from]:
-                        if write.action_type == "atomic write" and write.location == read.location:
-                            f_release = closest_fence_leftside.get(write.id)
-                            f_acquire = closest_fence_rightside.get(read.id)
-                            # Fence-fence synchronization
-                            if f_release is not None and f_acquire is not None:
-                                self.add_edge(f_release, f_acquire, edge_type="sw")
-                            # Fence-atomic synchronization
-                            # the read has to be acquire, write can be any memory order, f_release is before write in thread A
-                            if f_release is not None and read.memory_order in ("acquire", "seq_cst"):
-                                self.add_edge(f_release, read.id, edge_type="sw")
-                            # Atomic-fence synchronization
-                            # the write has to be release, atomic read before fence in thread B, read has any memory order
-                            if f_acquire is not None and write.memory_order in ("release", "seq_cst"):
-                                self.add_edge(write.id, f_acquire, edge_type="sw")
+        # ------------------------------------------------------------------
+        # 1. Cross-thread and cross-chain synchronization via rf chains
+        #
+        # For each atomic read (or RMW acting as a read):
+        # - Follow the read-from chain backward to the original write.
+        # - Collect the full rf chain (including acq_rel RMWs along the way).
+        # - For each earlier → later pair in the chain:
+        #     - Look up the closest release-side fence before the earlier op.
+        #     - Look up the closest acquire-side fence after the later op.
+        #     - Apply C++11 synchronization rules:
+        #         - Fence-to-Fence: release fence → acquire fence
+        #         - Fence-to-Read:  release fence → acquire read
+        #         - Write-to-Fence: release write → acquire fence
+        #
+        # caching via `seen` avoids revisiting RMWs/reads shared across chains.
+        # ------------------------------------------------------------------
+        seen = set()
+        for group in trace.actions:
+            for leaf_read in group:
+                if leaf_read.read_from is None or not leaf_read.action_type.startswith("atomic"):
+                    continue
+                # skip if this leaf was already in a processed chain
+                if leaf_read.id in seen:
+                    continue
+                # build the rf chain from leaf back to root write
+                chain = []
+                curr = leaf_read
+                while True:
+                    chain.append(curr)
+                    seen.add(curr.id)
+                    parent_id = curr.read_from
+                    if parent_id is None:
+                        break
+                    # find matching write/RMW in parent group
+                    parent = None
+                    for write in trace.actions[parent_id]:
+                        if write.action_type in ("atomic write", "atomic rmw") and write.location == curr.location:
+                            parent = write
+                            break
+                    if parent is None:
+                        break
+                    curr = parent
+                # emit sw edges for each earlier->later pair
+                for i in range(len(chain)):
+                    for j in range(i+1, len(chain)):
+                        r = chain[i]
+                        w = chain[j]
+                        f_rel = closest_fence_leftside.get(w.id)
+                        f_acq = closest_fence_rightside.get(r.id)
+                        # Fence-fence
+                        if f_rel is not None and f_acq is not None:
+                            self.add_edge(f_rel, f_acq, edge_type="sw")
+                        # Fence-to-read
+                        if f_rel is not None and r.memory_order in ("acq_rel", "acquire", "seq_cst"):
+                            self.add_edge(f_rel, r.id, edge_type="sw")
+                        # Write-to-fence
+                        if f_acq is not None and w.memory_order in ("acq_rel","release", "seq_cst"):
+                            self.add_edge(w.id, f_acq, edge_type="sw")
 
     def __init__(self, trace:TraceStruct):
         # unique thread id trace size
