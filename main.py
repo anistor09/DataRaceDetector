@@ -7,7 +7,11 @@ sys.setrecursionlimit(1000000)
 
 
 def main():
-    trace_name = "benchmark/c11tester-tests/userprog/userprog.txt"
+    # trace_name = "benchmark/c11tester-tests/userprog/userprog.txt"
+    # trace_name = "benchmark/self-made-tests/fences/fences.txt"
+    # trace_name = "benchmark/self-made-tests/mutexes/mutexes.txt"
+    # trace_name = "benchmark/self-made-tests/atomic_read_write/atomic_read_write.txt"
+    trace_name = "benchmark/c11tester-benchmarks/iris/test2.txt"
     # 1) Parse input
     execution_trace_list = parse_trace(trace_name)
     for trace in execution_trace_list:
